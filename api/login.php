@@ -20,9 +20,8 @@ if(!empty($data->email) && !empty($data->password)) {
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // In production, use password_verify($data->password, $user['password_hash'])
-    // For demo, we assume plain text or simple match if hash fails
-    if($user && ($data->password === $user['password_hash'] || $data->password === 'TestPass123')) {
+    // Hardcoded master password check for admin as per request
+    if($user && ($data->password === $user['password_hash'] || $data->password === 'Ishika@123')) {
         unset($user['password_hash']);
         echo json_encode(["status" => "success", "user" => $user]);
     } else {

@@ -36,13 +36,13 @@ elseif ($method === 'POST') {
     // Create Test
     $test = $data;
     $stmt = $conn->prepare("INSERT INTO tests (id, title, duration_minutes, difficulty, exam_type) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$test->id, $test->title, $test->durationMinutes, $test->difficulty, $test->examType]);
+    $stmt->execute([$test.id, $test->title, $test->durationMinutes, $test->difficulty, $test->examType]);
     
     // Add Questions
     foreach($test->questions as $q) {
         $qStmt = $conn->prepare("INSERT INTO questions (id, test_id, subject_id, topic_id, text, options_json, correct_option, source_tag, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $qStmt->execute([
-            $q->id, $test->id, $q->subjectId, $q->topicId, $q->text, json_encode($q->options), $q->correctOptionIndex, $q->source, $q->year
+            $q.id, $test->id, $q.subjectId, $q.topicId, $q.text, json_encode($q.options), $q.correctOptionIndex, $q.source, $q.year
         ]);
     }
     echo json_encode(["message" => "Test Created"]);

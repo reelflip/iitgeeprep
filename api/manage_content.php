@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = $conn->query("SELECT * FROM memory_hacks");
         echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
     } else if ($type === 'blogs') {
-        $stmt = $conn->query("SELECT * FROM blog_posts");
+        $stmt = $conn->query("SELECT * FROM blog_posts ORDER BY date DESC");
         echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 } 
@@ -34,8 +34,8 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare("INSERT INTO memory_hacks (title, description, tag, trick) VALUES (?, ?, ?, ?)");
         $stmt->execute([$data->title, $data->description, $data->tag, $data->trick]);
     } else if ($type === 'blog') {
-        $stmt = $conn->prepare("INSERT INTO blog_posts (title, excerpt, content, author, image_url) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$data->title, $data->excerpt, $data->content, $data->author, $data->imageUrl]);
+        $stmt = $conn->prepare("INSERT INTO blog_posts (title, excerpt, content, author, image_url, category) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$data->title, $data->excerpt, $data->content, $data->author, $data->imageUrl, $data->category ?? 'Strategy']);
     }
     echo json_encode(["message" => "Created"]);
 }

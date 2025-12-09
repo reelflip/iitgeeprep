@@ -14,7 +14,6 @@ require_once 'config.php';
 $data = json_decode(file_get_contents("php://input"));
 
 if(!empty($data->token)) {
-    // 1. Verify Token with Google
     $url = "https://oauth2.googleapis.com/tokeninfo?id_token=" . $data->token;
     $response = file_get_contents($url);
     $payload = json_decode($response);

@@ -23,7 +23,7 @@ if(!empty($data->name) && !empty($data->email) && !empty($data->password)) {
         exit();
     }
 
-    $query = "INSERT INTO users (name, email, password_hash, role, target_exam, target_year, institute, gender, dob) VALUES (:name, :email, :pass, :role, :exam, :year, :inst, :gender, :dob)";
+    $query = "INSERT INTO users (name, email, password_hash, role, target_exam, target_year, institute, gender, dob, security_question, security_answer) VALUES (:name, :email, :pass, :role, :exam, :year, :inst, :gender, :dob, :sq, :sa)";
     $stmt = $conn->prepare($query);
     
     // Simple hash for demo
@@ -38,6 +38,8 @@ if(!empty($data->name) && !empty($data->email) && !empty($data->password)) {
     $stmt->bindParam(":inst", $data->institute);
     $stmt->bindParam(":gender", $data->gender);
     $stmt->bindParam(":dob", $data->dob);
+    $stmt->bindParam(":sq", $data->securityQuestion);
+    $stmt->bindParam(":sa", $data->securityAnswer);
 
     if($stmt->execute()) {
         $id = $conn->lastInsertId();

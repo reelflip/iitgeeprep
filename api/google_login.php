@@ -12,8 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
+$selectedRole = $data->role ?? null; 
 
 if(!empty($data->token)) {
+    // Basic verification: in production use Google Client Library for PHP
     $url = "https://oauth2.googleapis.com/tokeninfo?id_token=" . $data->token;
     $response = file_get_contents($url);
     $payload = json_decode($response);
@@ -37,11 +39,17 @@ if(!empty($data->token)) {
             unset($user['password_hash']);
             echo json_encode(["status" => "success", "user" => $user]);
         } else {
-            // 3. Create New User
-            $stmt = $conn->prepare("INSERT INTO users (name, email, password_hash, role, google_id, is_verified) VALUES (?, ?, ?, 'STUDENT', ?, 1)");
-            // Use dummy password for social login
+            // 3. User NOT found
+            if ($selectedRole === null) {
+                // If no role provided for a new user, ask frontend to prompt
+                echo json_encode(["status" => "needs_role", "message" => "User not found, please select role"]);
+                exit();
+            }
+
+            // 4. Create New User with Selected Role
+            $stmt = $conn->prepare("INSERT INTO users (name, email, password_hash, role, google_id, is_verified) VALUES (?, ?, ?, ?, ?, 1)");
             $dummyPass = password_hash(uniqid(), PASSWORD_DEFAULT);
-            $stmt->execute([$name, $email, $dummyPass, $sub]);
+            $stmt->execute([$name, $email, $dummyPass, $selectedRole, $sub]);
             
             $id = $conn->lastInsertId();
             $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");

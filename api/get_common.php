@@ -22,6 +22,16 @@ $vMap = [];
 foreach($videos as $v) $vMap[$v['topic_id']] = $v;
 $common['videoMap'] = $vMap;
 
+// Notes Map
+$notes = $conn->query("SELECT * FROM chapter_notes")->fetchAll(PDO::FETCH_ASSOC);
+$nMap = [];
+foreach($notes as $n) {
+    $n['pages'] = json_decode($n['pages_json']);
+    unset($n['pages_json']);
+    $nMap[$n['topic_id']] = $n;
+}
+$common['noteMap'] = $nMap;
+
 // Notifications for broadcast
 $common['notifications'] = $conn->query("SELECT * FROM notifications WHERE type='INFO'")->fetchAll(PDO::FETCH_ASSOC);
 

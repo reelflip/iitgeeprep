@@ -34,6 +34,20 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare("INSERT INTO memory_hacks (title, description, tag, trick) VALUES (?, ?, ?, ?)");
         $stmt->execute([$data->title, $data->description, $data->tag, $data->trick]);
     } else if ($type === 'blog') {
+        // Upsert based on ID logic if passed (though ID is AI usually)
+        // If ID exists in input and > 0, assume update
+        if (isset($data->id) && $data->id > 0) {
+             // Check existence first
+             $check = $conn->prepare("SELECT id FROM blog_posts WHERE id = ?");
+             $check->execute([$data->id]);
+             if($check->rowCount() > 0) {
+                 $stmt = $conn->prepare("UPDATE blog_posts SET title=?, excerpt=?, content=?, author=?, image_url=?, category=? WHERE id=?");
+                 $stmt->execute([$data->title, $data->excerpt, $data->content, $data->author, $data->imageUrl, $data->category ?? 'Strategy', $data->id]);
+                 echo json_encode(["message" => "Updated"]);
+                 exit;
+             }
+        }
+        
         $stmt = $conn->prepare("INSERT INTO blog_posts (title, excerpt, content, author, image_url, category) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->execute([$data->title, $data->excerpt, $data->content, $data->author, $data->imageUrl, $data->category ?? 'Strategy']);
     }

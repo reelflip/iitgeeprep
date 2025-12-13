@@ -26,7 +26,7 @@ try {
     folder: "deployment/api",
     desc: "API Root Health Check",
     content: `${phpHeader}
-echo json_encode(["status" => "active", "message" => "IITGEEPrep API v12.1 Operational", "timestamp" => date('c')]);
+echo json_encode(["status" => "active", "message" => "IITGEEPrep API v12.2 Operational", "timestamp" => date('c')]);
 ?>`
   },
   // ... (All logic files mapped to deployment/api)
@@ -305,7 +305,7 @@ if ($method === 'GET') {
 elseif ($method === 'POST') {
     $test = $data;
     $stmt = $conn->prepare("INSERT INTO tests (id, title, duration_minutes, difficulty, exam_type) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$test.id, $test.title, $test.durationMinutes, $test->difficulty, $test->examType]);
+    $stmt->execute([$test.id, $test.title, $test.durationMinutes, $test.difficulty, $test.examType]);
     foreach($test.questions as $q) {
         $qStmt = $conn->prepare("INSERT INTO questions (id, test_id, subject_id, topic_id, text, options_json, correct_option, source_tag, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $qStmt->execute([
@@ -511,18 +511,40 @@ echo json_encode($common);
     folder: "deployment/api",
     content: `${phpHeader}
 try {
+    // 1. Table Stats
     $tables = [];
     $res = $conn->query("SHOW TABLES");
     while($row = $res->fetch(PDO::FETCH_NUM)) {
         $count = $conn->query("SELECT COUNT(*) FROM " . $row[0])->fetchColumn();
         $tables[] = ["name" => $row[0], "rows" => $count];
     }
+
+    // 2. Content Stats (Topics with Questions/Notes)
+    $contentStats = [];
+    
+    // Check if topics table exists first to avoid error on fresh DB
+    $check = $conn->query("SHOW TABLES LIKE 'topics'");
+    if($check->rowCount() > 0) {
+        $sql = "SELECT 
+            t.name as topic, 
+            t.subject, 
+            (SELECT COUNT(*) FROM questions q WHERE q.topic_id = t.id) as question_count,
+            (SELECT COUNT(*) FROM chapter_notes n WHERE n.topic_id = t.id) as note_count
+        FROM topics t
+        HAVING question_count > 0 OR note_count > 0
+        ORDER BY t.subject, t.name";
+        
+        $stmt = $conn->query($sql);
+        $contentStats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     echo json_encode([
         "status" => "CONNECTED",
         "db_host" => $host,
         "db_name" => $db_name,
         "server_info" => $conn->getAttribute(PDO::ATTR_SERVER_INFO),
-        "tables" => $tables
+        "tables" => $tables,
+        "content_stats" => $contentStats
     ]);
 } catch(Exception $e) {
     echo json_encode(["status" => "ERROR", "message" => $e->getMessage()]);
@@ -807,7 +829,7 @@ const generateHtaccess = () => `
 `;
 const generateSQLSchema = () => {
   let sql = `
--- IITGEEPrep Database Schema v12.1
+-- IITGEEPrep Database Schema v12.2
 -- Target: MySQL / MariaDB (Hostinger)
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -1058,6 +1080,52 @@ INSERT INTO \`users\` (\`name\`, \`email\`, \`password_hash\`, \`role\`) VALUES
 -- Seed Sample Blog Post
 INSERT INTO \`blog_posts\` (\`title\`, \`excerpt\`, \`content\`, \`author\`, \`category\`, \`image_url\`) VALUES
 ('JEE Main & Advanced 2025: Complete Roadmap', 'A strategic month-by-month guide to conquering Physics, Chemistry, and Maths while managing Board Exams.', '<h2>The Foundation</h2><p>Success in JEE Main and Advanced is not just about hard work; it is about <strong>smart work</strong> and consistent effort.</p>', 'System Admin', 'Strategy', 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=1000');
+
+-- SEED FLASHCARDS (20 Items)
+INSERT INTO \`flashcards\` (\`front\`, \`back\`, \`subject_id\`) VALUES
+('Newton''s Second Law', 'F = ma (Force = mass × acceleration)', 'phys'),
+('Kinetic Energy Formula', 'KE = ½mv²', 'phys'),
+('Work-Energy Theorem', 'Work done by all forces = Change in Kinetic Energy', 'phys'),
+('Torque Formula', 'τ = r × F = rFsin(θ)', 'phys'),
+('Escape Velocity', 'v = √(2GM/R)', 'phys'),
+('Bernoulli''s Equation', 'P + ½ρv² + ρgh = Constant', 'phys'),
+('Time Period of Simple Pendulum', 'T = 2π√(L/g)', 'phys'),
+('Ohm''s Law', 'V = IR', 'phys'),
+('Power Formula (Electrical)', 'P = VI = I²R = V²/R', 'phys'),
+('Lens Maker''s Formula', '1/f = (n-1)(1/R₁ - 1/R₂)', 'phys'),
+('Ideal Gas Equation', 'PV = nRT', 'chem'),
+('Molarity (M)', 'Moles of Solute / Volume of Solution (L)', 'chem'),
+('First Law of Thermodynamics', 'ΔU = q + w', 'chem'),
+('pH Formula', 'pH = -log[H+]', 'chem'),
+('Heisenberg Uncertainty Principle', 'Δx × Δp ≥ h/4π', 'chem'),
+('Gibbs Free Energy', 'ΔG = ΔH - TΔS', 'chem'),
+('Quadratic Formula', 'x = (-b ± √(b² - 4ac)) / 2a', 'math'),
+('Sin(A+B)', 'sinAcosB + cosAsinB', 'math'),
+('Integration by Parts', '∫u dv = uv - ∫v du', 'math'),
+('Derivative of ln(x)', '1/x', 'math');
+
+-- SEED MEMORY HACKS (20 Items)
+INSERT INTO \`memory_hacks\` (\`title\`, \`description\`, \`trick\`, \`tag\`, \`subject_id\`) VALUES
+('Trigonometry Ratios', 'Sine, Cosine, Tangent relationships', 'SOH CAH TOA (Sine=Opp/Hyp, Cos=Adj/Hyp, Tan=Opp/Adj)', 'Maths', 'math'),
+('Resistor Color Code', 'Order of colors for resistance', 'BB ROY of Great Britain had a Very Good Wife (Black, Brown, Red, Orange, Yellow, Green, Blue, Violet, Grey, White)', 'Physics', 'phys'),
+('Redox Reactions', 'Oxidation vs Reduction', 'OIL RIG (Oxidation Is Loss, Reduction Is Gain of electrons)', 'Chemistry', 'chem'),
+('Electromagnetic Spectrum', 'Order of frequency/wavelength', 'Rich Men In Venus Use X-ray Guns (Radio, Micro, Infra, Visible, UV, X-ray, Gamma)', 'Physics', 'phys'),
+('Group 1 Elements', 'Alkali Metals', 'Hi Li Na K Rb Cs Fr (Hydrogen, Lithium, Sodium, Potassium, Rubidium, Cesium, Francium)', 'Chemistry', 'chem'),
+('Electrodes', 'Anode vs Cathode oxidation/reduction', 'An Ox, Red Cat (Anode = Oxidation, Reduction = Cathode)', 'Chemistry', 'chem'),
+('Diatomic Molecules', 'Elements that exist as pairs', 'Have No Fear Of Ice Cold Beer (H2, N2, F2, O2, I2, Cl2, Br2)', 'Chemistry', 'chem'),
+('Metric Prefixes', 'Kilo, Hecto, Deca, Base, Deci, Centi, Milli', 'King Henry Died By Drinking Chocolate Milk', 'Physics', 'phys'),
+('Coordinate Quadrants', 'Which trig functions are positive', 'All Silver Tea Cups (All, Sin, Tan, Cos)', 'Maths', 'math'),
+('Visible Light Spectrum', 'Colors from low to high frequency', 'ROY G BIV (Red, Orange, Yellow, Green, Blue, Indigo, Violet)', 'Physics', 'phys'),
+('Calculus Quotient Rule', 'Derivative of f/g', 'Lo d-Hi minus Hi d-Lo, over Lo Lo', 'Maths', 'math'),
+('Reactivity Series', 'Metals reactivity order', 'Please Stop Calling Me A Careless Zebra Instead Try Learning Copper Saves Gold', 'Chemistry', 'chem'),
+('First 10 Alkanes', 'Methane to Decane', 'My Enormous Penguin Bounces Pretty High (Methane, Ethane, Propane, Butane, Pentane, Hexane...)', 'Chemistry', 'chem'),
+('Value of Pi', 'First few digits of Pi', 'May I have a large container of coffee (Count letters: 3.1415926)', 'Maths', 'math'),
+('Unit Circle', 'Cosine is x, Sine is y', 'Alphabetical order: C comes before S, x comes before y', 'Maths', 'math'),
+('Fleming''s Left Hand Rule', 'Motor Effect', 'FBI (Thumb=Force, First finger=B-Field, Second=Current)', 'Physics', 'phys'),
+('Specific Heat Capacity', 'Water is high', 'Water takes a long time to boil because it has high capacity', 'Physics', 'phys'),
+('Noble Gases', 'Group 18', 'He Never Arrived; Karen X-rayed Ron (He, Ne, Ar, Kr, Xe, Rn)', 'Chemistry', 'chem'),
+('Order of Operations', 'Maths precedence', 'BODMAS (Brackets, Orders, Divide, Multiply, Add, Subtract)', 'Maths', 'math'),
+('convex vs concave', 'Lenses and mirrors', 'Concave is like a cave (goes inward)', 'Physics', 'phys');
 
 -- SEED MOCK TESTS (10 TESTS)
 `;

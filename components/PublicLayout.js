@@ -20,6 +20,7 @@ const PublicLayout = ({ children, onNavigate, currentScreen, socialConfig }) => 
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("about"), className: `hover:text-blue-600 transition-colors ${currentScreen === "about" ? "text-blue-600 font-bold" : ""}`, children: "About" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("features"), className: `hover:text-blue-600 transition-colors ${currentScreen === "features" ? "text-blue-600 font-bold" : ""}`, children: "Features" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("exams"), className: `hover:text-blue-600 transition-colors ${currentScreen === "exams" ? "text-blue-600 font-bold" : ""}`, children: "Exam Guide" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("blog"), className: `hover:text-blue-600 transition-colors ${currentScreen === "blog" || currentScreen === "public-blog" ? "text-blue-600 font-bold" : ""}`, children: "Blog" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("contact"), className: `hover:text-blue-600 transition-colors ${currentScreen === "contact" ? "text-blue-600 font-bold" : ""}`, children: "Contact" })
@@ -70,6 +71,7 @@ const PublicLayout = ({ children, onNavigate, currentScreen, socialConfig }) => 
           /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { className: "text-white font-bold mb-4 uppercase tracking-wider text-xs", children: "Platform" }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "space-y-2 text-sm", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("about"), className: "hover:text-blue-400 transition-colors", children: "About Us" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("features"), className: "hover:text-blue-400 transition-colors", children: "Features" }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("exams"), className: "hover:text-blue-400 transition-colors", children: "Exam Guide" }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("blog"), className: "hover:text-blue-400 transition-colors", children: "Blog & Insights" }) })
           ] })

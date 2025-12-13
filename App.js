@@ -28,6 +28,7 @@ import { AboutUsScreen } from "./screens/AboutUsScreen.js";
 import { ContactUsScreen } from "./screens/ContactUsScreen.js";
 import { ExamGuideScreen } from "./screens/ExamGuideScreen.js";
 import { PrivacyPolicyScreen } from "./screens/PrivacyPolicyScreen.js";
+import { FeaturesScreen } from "./screens/FeaturesScreen.js";
 import { FocusScreen } from "./screens/FocusScreen.js";
 import { AnalyticsScreen } from "./screens/AnalyticsScreen.js";
 import { WellnessScreen } from "./screens/WellnessScreen.js";
@@ -38,11 +39,11 @@ import { AITutorChat } from "./components/AITutorChat.js";
 import { calculateNextRevision } from "./lib/utils.js";
 import { SYLLABUS_DATA } from "./lib/syllabusData.js";
 import { DEFAULT_CHAPTER_NOTES } from "./lib/chapterContent.js";
-import { MOCK_TESTS_DATA } from "./lib/mockTestsData.js";
+import { MOCK_TESTS_DATA, generateInitialQuestionBank } from "./lib/mockTestsData.js";
 import TrendingUp from "./node_modules/lucide-react/dist/esm/icons/trending-up.js";
 import Bell from "./node_modules/lucide-react/dist/esm/icons/bell.js";
 import LogOut from "./node_modules/lucide-react/dist/esm/icons/log-out.js";
-const APP_VERSION = "12.1";
+const APP_VERSION = "12.2";
 const ComingSoonScreen = ({ title, icon }) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center justify-center h-[70vh] text-center", children: [
   /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-6xl mb-4", children: icon }),
   /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold text-slate-900 mb-2", children: title }),
@@ -187,7 +188,12 @@ function App() {
       if (u.role === "PARENT" && u.linkedStudentId) loadLinkedStudent(u.linkedStudentId);
     }
     if (savedVideos) setVideoMap(JSON.parse(savedVideos));
-    if (savedQuestions) setQuestionBank(JSON.parse(savedQuestions));
+    if (savedQuestions) {
+      const parsed = JSON.parse(savedQuestions);
+      setQuestionBank(parsed.length > 0 ? parsed : generateInitialQuestionBank());
+    } else {
+      setQuestionBank(generateInitialQuestionBank());
+    }
     if (savedAdminTests) {
       const parsedTests = JSON.parse(savedAdminTests);
       setAdminTests(parsedTests.length > 0 ? parsedTests : MOCK_TESTS_DATA);
@@ -247,14 +253,8 @@ function App() {
             lastRevised: p.last_revised,
             revisionLevel: p.revision_level,
             nextRevisionDate: p.next_revision_date,
-            ex1Solved: p.ex1_solved,
-            ex1Total: p.ex1_total,
-            ex2Solved: p.ex2_solved,
-            ex2Total: p.ex2_total,
-            ex3Solved: p.ex3_solved,
-            ex3Total: p.ex3_total,
-            ex4Solved: p.ex4_solved,
-            ex4Total: p.ex4_total
+            solvedQuestions: p.solvedQuestions || []
+            // Assume backend might send this eventually
           };
         });
         setProgress(progMap);
@@ -331,7 +331,7 @@ function App() {
   };
   const updateTopicProgress = (topicId, updates) => {
     setProgress((prev) => {
-      const current = prev[topicId] || { topicId, status: "NOT_STARTED", lastRevised: null, revisionLevel: 0, nextRevisionDate: null };
+      const current = prev[topicId] || { topicId, status: "NOT_STARTED", lastRevised: null, revisionLevel: 0, nextRevisionDate: null, solvedQuestions: [] };
       if (updates.status === "COMPLETED" && current.status !== "COMPLETED") {
         const now = (/* @__PURE__ */ new Date()).toISOString();
         updates.lastRevised = now;
@@ -339,6 +339,16 @@ function App() {
         updates.revisionLevel = 0;
       }
       return { ...prev, [topicId]: { ...current, ...updates } };
+    });
+  };
+  const toggleQuestionSolved = (topicId, questionId) => {
+    setProgress((prev) => {
+      const current = prev[topicId] || { topicId, status: "NOT_STARTED", lastRevised: null, revisionLevel: 0, nextRevisionDate: null, solvedQuestions: [] };
+      const solved = current.solvedQuestions || [];
+      const newSolved = solved.includes(questionId) ? solved.filter((id) => id !== questionId) : [...solved, questionId];
+      let status = current.status;
+      if (newSolved.length > 0 && status === "NOT_STARTED") status = "IN_PROGRESS";
+      return { ...prev, [topicId]: { ...current, solvedQuestions: newSolved, status } };
     });
   };
   const handleRevisionComplete = (topicId) => {
@@ -368,7 +378,16 @@ function App() {
   const deleteQuestion = (id) => setQuestionBank((prev) => prev.filter((q) => q.id !== id));
   const createTest = (t) => setAdminTests((prev) => [...prev, t]);
   const deleteTest = (id) => setAdminTests((prev) => prev.filter((t) => t.id !== id));
-  const addTestAttempt = (attempt) => setTestAttempts((prev) => [...prev, attempt]);
+  const addTestAttempt = (attempt) => {
+    setTestAttempts((prev) => [...prev, attempt]);
+    if (user) {
+      fetch("/api/save_attempt.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...attempt, user_id: user.id })
+      }).catch(console.error);
+    }
+  };
   const addGoal = (text) => setGoals((prev) => [...prev, { id: Date.now().toString(), text, completed: false }]);
   const toggleGoal = (id) => setGoals((prev) => prev.map((g) => g.id === id ? { ...g, completed: !g.completed } : g));
   const addMistake = (m) => setMistakes((prev) => [{ ...m, id: Date.now().toString(), date: (/* @__PURE__ */ new Date()).toISOString() }, ...prev]);
@@ -441,6 +460,7 @@ function App() {
   if (currentScreen === "contact") return /* @__PURE__ */ jsxRuntimeExports.jsx(PublicLayout, { onNavigate: handleNavigation, currentScreen: "contact", socialConfig, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ContactUsScreen, {}) });
   if (currentScreen === "exams") return /* @__PURE__ */ jsxRuntimeExports.jsx(PublicLayout, { onNavigate: handleNavigation, currentScreen: "exams", socialConfig, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ExamGuideScreen, {}) });
   if (currentScreen === "privacy") return /* @__PURE__ */ jsxRuntimeExports.jsx(PublicLayout, { onNavigate: handleNavigation, currentScreen: "privacy", socialConfig, children: /* @__PURE__ */ jsxRuntimeExports.jsx(PrivacyPolicyScreen, {}) });
+  if (currentScreen === "features") return /* @__PURE__ */ jsxRuntimeExports.jsx(PublicLayout, { onNavigate: handleNavigation, currentScreen: "features", socialConfig, children: /* @__PURE__ */ jsxRuntimeExports.jsx(FeaturesScreen, {}) });
   if (!user) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(AuthScreen, { onLogin: handleLogin, onNavigate: handleNavigation, enableGoogleLogin, socialConfig });
   }
@@ -475,7 +495,8 @@ function App() {
           currentScreen === "tests" && /* @__PURE__ */ jsxRuntimeExports.jsx(TestScreen, { user, history: (linkedStudentData == null ? void 0 : linkedStudentData.tests) || [], addTestAttempt: () => {
           }, availableTests: adminTests }),
           currentScreen === "syllabus" && /* @__PURE__ */ jsxRuntimeExports.jsx(SyllabusScreen, { user, subjects: syllabus, progress: (linkedStudentData == null ? void 0 : linkedStudentData.progress) || {}, onUpdateProgress: () => {
-          }, readOnly: true, videoMap, chapterNotes }),
+          }, readOnly: true, videoMap, chapterNotes, questionBank, addTestAttempt: () => {
+          } }),
           currentScreen === "profile" && /* @__PURE__ */ jsxRuntimeExports.jsx(ProfileScreen, { user, onAcceptRequest: () => {
           }, onUpdateUser: (u) => {
             const updated = { ...user, ...u };
@@ -486,7 +507,7 @@ function App() {
         user.role === "STUDENT" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(AITutorChat, { isFullScreen: currentScreen === "ai-tutor" }),
           currentScreen === "dashboard" && /* @__PURE__ */ jsxRuntimeExports.jsx(DashboardScreen, { user, progress, testAttempts, goals, addGoal, toggleGoal, setScreen: setCurrentScreen }),
-          currentScreen === "syllabus" && /* @__PURE__ */ jsxRuntimeExports.jsx(SyllabusScreen, { user, subjects: syllabus, progress, onUpdateProgress: updateTopicProgress, videoMap, chapterNotes }),
+          currentScreen === "syllabus" && /* @__PURE__ */ jsxRuntimeExports.jsx(SyllabusScreen, { user, subjects: syllabus, progress, onUpdateProgress: updateTopicProgress, videoMap, chapterNotes, questionBank, onToggleQuestion: toggleQuestionSolved, addTestAttempt }),
           currentScreen === "revision" && /* @__PURE__ */ jsxRuntimeExports.jsx(RevisionScreen, { progress, handleRevisionComplete }),
           currentScreen === "tests" && /* @__PURE__ */ jsxRuntimeExports.jsx(TestScreen, { user, history: testAttempts, addTestAttempt, availableTests: adminTests }),
           currentScreen === "psychometric" && /* @__PURE__ */ jsxRuntimeExports.jsx(PsychometricScreen, { user }),

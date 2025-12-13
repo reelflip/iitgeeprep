@@ -908,6 +908,8 @@ const AuthScreen = ({ onLogin, onNavigate, enableGoogleLogin, socialConfig }) =>
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-8 text-center space-x-4 text-xs text-slate-400 font-medium flex flex-wrap justify-center gap-y-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("about"), className: "hover:text-blue-600 transition-colors", children: "About Us" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "•" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("features"), className: "hover:text-blue-600 transition-colors", children: "Features" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "•" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("blog"), className: "hover:text-blue-600 transition-colors", children: "Blog" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "•" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("exams"), className: "hover:text-blue-600 transition-colors", children: "Exams Guide" }),
@@ -916,7 +918,7 @@ const AuthScreen = ({ onLogin, onNavigate, enableGoogleLogin, socialConfig }) =>
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "•" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("contact"), className: "hover:text-blue-600 transition-colors", children: "Contact" })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center text-[10px] text-slate-300 mt-4", children: "v12.1" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center text-[10px] text-slate-300 mt-4", children: "v12.2" })
       ] })
     ] })
   ] });

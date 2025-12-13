@@ -10,6 +10,8 @@ import { PolarAngleAxis } from "../node_modules/recharts/es6/polar/PolarAngleAxi
 import { PolarRadiusAxis } from "../node_modules/recharts/es6/polar/PolarRadiusAxis.js";
 import { Radar } from "../node_modules/recharts/es6/polar/Radar.js";
 import { Tooltip } from "../node_modules/recharts/es6/component/Tooltip.js";
+import Users from "../node_modules/lucide-react/dist/esm/icons/users.js";
+import Lightbulb from "../node_modules/lucide-react/dist/esm/icons/lightbulb.js";
 import Sparkles from "../node_modules/lucide-react/dist/esm/icons/sparkles.js";
 import FileText from "../node_modules/lucide-react/dist/esm/icons/file-text.js";
 import CheckCircle from "../node_modules/lucide-react/dist/esm/icons/check-circle.js";
@@ -24,11 +26,13 @@ const PsychometricScreen = ({ user, reportData: initialReport }) => {
   const [responses, setResponses] = reactExports.useState({});
   const [analyzing, setAnalyzing] = reactExports.useState(false);
   const [report, setReport] = reactExports.useState(initialReport || null);
+  const isParent = user.role === "PARENT";
   reactExports.useEffect(() => {
     if (!report) {
       const checkReport = async () => {
         try {
-          const res = await fetch(`/api/get_psychometric.php?user_id=${user.id}`);
+          const targetId = isParent && user.linkedStudentId ? user.linkedStudentId : user.id;
+          const res = await fetch(`/api/get_psychometric.php?user_id=${targetId}`);
           if (res.ok) {
             const data = await res.json();
             if (data && data.report) {
@@ -36,13 +40,14 @@ const PsychometricScreen = ({ user, reportData: initialReport }) => {
             }
           }
         } catch (e) {
-          const saved = localStorage.getItem(`psych_report_${user.id}`);
+          const targetId = isParent && user.linkedStudentId ? user.linkedStudentId : user.id;
+          const saved = localStorage.getItem(`psych_report_${targetId}`);
           if (saved) setReport(JSON.parse(saved));
         }
       };
       checkReport();
     }
-  }, [user.id, report]);
+  }, [user.id, report, isParent, user.linkedStudentId]);
   const handleStart = () => setStarted(true);
   const handleAnswer = (qId, value) => {
     setResponses((prev) => ({ ...prev, [qId]: value }));
@@ -120,7 +125,7 @@ const PsychometricScreen = ({ user, reportData: initialReport }) => {
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-bold text-white", children: report.profileType })
           ] })
         ] }),
-        !initialReport && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        !isParent && !initialReport && /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "button",
           {
             onClick: handleRetake,
@@ -160,6 +165,19 @@ const PsychometricScreen = ({ user, reportData: initialReport }) => {
           ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "lg:col-span-2 space-y-6", children: [
+          isParent && report.parentTips && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-amber-50 rounded-xl border border-amber-200 p-6 shadow-sm animate-in slide-in-from-right-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-bold text-amber-900 text-lg mb-4 flex items-center", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-6 h-6 mr-2 text-amber-600" }),
+              " Parental Guidance Zone"
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-amber-800 mb-2 font-medium", children: "Based on your child's psychometric profile, here are personalized ways you can support them:" }),
+              report.parentTips.map((tip, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-3 bg-white p-3 rounded-lg border border-amber-100", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Lightbulb, { className: "w-5 h-5 text-amber-500 shrink-0 mt-0.5" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-slate-700 leading-relaxed", children: tip })
+              ] }, idx))
+            ] })
+          ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-violet-50 p-6 rounded-xl border border-violet-100", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-lg font-bold text-violet-900 mb-3 flex items-center", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { className: "w-5 h-5 mr-2" }),
@@ -187,7 +205,7 @@ const PsychometricScreen = ({ user, reportData: initialReport }) => {
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-xl border border-slate-200 p-6 shadow-sm", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-bold text-slate-800 text-lg mb-4 flex items-center", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { className: "w-5 h-5 mr-2 text-blue-600" }),
-              " Personalized Action Plan"
+              isParent ? "Student's Action Plan" : "Personalized Action Plan"
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "space-y-3", children: report.actionPlan.map((action, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { className: "flex items-start gap-3 text-sm text-slate-700 bg-slate-50 p-3 rounded-lg", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "bg-blue-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5", children: idx + 1 }),
@@ -197,6 +215,17 @@ const PsychometricScreen = ({ user, reportData: initialReport }) => {
         ] })
       ] })
     ] });
+  }
+  if (isParent && !report) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "max-w-2xl mx-auto py-12 px-4 animate-in fade-in", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-2xl shadow-xl border border-slate-200 p-12 text-center", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-10 h-10 text-slate-400" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-2xl font-bold text-slate-900 mb-2", children: "Assessment Pending" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-500 mb-6 max-w-md mx-auto", children: "The student has not taken the psychometric assessment yet. Once they complete it, you will see a detailed breakdown of their learning style, stress levels, and specific tips for how you can support them." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "inline-flex items-center text-sm font-bold text-blue-600 bg-blue-50 px-4 py-2 rounded-lg", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { className: "w-4 h-4 mr-2" }),
+        " Waiting for student action"
+      ] })
+    ] }) });
   }
   if (!started) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "max-w-3xl mx-auto py-12 px-4 animate-in fade-in slide-in-from-bottom-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden text-center p-12", children: [

@@ -9,8 +9,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
-$stmt = $conn->query("SELECT * FROM contact_messages ORDER BY created_at DESC");
-echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $stmt = $conn->query("SELECT * FROM contact_messages ORDER BY created_at DESC");
+    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+}
 ?>

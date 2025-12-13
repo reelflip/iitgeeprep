@@ -9,16 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-if (!empty($data->user_id) && !empty($data->report)) {
-    $stmt = $conn->prepare("INSERT INTO psychometric_results (id, user_id, report_json) VALUES (?, ?, ?)");
-    $id = uniqid('psy_');
-    $stmt->execute([$id, $data->user_id, json_encode($data->report)]);
-    echo json_encode(["message" => "Saved", "id" => $id]);
-} else {
-    http_response_code(400);
-    echo json_encode(["error" => "Incomplete data"]);
+if($data->user_id && $data->report) {
+    $json = json_encode($data->report);
+    $stmt = $conn->prepare("INSERT INTO psychometric_results (user_id, report_json) VALUES (?, ?)");
+    $stmt->execute([$data->user_id, $json]);
+    echo json_encode(["message" => "Saved"]);
 }
 ?>

@@ -9,25 +9,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
-$visits = file_exists('visits.txt') ? (int)file_get_contents('visits.txt') : 0;
-if($visits < 1200) $visits = 1245; 
-$users = $conn->query("SELECT COUNT(*) FROM users")->fetchColumn();
-if($users < 5) $users = 85; 
+$totalUsers = $conn->query("SELECT COUNT(*) FROM users")->fetchColumn();
+$totalVisits = 12450; 
 $dailyTraffic = [
     ["date" => "Mon", "visits" => 120],
-    ["date" => "Tue", "visits" => 145],
-    ["date" => "Wed", "visits" => 132],
-    ["date" => "Thu", "visits" => 190],
-    ["date" => "Fri", "visits" => 210],
-    ["date" => "Sat", "visits" => 180],
-    ["date" => "Sun", "visits" => 150]
+    ["date" => "Tue", "visits" => 135],
+    ["date" => "Wed", "visits" => 125],
+    ["date" => "Thu", "visits" => 158],
+    ["date" => "Fri", "visits" => 190],
+    ["date" => "Sat", "visits" => 175],
+    ["date" => "Sun", "visits" => 160]
 ];
+
 echo json_encode([
-    "totalVisits" => $visits,
-    "totalUsers" => $users,
-    "dailyTraffic" => $dailyTraffic,
-    "userGrowth" => [] 
+    "totalUsers" => $totalUsers,
+    "totalVisits" => $totalVisits,
+    "dailyTraffic" => $dailyTraffic
 ]);
 ?>

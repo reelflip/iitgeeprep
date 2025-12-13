@@ -9,12 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $stmt = $conn->prepare("INSERT INTO backlogs (id, user_id, title, subject_id, priority, status, deadline) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$data->id, $data->user_id, $data->title, $data->subjectId, $data->priority, $data->status, $data->deadline]);
+    $stmt = $conn->prepare("INSERT INTO backlogs (id, user_id, title, subject, priority, status, deadline) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([$data->id, $data->user_id, $data->title, $data->subject, $data->priority, $data->status, $data->deadline]);
+    echo json_encode(["message" => "Saved"]);
 }
-echo json_encode(["message" => "OK"]);
 ?>

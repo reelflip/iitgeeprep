@@ -9,20 +9,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-$uid = $data->user_id;
-$config = json_encode($data->config);
-$slots = json_encode($data->slots);
-$check = $conn->prepare("SELECT user_id FROM timetable_configs WHERE user_id = ?");
-$check->execute([$uid]);
-if($check->rowCount() > 0) {
-    $stmt = $conn->prepare("UPDATE timetable_configs SET config_json = ?, slots_json = ? WHERE user_id = ?");
-    $stmt->execute([$config, $slots, $uid]);
-} else {
-    $stmt = $conn->prepare("INSERT INTO timetable_configs (user_id, config_json, slots_json) VALUES (?, ?, ?)");
-    $stmt->execute([$uid, $config, $slots]);
+if($data->user_id) {
+    $config = json_encode($data->config);
+    $slots = json_encode($data->slots);
+    $stmt = $conn->prepare("INSERT INTO timetable_configs (user_id, config_json, slots_json) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE config_json = ?, slots_json = ?");
+    $stmt->execute([$data->user_id, $config, $slots, $config, $slots]);
+    echo json_encode(["message" => "Saved"]);
 }
-echo json_encode(["message" => "Saved"]);
 ?>

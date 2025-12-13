@@ -1,9 +1,12 @@
 import { j as jsxRuntimeExports } from "../node_modules/react/jsx-runtime.js";
 import { r as reactExports } from "../node_modules/react/index.js";
+import { PsychometricScreen } from "./PsychometricScreen.js";
+import Brain from "../node_modules/lucide-react/dist/esm/icons/brain.js";
 const ParentFamilyScreen = ({ user, onSendRequest, linkedData }) => {
   const [searchId, setSearchId] = reactExports.useState("");
   const [statusMsg, setStatusMsg] = reactExports.useState(null);
   const [loading, setLoading] = reactExports.useState(false);
+  const [viewingPsychReport, setViewingPsychReport] = reactExports.useState(false);
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!searchId.trim()) return;
@@ -20,7 +23,21 @@ const ParentFamilyScreen = ({ user, onSendRequest, linkedData }) => {
   };
   const completedTopics = linkedData ? Object.values(linkedData.progress).filter((p) => p.status === "COMPLETED").length : 0;
   const recentTest = linkedData && linkedData.tests.length > 0 ? linkedData.tests[linkedData.tests.length - 1] : null;
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6", children: [
+  if (viewingPsychReport && user.linkedStudentId) {
+    const studentUser = { ...user, id: user.linkedStudentId, role: "STUDENT" };
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: () => setViewingPsychReport(false),
+          className: "text-sm font-bold text-slate-500 hover:text-blue-600 flex items-center gap-2",
+          children: "← Back to Family Dashboard"
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(PsychometricScreen, { user: studentUser })
+    ] });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6 animate-in fade-in slide-in-from-bottom-4", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-2xl font-bold text-slate-900", children: "Family Connections" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-500", children: "Manage connected student accounts." })
@@ -39,15 +56,28 @@ const ParentFamilyScreen = ({ user, onSendRequest, linkedData }) => {
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full", children: "Connected" })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 grid grid-cols-2 gap-6", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block text-3xl font-bold text-slate-800", children: completedTopics }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-slate-500 uppercase font-bold", children: "Topics Completed" })
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-6 mb-6", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center p-4 bg-slate-50 rounded-lg border border-slate-100", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block text-3xl font-bold text-slate-800", children: completedTopics }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-slate-500 uppercase font-bold", children: "Topics Completed" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center p-4 bg-slate-50 rounded-lg border border-slate-100", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block text-3xl font-bold text-slate-800", children: recentTest ? `${recentTest.score}/${recentTest.totalMarks}` : "N/A" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-slate-500 uppercase font-bold", children: "Recent Test Score" })
+          ] })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block text-3xl font-bold text-slate-800", children: recentTest ? `${recentTest.score}/${recentTest.totalMarks}` : "N/A" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-slate-500 uppercase font-bold", children: "Recent Test" })
-        ] })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            onClick: () => setViewingPsychReport(true),
+            className: "flex-1 bg-violet-600 text-white font-bold py-3 rounded-lg hover:bg-violet-700 transition-colors flex items-center justify-center gap-2 shadow-sm",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Brain, { className: "w-5 h-5" }),
+              " View Psychometric Profile"
+            ]
+          }
+        ) })
       ] })
     ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-xl border border-slate-200 p-8 shadow-sm text-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl", children: "🔍" }),

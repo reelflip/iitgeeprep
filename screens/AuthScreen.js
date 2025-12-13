@@ -916,7 +916,7 @@ const AuthScreen = ({ onLogin, onNavigate, enableGoogleLogin, socialConfig }) =>
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "•" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("contact"), className: "hover:text-blue-600 transition-colors", children: "Contact" })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center text-[10px] text-slate-300 mt-4", children: "v12.0" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center text-[10px] text-slate-300 mt-4", children: "v12.1" })
       ] })
     ] })
   ] });

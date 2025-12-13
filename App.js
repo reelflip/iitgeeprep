@@ -32,6 +32,7 @@ import { FocusScreen } from "./screens/FocusScreen.js";
 import { AnalyticsScreen } from "./screens/AnalyticsScreen.js";
 import { WellnessScreen } from "./screens/WellnessScreen.js";
 import { BacklogScreen } from "./screens/BacklogScreen.js";
+import { PsychometricScreen } from "./screens/PsychometricScreen.js";
 import { PublicLayout } from "./components/PublicLayout.js";
 import { AITutorChat } from "./components/AITutorChat.js";
 import { calculateNextRevision } from "./lib/utils.js";
@@ -41,7 +42,7 @@ import { MOCK_TESTS_DATA } from "./lib/mockTestsData.js";
 import TrendingUp from "./node_modules/lucide-react/dist/esm/icons/trending-up.js";
 import Bell from "./node_modules/lucide-react/dist/esm/icons/bell.js";
 import LogOut from "./node_modules/lucide-react/dist/esm/icons/log-out.js";
-const APP_VERSION = "12.0";
+const APP_VERSION = "12.1";
 const ComingSoonScreen = ({ title, icon }) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center justify-center h-[70vh] text-center", children: [
   /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-6xl mb-4", children: icon }),
   /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold text-slate-900 mb-2", children: title }),
@@ -488,6 +489,7 @@ function App() {
           currentScreen === "syllabus" && /* @__PURE__ */ jsxRuntimeExports.jsx(SyllabusScreen, { user, subjects: syllabus, progress, onUpdateProgress: updateTopicProgress, videoMap, chapterNotes }),
           currentScreen === "revision" && /* @__PURE__ */ jsxRuntimeExports.jsx(RevisionScreen, { progress, handleRevisionComplete }),
           currentScreen === "tests" && /* @__PURE__ */ jsxRuntimeExports.jsx(TestScreen, { user, history: testAttempts, addTestAttempt, availableTests: adminTests }),
+          currentScreen === "psychometric" && /* @__PURE__ */ jsxRuntimeExports.jsx(PsychometricScreen, { user }),
           currentScreen === "timetable" && /* @__PURE__ */ jsxRuntimeExports.jsx(TimetableScreen, { user, savedConfig: timetableData == null ? void 0 : timetableData.config, savedSlots: timetableData == null ? void 0 : timetableData.slots, onSave: saveTimetable, progress }),
           currentScreen === "focus" && /* @__PURE__ */ jsxRuntimeExports.jsx(FocusScreen, {}),
           currentScreen === "ai-tutor" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-full hidden md:block" }),

@@ -59,7 +59,7 @@ const DeploymentScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold", children: "System Deployment Center" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-1 rounded-md bg-slate-700 border border-slate-600 text-xs font-mono text-cyan-400 shadow-sm", children: "v12.0 (Stable)" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-1 rounded-md bg-slate-700 border border-slate-600 text-xs font-mono text-cyan-400 shadow-sm", children: "v12.1 (Stable)" })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-lg max-w-xl", children: "Download the complete backend kit and follow the structured guide to go live." })
       ] }),

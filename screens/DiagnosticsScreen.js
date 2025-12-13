@@ -32,7 +32,8 @@ const REQUIRED_SCHEMA = [
   "backlogs",
   "timetable_configs",
   "system_settings",
-  "chapter_notes"
+  "chapter_notes",
+  "psychometric_results"
 ];
 const DIAGNOSTICS_DATA = {
   "metadata": {
@@ -257,6 +258,40 @@ const DiagnosticsScreen = () => {
         tests2.push({ description: "should handle note operations", passed: false, duration: 0, error: e.message });
       }
       return tests2;
+    },
+    psychometricFlow: async () => {
+      const tests2 = [];
+      const userId = "diag_psycho_user";
+      try {
+        const start = performance.now();
+        const mockReport = {
+          date: (/* @__PURE__ */ new Date()).toISOString(),
+          scores: { "Stress": 50 },
+          overallScore: 75,
+          profileType: "Test User",
+          summary: "Diagnostics Test",
+          insights: [],
+          actionPlan: [],
+          detailedAnalysis: "Diagnostics Detailed Analysis"
+        };
+        await fetch("/api/save_psychometric.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: userId, report: mockReport })
+        });
+        tests2.push({ description: "should save assessment result", passed: true, duration: performance.now() - start });
+        const start2 = performance.now();
+        const res = await fetch(`/api/get_psychometric.php?user_id=${userId}`);
+        const data = await res.json();
+        if (data && data.report && data.report.profileType === "Test User") {
+          tests2.push({ description: "should retrieve assessment result", passed: true, duration: performance.now() - start2 });
+        } else {
+          tests2.push({ description: "should retrieve assessment result", passed: false, duration: 0, error: "Data mismatch" });
+        }
+      } catch (e) {
+        tests2.push({ description: "should handle psychometric flow", passed: false, duration: 0, error: e.message });
+      }
+      return tests2;
     }
   };
   const suites = [
@@ -265,7 +300,8 @@ const DiagnosticsScreen = () => {
     ["21. [Student] Action Verification", dynamicResults["studentActions"] || []],
     ["22. [AI] System Connectivity", dynamicResults["aiSystem"] || []],
     ["23. [DB] Large Data Storage", dynamicResults["longTextStorage"] || []],
-    ["24. [Content] Notes System", dynamicResults["notesSystem"] || []]
+    ["24. [Content] Notes System", dynamicResults["notesSystem"] || []],
+    ["25. [Module] Psychometric Test", dynamicResults["psychometricFlow"] || []]
   ];
   const handleStartScan = async () => {
     setScanStatus("RUNNING");
@@ -286,6 +322,8 @@ const DiagnosticsScreen = () => {
         await performTest("longTextStorage", tests.longTextStorage);
         setScanIndex(staticCount + 4);
         await performTest("notesSystem", tests.notesSystem);
+        setScanIndex(staticCount + 5);
+        await performTest("psychometricFlow", tests.psychometricFlow);
         setScanStatus("COMPLETE");
       } else {
         setScanIndex((prev) => prev + 1);

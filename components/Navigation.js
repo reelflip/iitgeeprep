@@ -7,6 +7,7 @@ import LayoutDashboard from "../node_modules/lucide-react/dist/esm/icons/layout-
 import BookOpen from "../node_modules/lucide-react/dist/esm/icons/book-open.js";
 import Bot from "../node_modules/lucide-react/dist/esm/icons/bot.js";
 import FileText from "../node_modules/lucide-react/dist/esm/icons/file-text.js";
+import Brain from "../node_modules/lucide-react/dist/esm/icons/brain.js";
 import Timer from "../node_modules/lucide-react/dist/esm/icons/timer.js";
 import BarChart2 from "../node_modules/lucide-react/dist/esm/icons/bar-chart-2.js";
 import Calendar from "../node_modules/lucide-react/dist/esm/icons/calendar.js";
@@ -28,6 +29,7 @@ const STUDENT_MENU = [
   { id: "syllabus", icon: BookOpen, label: "Syllabus" },
   { id: "ai-tutor", icon: Bot, label: "AI Tutor" },
   { id: "tests", icon: FileText, label: "Tests" },
+  { id: "psychometric", icon: Brain, label: "Assessment" },
   { id: "focus", icon: Timer, label: "Focus" },
   { id: "analytics", icon: BarChart2, label: "Analytics" },
   { id: "timetable", icon: Calendar, label: "Timetable" },
@@ -93,7 +95,7 @@ const Navigation = ({ currentScreen, setScreen, logout, user }) => {
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mt-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1.5 py-0.5 bg-slate-800 rounded", children: user.role }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-slate-600", children: "• v12.0" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-slate-600", children: "• v12.1" })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { className: "flex-1 space-y-1 pb-4", children: menuItems.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(

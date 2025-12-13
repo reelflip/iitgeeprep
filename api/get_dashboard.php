@@ -30,20 +30,17 @@ foreach($attempts as &$attempt) {
     
     $detailedResults = [];
     foreach($details as $d) {
-        // Fetch Question Metadata for subject/topic info
         $qStmt = $conn->prepare("SELECT subject_id, topic_id FROM questions WHERE id = ?");
         $qStmt->execute([$d['question_id']]);
         $qData = $qStmt->fetch(PDO::FETCH_ASSOC);
         
-        if($qData) {
-            $detailedResults[] = [
-                "questionId" => $d['question_id'],
-                "subjectId" => $qData['subject_id'],
-                "topicId" => $qData['topic_id'],
-                "status" => $d['status'],
-                "selectedOptionIndex" => $d['selected_option']
-            ];
-        }
+        $detailedResults[] = [
+            "questionId" => $d['question_id'],
+            "subjectId" => $qData ? $qData['subject_id'] : 'Unknown',
+            "topicId" => $qData ? $qData['topic_id'] : 'Unknown',
+            "status" => $d['status'],
+            "selectedOptionIndex" => $d['selected_option']
+        ];
     }
     $attempt['detailedResults'] = $detailedResults;
 }

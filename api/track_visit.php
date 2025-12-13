@@ -9,10 +9,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
-$file = 'visits.txt';
-$count = file_exists($file) ? (int)file_get_contents($file) : 0;
-file_put_contents($file, $count + 1);
-echo json_encode(["status" => "ok"]);
+$stmt = $conn->query("SELECT setting_value FROM system_settings WHERE setting_key = 'total_visits'");
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($row) {
+    $newVal = intval($row['setting_value']) + 1;
+    $conn->prepare("UPDATE system_settings SET setting_value = ? WHERE setting_key = 'total_visits'")->execute([$newVal]);
+} else {
+    $conn->prepare("INSERT INTO system_settings (setting_key, setting_value) VALUES ('total_visits', '1')")->execute();
+}
+echo json_encode(["status" => "tracked"]);
 ?>

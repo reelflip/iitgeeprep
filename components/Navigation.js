@@ -17,6 +17,7 @@ import Layers from "../node_modules/lucide-react/dist/esm/icons/layers.js";
 import ListTodo from "../node_modules/lucide-react/dist/esm/icons/list-todo.js";
 import Lightbulb from "../node_modules/lucide-react/dist/esm/icons/lightbulb.js";
 import Heart from "../node_modules/lucide-react/dist/esm/icons/heart.js";
+import Star from "../node_modules/lucide-react/dist/esm/icons/star.js";
 import User from "../node_modules/lucide-react/dist/esm/icons/user.js";
 import Users from "../node_modules/lucide-react/dist/esm/icons/users.js";
 import Settings from "../node_modules/lucide-react/dist/esm/icons/settings.js";
@@ -39,6 +40,8 @@ const STUDENT_MENU = [
   { id: "backlogs", icon: ListTodo, label: "Backlogs" },
   { id: "hacks", icon: Lightbulb, label: "Hacks" },
   { id: "wellness", icon: Heart, label: "Wellness" },
+  { id: "features", icon: Star, label: "Features" },
+  // Added Features Link
   { id: "profile", icon: User, label: "Profile" }
 ];
 const ADMIN_MENU = [
@@ -95,7 +98,7 @@ const Navigation = ({ currentScreen, setScreen, logout, user }) => {
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mt-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1.5 py-0.5 bg-slate-800 rounded", children: user.role }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-slate-600", children: "• v12.2" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-slate-600", children: "• v12.3" })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { className: "flex-1 space-y-1 pb-4", children: menuItems.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(

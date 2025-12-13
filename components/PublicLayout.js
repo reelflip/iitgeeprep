@@ -1,55 +1,95 @@
 import { j as jsxRuntimeExports } from "../node_modules/react/jsx-runtime.js";
+import { r as reactExports } from "../node_modules/react/index.js";
 import TrendingUp from "../node_modules/lucide-react/dist/esm/icons/trending-up.js";
 import ArrowLeft from "../node_modules/lucide-react/dist/esm/icons/arrow-left.js";
 import LogIn from "../node_modules/lucide-react/dist/esm/icons/log-in.js";
+import X from "../node_modules/lucide-react/dist/esm/icons/x.js";
+import Menu from "../node_modules/lucide-react/dist/esm/icons/menu.js";
 import Instagram from "../node_modules/lucide-react/dist/esm/icons/instagram.js";
 import Facebook from "../node_modules/lucide-react/dist/esm/icons/facebook.js";
 import Twitter from "../node_modules/lucide-react/dist/esm/icons/twitter.js";
 import Youtube from "../node_modules/lucide-react/dist/esm/icons/youtube.js";
 import Linkedin from "../node_modules/lucide-react/dist/esm/icons/linkedin.js";
 const PublicLayout = ({ children, onNavigate, currentScreen, socialConfig }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = reactExports.useState(false);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-screen bg-slate-50 font-inter flex flex-col", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("header", { className: "bg-white border-b border-slate-200 sticky top-0 z-50", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center space-x-2 cursor-pointer", onClick: () => onNavigate("dashboard"), children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-8 h-8 bg-slate-900 rounded-full flex items-center justify-center shadow-lg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "w-5 h-5 text-blue-400" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-bold text-lg text-slate-900 tracking-tight", children: [
-          "IIT",
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-blue-600", children: "JEE" }),
-          "Prep"
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "bg-white border-b border-slate-200 sticky top-0 z-50", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center space-x-2 cursor-pointer", onClick: () => onNavigate("dashboard"), children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-8 h-8 bg-slate-900 rounded-full flex items-center justify-center shadow-lg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "w-5 h-5 text-blue-400" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-bold text-lg text-slate-900 tracking-tight", children: [
+            "IIT",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-blue-600", children: "JEE" }),
+            "Prep"
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("about"), className: `hover:text-blue-600 transition-colors ${currentScreen === "about" ? "text-blue-600 font-bold" : ""}`, children: "About" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("features"), className: `hover:text-blue-600 transition-colors ${currentScreen === "features" ? "text-blue-600 font-bold" : ""}`, children: "Features" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("exams"), className: `hover:text-blue-600 transition-colors ${currentScreen === "exams" ? "text-blue-600 font-bold" : ""}`, children: "Exam Guide" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("blog"), className: `hover:text-blue-600 transition-colors ${currentScreen === "blog" || currentScreen === "public-blog" ? "text-blue-600 font-bold" : ""}`, children: "Blog" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("contact"), className: `hover:text-blue-600 transition-colors ${currentScreen === "contact" ? "text-blue-600 font-bold" : ""}`, children: "Contact" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "button",
+            {
+              onClick: () => onNavigate("dashboard"),
+              className: "hidden md:flex text-sm font-bold text-slate-600 hover:text-slate-900 items-center",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { className: "w-4 h-4 mr-1" }),
+                " Back"
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "button",
+            {
+              onClick: () => onNavigate("dashboard"),
+              className: "hidden md:flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md hover:bg-blue-700 transition-all active:scale-95",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "w-4 h-4 mr-1.5" }),
+                " Login"
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              className: "md:hidden p-2 text-slate-600",
+              onClick: () => setMobileMenuOpen(!mobileMenuOpen),
+              children: mobileMenuOpen ? /* @__PURE__ */ jsxRuntimeExports.jsx(X, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx(Menu, {})
+            }
+          )
         ] })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("about"), className: `hover:text-blue-600 transition-colors ${currentScreen === "about" ? "text-blue-600 font-bold" : ""}`, children: "About" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("features"), className: `hover:text-blue-600 transition-colors ${currentScreen === "features" ? "text-blue-600 font-bold" : ""}`, children: "Features" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("exams"), className: `hover:text-blue-600 transition-colors ${currentScreen === "exams" ? "text-blue-600 font-bold" : ""}`, children: "Exam Guide" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("blog"), className: `hover:text-blue-600 transition-colors ${currentScreen === "blog" || currentScreen === "public-blog" ? "text-blue-600 font-bold" : ""}`, children: "Blog" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("contact"), className: `hover:text-blue-600 transition-colors ${currentScreen === "contact" ? "text-blue-600 font-bold" : ""}`, children: "Contact" })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "button",
-          {
-            onClick: () => onNavigate("dashboard"),
-            className: "text-sm font-bold text-slate-600 hover:text-slate-900 flex items-center",
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { className: "w-4 h-4 mr-1" }),
-              " Back"
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "button",
-          {
-            onClick: () => onNavigate("dashboard"),
-            className: "hidden md:flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md hover:bg-blue-700 transition-all active:scale-95",
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "w-4 h-4 mr-1.5" }),
-              " Login"
-            ]
-          }
-        )
+      mobileMenuOpen && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "md:hidden bg-white border-t border-slate-100 absolute w-full left-0 top-16 shadow-xl animate-in slide-in-from-top-2 p-4 flex flex-col space-y-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => {
+          onNavigate("about");
+          setMobileMenuOpen(false);
+        }, className: "text-left font-medium text-slate-700 py-2 border-b border-slate-50", children: "About Us" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => {
+          onNavigate("features");
+          setMobileMenuOpen(false);
+        }, className: "text-left font-medium text-slate-700 py-2 border-b border-slate-50", children: "Features" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => {
+          onNavigate("exams");
+          setMobileMenuOpen(false);
+        }, className: "text-left font-medium text-slate-700 py-2 border-b border-slate-50", children: "Exam Guide" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => {
+          onNavigate("blog");
+          setMobileMenuOpen(false);
+        }, className: "text-left font-medium text-slate-700 py-2 border-b border-slate-50", children: "Blog" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => {
+          onNavigate("contact");
+          setMobileMenuOpen(false);
+        }, className: "text-left font-medium text-slate-700 py-2 border-b border-slate-50", children: "Contact" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 pt-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("dashboard"), className: "flex-1 bg-slate-100 text-slate-700 py-3 rounded-lg font-bold", children: "Back" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("dashboard"), className: "flex-1 bg-blue-600 text-white py-3 rounded-lg font-bold", children: "Login" })
+        ] })
       ] })
-    ] }) }),
+    ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("main", { className: "flex-1 w-full", children }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: "bg-slate-900 text-slate-400 py-12 border-t border-slate-800", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8", children: [

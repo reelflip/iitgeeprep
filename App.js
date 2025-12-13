@@ -43,7 +43,7 @@ import { MOCK_TESTS_DATA, generateInitialQuestionBank } from "./lib/mockTestsDat
 import TrendingUp from "./node_modules/lucide-react/dist/esm/icons/trending-up.js";
 import Bell from "./node_modules/lucide-react/dist/esm/icons/bell.js";
 import LogOut from "./node_modules/lucide-react/dist/esm/icons/log-out.js";
-const APP_VERSION = "12.2";
+const APP_VERSION = "12.3";
 const ComingSoonScreen = ({ title, icon }) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center justify-center h-[70vh] text-center", children: [
   /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-6xl mb-4", children: icon }),
   /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold text-slate-900 mb-2", children: title }),
@@ -520,6 +520,7 @@ function App() {
           currentScreen === "hacks" && /* @__PURE__ */ jsxRuntimeExports.jsx(HacksScreen, { hacks }),
           currentScreen === "analytics" && /* @__PURE__ */ jsxRuntimeExports.jsx(AnalyticsScreen, { user, progress, testAttempts }),
           currentScreen === "wellness" && /* @__PURE__ */ jsxRuntimeExports.jsx(WellnessScreen, {}),
+          currentScreen === "features" && /* @__PURE__ */ jsxRuntimeExports.jsx(FeaturesScreen, {}),
           currentScreen === "profile" && /* @__PURE__ */ jsxRuntimeExports.jsx(ProfileScreen, { user, onAcceptRequest: acceptConnectionRequest, onUpdateUser: (u) => {
             const updated = { ...user, ...u };
             setUser(updated);

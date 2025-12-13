@@ -18,9 +18,35 @@ $stmt = $conn->prepare("SELECT * FROM topic_progress WHERE user_id = ?");
 $stmt->execute([$user_id]);
 $progress = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $conn->prepare("SELECT * FROM test_attempts WHERE user_id = ? ORDER BY date DESC LIMIT 5");
+// Updated to fetch more attempts and include details for Analytics
+$stmt = $conn->prepare("SELECT * FROM test_attempts WHERE user_id = ? ORDER BY date DESC LIMIT 50");
 $stmt->execute([$user_id]);
 $attempts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+foreach($attempts as &$attempt) {
+    $dStmt = $conn->prepare("SELECT * FROM attempt_details WHERE attempt_id = ?");
+    $dStmt->execute([$attempt['id']]);
+    $details = $dStmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $detailedResults = [];
+    foreach($details as $d) {
+        // Fetch Question Metadata for subject/topic info
+        $qStmt = $conn->prepare("SELECT subject_id, topic_id FROM questions WHERE id = ?");
+        $qStmt->execute([$d['question_id']]);
+        $qData = $qStmt->fetch(PDO::FETCH_ASSOC);
+        
+        if($qData) {
+            $detailedResults[] = [
+                "questionId" => $d['question_id'],
+                "subjectId" => $qData['subject_id'],
+                "topicId" => $qData['topic_id'],
+                "status" => $d['status'],
+                "selectedOptionIndex" => $d['selected_option']
+            ];
+        }
+    }
+    $attempt['detailedResults'] = $detailedResults;
+}
 
 $stmt = $conn->prepare("SELECT * FROM goals WHERE user_id = ? AND date(created_at) = CURDATE()");
 $stmt->execute([$user_id]);

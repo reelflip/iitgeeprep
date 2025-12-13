@@ -17,7 +17,7 @@ const FeaturesScreen = () => {
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-slate-900 text-white pt-20 pb-24 px-4 relative overflow-hidden", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute top-0 right-0 w-1/2 h-full opacity-10 bg-gradient-to-l from-blue-600 to-transparent pointer-events-none" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-5xl mx-auto text-center relative z-10", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "inline-block py-1 px-3 rounded-full bg-blue-900 text-blue-200 text-xs font-bold uppercase tracking-wider mb-4 border border-blue-800", children: "v12.2 Platform Overview" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "inline-block py-1 px-3 rounded-full bg-blue-900 text-blue-200 text-xs font-bold uppercase tracking-wider mb-4 border border-blue-800", children: "v12.5 Platform Overview" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "text-4xl md:text-6xl font-extrabold tracking-tight leading-tight mb-6", children: [
           "The Complete Toolkit for ",
           /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),

@@ -43,7 +43,7 @@ import { MOCK_TESTS_DATA, generateInitialQuestionBank } from "./lib/mockTestsDat
 import TrendingUp from "./node_modules/lucide-react/dist/esm/icons/trending-up.js";
 import Bell from "./node_modules/lucide-react/dist/esm/icons/bell.js";
 import LogOut from "./node_modules/lucide-react/dist/esm/icons/log-out.js";
-const APP_VERSION = "12.3";
+const APP_VERSION = "12.5";
 const ComingSoonScreen = ({ title, icon }) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center justify-center h-[70vh] text-center", children: [
   /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-6xl mb-4", children: icon }),
   /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold text-slate-900 mb-2", children: title }),
@@ -61,9 +61,75 @@ const saveUserToDB = (user) => {
   localStorage.setItem("iitjee_users_db", JSON.stringify(db));
 };
 const findUserById = (id) => getUserDB().find((u) => u.id === id);
+const validateScreen = (role, screen) => {
+  const studentScreens = [
+    "dashboard",
+    "syllabus",
+    "ai-tutor",
+    "tests",
+    "psychometric",
+    "focus",
+    "analytics",
+    "timetable",
+    "revision",
+    "mistakes",
+    "flashcards",
+    "backlogs",
+    "hacks",
+    "wellness",
+    "features",
+    "profile"
+  ];
+  const parentScreens = [
+    "dashboard",
+    "family",
+    "analytics",
+    "tests",
+    "syllabus",
+    "profile"
+  ];
+  const adminScreens = [
+    "overview",
+    "users",
+    "syllabus_admin",
+    "inbox",
+    "content_admin",
+    "content",
+    "blog_admin",
+    "tests",
+    "tests_admin",
+    "analytics",
+    "diagnostics",
+    "system",
+    "deployment"
+  ];
+  const publicScreens = [
+    "about",
+    "contact",
+    "exams",
+    "blog",
+    "public-blog",
+    "privacy",
+    "features"
+  ];
+  if (publicScreens.includes(screen)) return screen;
+  switch (role) {
+    case "STUDENT":
+      return studentScreens.includes(screen) ? screen : "dashboard";
+    case "PARENT":
+      return parentScreens.includes(screen) ? screen : "dashboard";
+    case "ADMIN":
+      return adminScreens.includes(screen) ? screen : "overview";
+    default:
+      return "dashboard";
+  }
+};
 function App() {
   const [user, setUser] = reactExports.useState(null);
-  const [currentScreen, setCurrentScreen] = reactExports.useState("dashboard");
+  const [currentScreen, setCurrentScreen] = reactExports.useState(() => {
+    const saved = localStorage.getItem("iitjee_last_screen");
+    return saved || "dashboard";
+  });
   const [enableGoogleLogin, setEnableGoogleLogin] = reactExports.useState(false);
   const [gaMeasurementId, setGaMeasurementId] = reactExports.useState(null);
   const [socialConfig, setSocialConfig] = reactExports.useState({ enabled: false });
@@ -120,6 +186,19 @@ function App() {
       setAdminTests(MOCK_TESTS_DATA);
     }
   }, []);
+  reactExports.useEffect(() => {
+    if (user) {
+      const safeScreen = validateScreen(user.role, currentScreen);
+      if (safeScreen !== currentScreen) {
+        setCurrentScreen(safeScreen);
+      }
+    }
+  }, [user, currentScreen]);
+  reactExports.useEffect(() => {
+    if (user) {
+      localStorage.setItem("iitjee_last_screen", currentScreen);
+    }
+  }, [currentScreen, user]);
   reactExports.useEffect(() => {
     const initSettings = async () => {
       try {
@@ -289,13 +368,11 @@ function App() {
     } else {
       newUser = { ...userData, id: userData.id || Math.floor(1e5 + Math.random() * 9e5).toString(), notifications: [] };
     }
+    const safeScreen = validateScreen(newUser.role, currentScreen);
+    setCurrentScreen(safeScreen);
     setUser(newUser);
     fetchRemoteData(newUser.id);
-    if (newUser.role === "ADMIN") setCurrentScreen("overview");
-    else if (newUser.role === "PARENT") {
-      setCurrentScreen("dashboard");
-      if (newUser.linkedStudentId) loadLinkedStudent(newUser.linkedStudentId);
-    } else setCurrentScreen("dashboard");
+    if (newUser.role === "PARENT" && newUser.linkedStudentId) loadLinkedStudent(newUser.linkedStudentId);
   };
   const handleLogout = () => {
     setUser(null);

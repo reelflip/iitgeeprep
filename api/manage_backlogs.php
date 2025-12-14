@@ -16,5 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $conn->prepare("INSERT INTO backlogs (id, user_id, title, subject, priority, status, deadline) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->execute([$data->id, $data->user_id, $data->title, $data->subject, $data->priority, $data->status, $data->deadline]);
     echo json_encode(["message" => "Saved"]);
+} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $conn->prepare("DELETE FROM backlogs WHERE id = ?")->execute([$_GET['id']]);
+    echo json_encode(["message" => "Deleted"]);
 }
 ?>

@@ -12,20 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-$method = $_SERVER['REQUEST_METHOD'];
-$user_id = $_GET['user_id'] ?? $data->user_id ?? null;
-
-if ($method === 'GET' && $user_id) {
-    $stmt = $conn->prepare("SELECT * FROM goals WHERE user_id = ? AND date(created_at) = CURDATE()");
-    $stmt->execute([$user_id]);
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['user_id'])) {
+    $stmt = $conn->prepare("SELECT * FROM goals WHERE user_id = ?");
+    $stmt->execute([$_GET['user_id']]);
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-} elseif ($method === 'POST') {
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $conn->prepare("INSERT INTO goals (id, user_id, text, completed) VALUES (?, ?, ?, 0)");
     $stmt->execute([$data->id, $data->user_id, $data->text]);
     echo json_encode(["message" => "Goal Added"]);
-} elseif ($method === 'PUT') {
-    $stmt = $conn->prepare("UPDATE goals SET completed = ? WHERE id = ?");
-    $stmt->execute([$data->completed ? 1 : 0, $data->id]);
-    echo json_encode(["message" => "Updated"]);
+} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $conn->prepare("DELETE FROM goals WHERE id = ?")->execute([$_GET['id']]);
+    echo json_encode(["message" => "Deleted"]);
 }
 ?>

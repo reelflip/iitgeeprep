@@ -12,17 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-$stmt = $conn->prepare("INSERT INTO test_attempts (id, user_id, test_id, score, total_marks, accuracy, correct_count, incorrect_count, unattempted_count, topic_id, difficulty) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-$id = uniqid('att_');
-$stmt->execute([
-    $id, $data->user_id, $data->testId, $data->score, $data->totalQuestions*4, $data->accuracy_percent, 
-    $data->correctCount, $data->incorrectCount, $data->unattempted_count, $data->topicId ?? NULL, $data->difficulty ?? 'MIXED'
-]);
-if(!empty($data->detailedResults)) {
-    $dStmt = $conn->prepare("INSERT INTO attempt_details (attempt_id, question_id, status, selected_option) VALUES (?, ?, ?, ?)");
-    foreach($data->detailedResults as $res) {
-        $dStmt->execute([$id, $res->questionId, $res->status, $res->selectedOptionIndex]);
-    }
+if($data->user_id) {
+    $stmt = $conn->prepare("INSERT INTO test_attempts (id, user_id, test_id, score, total_marks, accuracy, detailed_results) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([$data->id, $data->user_id, $data->testId, $data->score, $data->totalMarks, $data->accuracy_percent, json_encode($data->detailedResults)]);
+    echo json_encode(["message" => "Saved"]);
 }
-echo json_encode(["message" => "Saved", "id" => $id]);
 ?>

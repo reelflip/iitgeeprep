@@ -13,17 +13,14 @@ include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
 $method = $_SERVER['REQUEST_METHOD'];
-
 if ($method === 'GET') {
     $stmt = $conn->query("SELECT * FROM topics");
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-}
-elseif ($method === 'POST') {
+} elseif ($method === 'POST') {
     $stmt = $conn->prepare("INSERT INTO topics (id, name, chapter, subject) VALUES (?, ?, ?, ?)");
     $stmt->execute([$data->id, $data->name, $data->chapter, $data->subject]);
     echo json_encode(["message" => "Created"]);
-}
-elseif ($method === 'DELETE') {
+} elseif ($method === 'DELETE') {
     $conn->prepare("DELETE FROM topics WHERE id = ?")->execute([$_GET['id']]);
     echo json_encode(["message" => "Deleted"]);
 }

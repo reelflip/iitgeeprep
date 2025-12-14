@@ -11,8 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 include_once 'config.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+$method = $_SERVER['REQUEST_METHOD'];
+if ($method === 'GET') {
     $stmt = $conn->query("SELECT * FROM contact_messages ORDER BY created_at DESC");
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+} elseif ($method === 'POST') {
+    $data = json_decode(file_get_contents("php://input"));
+    $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$data->name, $data->email, $data->subject, $data->message]);
+    echo json_encode(["status" => "success"]);
 }
 ?>

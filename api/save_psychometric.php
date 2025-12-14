@@ -12,10 +12,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-if($data->user_id && $data->report) {
-    $json = json_encode($data->report);
-    $stmt = $conn->prepare("INSERT INTO psychometric_results (user_id, report_json) VALUES (?, ?)");
-    $stmt->execute([$data->user_id, $json]);
-    echo json_encode(["message" => "Saved"]);
+if(!empty($data->user_id) && !empty($data->report)) {
+    // Check if exists
+    $check = $conn->prepare("SELECT id FROM psychometric_results WHERE user_id = ?");
+    $check->execute([$data->user_id]);
+    
+    $reportJson = json_encode($data->report);
+    
+    if($check->rowCount() > 0) {
+        $stmt = $conn->prepare("UPDATE psychometric_results SET report_json = ?, date = NOW() WHERE user_id = ?");
+        $stmt->execute([$reportJson, $data->user_id]);
+    } else {
+        $stmt = $conn->prepare("INSERT INTO psychometric_results (user_id, report_json, date) VALUES (?, ?, NOW())");
+        $stmt->execute([$data->user_id, $reportJson]);
+    }
+    echo json_encode(["status" => "success"]);
+} else {
+    http_response_code(400);
+    echo json_encode(["error" => "Invalid input"]);
 }
 ?>

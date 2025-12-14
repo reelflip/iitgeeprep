@@ -33,12 +33,12 @@ try {
     // Progress
     $stmt = $conn->prepare("SELECT * FROM user_progress WHERE user_id = ?");
     $stmt->execute([$user_id]);
-    $response['progress'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $response['progress'] = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
     // Attempts
     $stmt = $conn->prepare("SELECT * FROM test_attempts WHERE user_id = ? ORDER BY date DESC");
     $stmt->execute([$user_id]);
-    $attempts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $attempts = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     // Properly decode JSON for React
     foreach($attempts as &$att) {
         $att['detailedResults'] = json_decode($att['detailed_results']);
@@ -48,17 +48,17 @@ try {
     // Goals
     $stmt = $conn->prepare("SELECT * FROM goals WHERE user_id = ?");
     $stmt->execute([$user_id]);
-    $response['goals'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $response['goals'] = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
     // Mistakes
     $stmt = $conn->prepare("SELECT * FROM mistake_logs WHERE user_id = ?");
     $stmt->execute([$user_id]);
-    $response['mistakes'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $response['mistakes'] = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
     // Backlogs
     $stmt = $conn->prepare("SELECT * FROM backlogs WHERE user_id = ?");
     $stmt->execute([$user_id]);
-    $response['backlogs'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $response['backlogs'] = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
     // Timetable
     $stmt = $conn->prepare("SELECT config_json, slots_json FROM timetable WHERE user_id = ?");
@@ -66,12 +66,14 @@ try {
     $tt = $stmt->fetch(PDO::FETCH_ASSOC);
     if($tt) {
         $response['timetable'] = ['config' => json_decode($tt['config_json']), 'slots' => json_decode($tt['slots_json'])];
+    } else {
+        $response['timetable'] = null;
     }
 
     // Notifications
     $stmt = $conn->prepare("SELECT * FROM notifications WHERE to_id = ? ORDER BY created_at DESC");
     $stmt->execute([$user_id]);
-    $response['notifications'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $response['notifications'] = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
     echo json_encode($response);
 } catch(Exception $e) {

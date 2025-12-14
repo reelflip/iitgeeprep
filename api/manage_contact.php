@@ -15,15 +15,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 include_once 'config.php';
-
-$method = $_SERVER['REQUEST_METHOD'];
-if ($method === 'GET') {
-    $stmt = $conn->query("SELECT * FROM contact_messages ORDER BY created_at DESC");
-    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-} elseif ($method === 'POST') {
-    // Admin Reply (Placeholder)
-    include 'contact.php'; 
-} elseif ($method === 'DELETE') {
-    $conn->prepare("DELETE FROM contact_messages WHERE id = ?")->execute([$_GET['id']]);
-}
-?>
+ $method = $_SERVER['REQUEST_METHOD']; if ($method === 'GET') { $stmt = $conn->query("SELECT * FROM contact_messages ORDER BY created_at DESC"); echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC)); } elseif ($method === 'POST') { include 'contact.php'; } elseif ($method === 'DELETE') { $conn->prepare("DELETE FROM contact_messages WHERE id = ?")->execute([$_GET['id']]); } ?>

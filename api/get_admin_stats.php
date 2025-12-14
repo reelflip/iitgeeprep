@@ -15,13 +15,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 include_once 'config.php';
-
-$visits = $conn->query("SELECT SUM(count) FROM analytics_visits")->fetchColumn();
-$users = $conn->query("SELECT COUNT(*) FROM users")->fetchColumn();
-$traffic = $conn->query("SELECT date, count as visits FROM analytics_visits ORDER BY date DESC LIMIT 7")->fetchAll(PDO::FETCH_ASSOC);
-echo json_encode([
-    "totalVisits" => (int)$visits,
-    "totalUsers" => (int)$users,
-    "dailyTraffic" => array_reverse($traffic)
-]);
-?>
+ $visits = $conn->query("SELECT SUM(count) FROM analytics_visits")->fetchColumn(); $users = $conn->query("SELECT COUNT(*) FROM users")->fetchColumn(); $traffic = $conn->query("SELECT date, count as visits FROM analytics_visits ORDER BY date DESC LIMIT 7")->fetchAll(PDO::FETCH_ASSOC); echo json_encode(["totalVisits" => (int)$visits, "totalUsers" => (int)$users, "dailyTraffic" => array_reverse($traffic)]); ?>

@@ -15,14 +15,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 include_once 'config.php';
-
-$data = json_decode(file_get_contents("php://input"));
-if($data->user_id && $data->new_password) {
-    $stmt = $conn->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
-    $stmt->execute([$data->new_password, $data->user_id]);
-    echo json_encode(["status" => "success"]);
-} else {
-    http_response_code(400);
-    echo json_encode(["error" => "Invalid data"]);
-}
-?>
+ $data = json_decode(file_get_contents("php://input")); if($data->user_id && $data->new_password) { $stmt = $conn->prepare("UPDATE users SET password_hash = ? WHERE id = ?"); $stmt->execute([$data->new_password, $data->user_id]); echo json_encode(["status" => "success"]); } else { http_response_code(400); echo json_encode(["error" => "Invalid data"]); } ?>

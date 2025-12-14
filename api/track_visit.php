@@ -15,8 +15,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 include_once 'config.php';
-
-$today = date('Y-m-d');
-$conn->query("INSERT INTO analytics_visits (date, count) VALUES ('$today', 1) ON DUPLICATE KEY UPDATE count = count + 1");
-echo json_encode(["status" => "tracked"]);
-?>
+ $today = date('Y-m-d'); $conn->query("INSERT INTO analytics_visits (date, count) VALUES ('$today', 1) ON DUPLICATE KEY UPDATE count = count + 1"); echo json_encode(["status" => "tracked"]); ?>

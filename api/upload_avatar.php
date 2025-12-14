@@ -15,7 +15,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 include_once 'config.php';
-
-// Placeholder for file upload logic
-echo json_encode(["status" => "error", "message" => "Upload not configured"]);
-?>
+ echo json_encode(["status" => "error", "message" => "Upload not configured"]); ?>

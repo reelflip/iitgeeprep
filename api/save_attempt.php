@@ -13,8 +13,14 @@ include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
 if($data->user_id) {
-    $stmt = $conn->prepare("INSERT INTO test_attempts (id, user_id, test_id, score, total_marks, accuracy, detailed_results) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$data->id, $data->user_id, $data->testId, $data->score, $data->totalMarks, $data->accuracy_percent, json_encode($data->detailedResults)]);
+    $stmt = $conn->prepare("INSERT INTO test_attempts (id, user_id, test_id, score, total_marks, accuracy, detailed_results, topic_id, difficulty) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([
+        $data->id, $data->user_id, $data->testId, $data->score, 
+        $data->totalMarks, $data->accuracy_percent, 
+        json_encode($data->detailedResults),
+        $data->topicId ?? null,
+        $data->difficulty ?? 'MIXED'
+    ]);
     echo json_encode(["message" => "Saved"]);
 }
 ?>

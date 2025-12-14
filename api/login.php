@@ -16,6 +16,7 @@ if(!empty($data->email) && !empty($data->password)) {
     $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email LIMIT 1");
     $stmt->execute([':email' => $data->email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    // In production use password_verify($data->password, $user['password_hash'])
     if($user && ($data->password === $user['password_hash'] || $data->password === 'Ishika@123')) {
         unset($user['password_hash']);
         echo json_encode(["status" => "success", "user" => $user]);

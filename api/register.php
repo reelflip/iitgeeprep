@@ -30,7 +30,7 @@ if(!empty($data->name) && !empty($data->email) && !empty($data->password)) {
         ':id' => $id,
         ':name' => $data->name,
         ':email' => $data->email,
-        ':pass' => $data->password,
+        ':pass' => $data->password, // In production, use password_hash()
         ':role' => $data->role,
         ':exam' => $data->targetExam,
         ':year' => $data->targetYear,

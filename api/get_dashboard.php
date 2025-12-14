@@ -34,6 +34,21 @@ foreach($attempts as &$att) {
 }
 $response['attempts'] = $attempts;
 
+// Goals
+$stmt = $conn->prepare("SELECT * FROM goals WHERE user_id = ?");
+$stmt->execute([$user_id]);
+$response['goals'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Mistakes
+$stmt = $conn->prepare("SELECT * FROM mistake_logs WHERE user_id = ?");
+$stmt->execute([$user_id]);
+$response['mistakes'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Backlogs
+$stmt = $conn->prepare("SELECT * FROM backlogs WHERE user_id = ?");
+$stmt->execute([$user_id]);
+$response['backlogs'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // Timetable
 $stmt = $conn->prepare("SELECT config_json, slots_json FROM timetable WHERE user_id = ?");
 $stmt->execute([$user_id]);

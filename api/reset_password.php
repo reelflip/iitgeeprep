@@ -12,7 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-$stmt = $conn->prepare("INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
-$stmt->execute([$data->name, $data->email, $data->subject, $data->message]);
-echo json_encode(["status" => "success"]);
+$stmt = $conn->prepare("SELECT id FROM users WHERE email = ? AND security_answer = ?");
+$stmt->execute([$data->email, $data->answer]);
+if($stmt->rowCount() > 0) {
+    $conn->prepare("UPDATE users SET password_hash = ? WHERE email = ?")->execute([$data->new_password, $data->email]);
+    echo json_encode(["status" => "success"]);
+} else {
+    echo json_encode(["status" => "error", "message" => "Incorrect security answer"]);
+}
 ?>

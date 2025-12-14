@@ -11,8 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 include_once 'config.php';
 
-$data = json_decode(file_get_contents("php://input"));
-$stmt = $conn->prepare("INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
-$stmt->execute([$data->name, $data->email, $data->subject, $data->message]);
-echo json_encode(["status" => "success"]);
+// Placeholder for file upload logic
+// In production: handle $_FILES, move_uploaded_file, return URL
+echo json_encode(["status" => "error", "message" => "Upload not configured"]);
 ?>

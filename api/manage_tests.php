@@ -11,35 +11,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 include_once 'config.php';
 
-$data = json_decode(file_get_contents("php://input"));
 $method = $_SERVER['REQUEST_METHOD'];
-
 if ($method === 'GET') {
-    $stmt = $conn->prepare("SELECT * FROM tests");
-    $stmt->execute();
+    $stmt = $conn->query("SELECT * FROM tests");
     $tests = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    foreach($tests as &$test) {
-        $qStmt = $conn->prepare("SELECT * FROM questions WHERE test_id = ?");
-        $qStmt->execute([$test['id']]);
-        $questions = $qStmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach($questions as &$q) {
-            $q['options'] = json_decode($q['options_json']);
-            unset($q['options_json']);
-        }
-        $test['questions'] = $questions;
-    }
+    foreach($tests as &$t) { $t['questions'] = json_decode($t['questions_json']); }
     echo json_encode($tests);
-} 
-elseif ($method === 'POST') {
-    $test = $data;
-    $stmt = $conn->prepare("INSERT INTO tests (id, title, duration_minutes, difficulty, exam_type) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$test.id, $test.title, $test.durationMinutes, $test.difficulty, $test.examType]);
-    foreach($test.questions as $q) {
-        $qStmt = $conn->prepare("INSERT INTO questions (id, test_id, subject_id, topic_id, text, options_json, correct_option, source_tag, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $qStmt->execute([
-            $q.id, $test->id, $q.subjectId, $q.topicId, $q.text, json_encode($q.options), $q.correctOptionIndex, $q.source, $q.year
-        ]);
-    }
-    echo json_encode(["message" => "Test Created"]);
+} elseif ($method === 'POST') {
+    $data = json_decode(file_get_contents("php://input"));
+    $stmt = $conn->prepare("INSERT INTO tests (id, title, duration, category, difficulty, exam_type, questions_json) VALUES (?,?,?,?,?,?,?)");
+    $stmt->execute([$data->id, $data->title, $data->durationMinutes, $data->category, $data->difficulty, $data->examType, json_encode($data->questions)]);
+    echo json_encode(["status" => "success"]);
+} elseif ($method === 'DELETE') {
+    $conn->prepare("DELETE FROM tests WHERE id = ?")->execute([$_GET['id']]);
 }
 ?>

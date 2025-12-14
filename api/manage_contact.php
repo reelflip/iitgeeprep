@@ -16,9 +16,9 @@ if ($method === 'GET') {
     $stmt = $conn->query("SELECT * FROM contact_messages ORDER BY created_at DESC");
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 } elseif ($method === 'POST') {
-    $data = json_decode(file_get_contents("php://input"));
-    $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
-    $stmt->execute([$data->name, $data->email, $data->subject, $data->message]);
-    echo json_encode(["status" => "success"]);
+    // Admin Reply or Internal Add
+    include 'contact.php'; 
+} elseif ($method === 'DELETE') {
+    $conn->prepare("DELETE FROM contact_messages WHERE id = ?")->execute([$_GET['id']]);
 }
 ?>

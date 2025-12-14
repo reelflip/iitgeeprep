@@ -13,9 +13,16 @@ include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
 if($data->id) {
-    $sql = "UPDATE users SET institute = ? WHERE id = ?";
+    $sql = "UPDATE users SET institute = ?, school = ?, target_year = ?, target_exam = ?, phone = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->execute([$data->institute, $data->id]);
+    $stmt->execute([
+        $data->institute ?? '', 
+        $data->school ?? '', 
+        $data->targetYear ?? 2025, 
+        $data->targetExam ?? '', 
+        $data->phone ?? '', 
+        $data->id
+    ]);
     echo json_encode(["message" => "Updated"]);
 }
 ?>

@@ -12,7 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-$stmt = $conn->prepare("INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
-$stmt->execute([$data->name, $data->email, $data->subject, $data->message]);
-echo json_encode(["status" => "success"]);
+$stmt = $conn->prepare("SELECT security_question FROM users WHERE email = ?");
+$stmt->execute([$data->email]);
+if($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    echo json_encode(["status" => "success", "question" => $row['security_question']]);
+} else {
+    echo json_encode(["status" => "error", "message" => "Email not found"]);
+}
 ?>

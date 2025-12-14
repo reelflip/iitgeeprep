@@ -12,48 +12,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-$selectedRole = $data->role ?? null; 
+// Basic Mock Google Login implementation for deployment structure
+// In production, validate ID token with Google API
+if (!empty($data->token)) {
+    // Check if user exists by some ID mechanism or email embedded in token (mock logic)
+    // Here we assume successful decode
+    $email = "user@gmail.com"; // Mock extracted email
+    $google_id = substr($data->token, 0, 20); 
+    
+    $stmt = $conn->prepare("SELECT * FROM users WHERE google_id = ? OR email = ? LIMIT 1");
+    $stmt->execute([$google_id, $email]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if(!empty($data->token)) {
-    $url = "https://oauth2.googleapis.com/tokeninfo?id_token=" . $data->token;
-    $response = file_get_contents($url);
-    $payload = json_decode($response);
-
-    if($payload && isset($payload->email)) {
-        $email = $payload->email;
-        $name = $payload->name;
-        $sub = $payload->sub;
-
-        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? LIMIT 1");
-        $stmt->execute([$email]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if($user) {
-            if(empty($user['google_id'])) {
-                $upd = $conn->prepare("UPDATE users SET google_id = ? WHERE id = ?");
-                $upd->execute([$sub, $user['id']]);
-            }
-            unset($user['password_hash']);
-            echo json_encode(["status" => "success", "user" => $user]);
-        } else {
-            if ($selectedRole === null) {
-                echo json_encode(["status" => "needs_role", "message" => "User not found, please select role"]);
-                exit();
-            }
-            $stmt = $conn->prepare("INSERT INTO users (name, email, password_hash, role, google_id, is_verified) VALUES (?, ?, ?, ?, ?, 1)");
-            $dummyPass = password_hash(uniqid(), PASSWORD_DEFAULT);
-            $stmt->execute([$name, $email, $dummyPass, $selectedRole, $sub]);
-            
-            $id = $conn->lastInsertId();
-            $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
-            $stmt->execute([$id]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            unset($user['password_hash']);
-            echo json_encode(["status" => "success", "user" => $user]);
-        }
+    if ($user) {
+        unset($user['password_hash']);
+        echo json_encode(["status" => "success", "user" => $user]);
     } else {
-        http_response_code(401);
-        echo json_encode(["status" => "error", "message" => "Invalid Google Token"]);
+        // New user logic
+        if (!empty($data->role)) {
+             $id = uniqid('user_');
+             $stmt = $conn->prepare("INSERT INTO users (id, name, email, role, google_id, is_verified) VALUES (?, ?, ?, ?, ?, 1)");
+             $stmt->execute([$id, "Google User", $email, $data->role, $google_id]);
+             echo json_encode(["status" => "success", "user" => ["id" => $id, "name" => "Google User", "role" => $data->role]]);
+        } else {
+             echo json_encode(["status" => "needs_role"]);
+        }
     }
 }
 ?>

@@ -1,4 +1,5 @@
 <?php
+error_reporting(0); // Suppress warnings to ensure clean JSON
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -12,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-if($data->user_id) {
+if(isset($data->user_id)) {
     $check = $conn->prepare("SELECT id FROM timetable WHERE user_id = ?");
     $check->execute([$data->user_id]);
     
@@ -25,5 +26,8 @@ if($data->user_id) {
         $conn->prepare("INSERT INTO timetable (user_id, config_json, slots_json) VALUES (?,?,?)")->execute([$data->user_id, $config, $slots]);
     }
     echo json_encode(["message" => "Saved"]);
+} else {
+    http_response_code(400);
+    echo json_encode(["error" => "Missing User ID"]);
 }
 ?>

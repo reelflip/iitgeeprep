@@ -1,4 +1,5 @@
 <?php
+error_reporting(0); // Suppress warnings to ensure clean JSON
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -12,12 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-// Basic Mock Google Login implementation for deployment structure
-// In production, validate ID token with Google API
 if (!empty($data->token)) {
-    // Check if user exists by some ID mechanism or email embedded in token (mock logic)
-    // Here we assume successful decode
-    $email = "user@gmail.com"; // Mock extracted email
+    $email = "user@gmail.com"; // Mock email for dev
     $google_id = substr($data->token, 0, 20); 
     
     $stmt = $conn->prepare("SELECT * FROM users WHERE google_id = ? OR email = ? LIMIT 1");
@@ -25,10 +22,14 @@ if (!empty($data->token)) {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
+        if (isset($user['is_verified']) && $user['is_verified'] == 0) {
+            http_response_code(403);
+            echo json_encode(["status" => "error", "message" => "Account blocked"]);
+            exit();
+        }
         unset($user['password_hash']);
         echo json_encode(["status" => "success", "user" => $user]);
     } else {
-        // New user logic
         if (!empty($data->role)) {
              $id = uniqid('user_');
              $stmt = $conn->prepare("INSERT INTO users (id, name, email, role, google_id, is_verified) VALUES (?, ?, ?, ?, ?, 1)");
@@ -38,5 +39,8 @@ if (!empty($data->token)) {
              echo json_encode(["status" => "needs_role"]);
         }
     }
+} else {
+    http_response_code(400);
+    echo json_encode(["error" => "No token provided"]);
 }
 ?>

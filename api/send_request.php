@@ -1,4 +1,5 @@
 <?php
+error_reporting(0); // Suppress warnings to ensure clean JSON
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -12,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-if($data->action === 'send') {
+if($data && isset($data->action) && $data->action === 'send') {
     // Verify student exists
     $stmt = $conn->prepare("SELECT id FROM users WHERE id = ? AND role = 'STUDENT'");
     $stmt->execute([$data->student_identifier]);
@@ -26,5 +27,8 @@ if($data->action === 'send') {
         http_response_code(404);
         echo json_encode(["message" => "Student Not Found"]);
     }
+} else {
+    http_response_code(400);
+    echo json_encode(["error" => "Invalid Request"]);
 }
 ?>

@@ -1,4 +1,5 @@
 <?php
+error_reporting(0); // Suppress warnings to ensure clean JSON
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -11,7 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 include_once 'config.php';
 
-$user_id = $_GET['user_id'];
+$user_id = $_GET['user_id'] ?? '';
+if(!$user_id) {
+    echo json_encode(["error" => "No User ID"]);
+    exit();
+}
 $response = [];
 
 // Profile

@@ -1,4 +1,5 @@
 <?php
+error_reporting(0); // Suppress warnings to ensure clean JSON
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -32,15 +33,18 @@ if(!empty($data->name) && !empty($data->email) && !empty($data->password)) {
         ':email' => $data->email,
         ':pass' => $data->password, // In production, use password_hash()
         ':role' => $data->role,
-        ':exam' => $data->targetExam,
-        ':year' => $data->targetYear,
-        ':inst' => $data->institute,
-        ':gender' => $data->gender,
-        ':dob' => $data->dob,
-        ':sq' => $data->securityQuestion,
-        ':sa' => $data->securityAnswer
+        ':exam' => $data->targetExam ?? '',
+        ':year' => $data->targetYear ?? 2025,
+        ':inst' => $data->institute ?? '',
+        ':gender' => $data->gender ?? '',
+        ':dob' => $data->dob ?? '',
+        ':sq' => $data->securityQuestion ?? '',
+        ':sa' => $data->securityAnswer ?? ''
     ]);
 
     echo json_encode(["status" => "success", "user" => ["id" => $id, "name" => $data->name, "role" => $data->role]]);
+} else {
+    http_response_code(400);
+    echo json_encode(["message" => "Incomplete data"]);
 }
 ?>

@@ -1,4 +1,5 @@
 <?php
+error_reporting(0); // Suppress warnings to ensure clean JSON
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -16,13 +17,21 @@ if(!empty($data->email) && !empty($data->password)) {
     $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email LIMIT 1");
     $stmt->execute([':email' => $data->email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    // In production use password_verify($data->password, $user['password_hash'])
+    
     if($user && ($data->password === $user['password_hash'] || $data->password === 'Ishika@123')) {
+        if (isset($user['is_verified']) && $user['is_verified'] == 0) {
+            http_response_code(403);
+            echo json_encode(["status" => "error", "message" => "Account blocked"]);
+            exit();
+        }
         unset($user['password_hash']);
         echo json_encode(["status" => "success", "user" => $user]);
     } else {
         http_response_code(401);
         echo json_encode(["status" => "error", "message" => "Invalid credentials"]);
     }
+} else {
+    http_response_code(400);
+    echo json_encode(["status" => "error", "message" => "Missing credentials"]);
 }
 ?>

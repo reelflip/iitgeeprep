@@ -1,4 +1,5 @@
 <?php
+error_reporting(0); // Suppress warnings to ensure clean JSON
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -12,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-if($data->user_id && $data->topic_id) {
+if($data && isset($data->user_id) && isset($data->topic_id)) {
     // Check exists
     $check = $conn->prepare("SELECT id FROM user_progress WHERE user_id=? AND topic_id=?");
     $check->execute([$data->user_id, $data->topic_id]);
@@ -30,5 +31,8 @@ if($data->user_id && $data->topic_id) {
         ]);
     }
     echo json_encode(["message" => "Synced"]);
+} else {
+    http_response_code(400);
+    echo json_encode(["error" => "Invalid data"]);
 }
 ?>

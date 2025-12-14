@@ -1,4 +1,5 @@
 <?php
+error_reporting(0); // Suppress warnings to ensure clean JSON
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -13,7 +14,7 @@ include_once 'config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 if ($method === 'GET') {
-    $key = $_GET['key'];
+    $key = $_GET['key'] ?? '';
     $stmt = $conn->prepare("SELECT value FROM settings WHERE setting_key = ?");
     $stmt->execute([$key]);
     $res = $stmt->fetch(PDO::FETCH_ASSOC);

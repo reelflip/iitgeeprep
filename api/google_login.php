@@ -31,7 +31,9 @@ if (!empty($data->token)) {
         echo json_encode(["status" => "success", "user" => $user]);
     } else {
         if (!empty($data->role)) {
-             $id = uniqid('user_');
+             // Generate 6-digit ID for Google Users too
+             $id = str_pad(mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+             
              $stmt = $conn->prepare("INSERT INTO users (id, name, email, role, google_id, is_verified) VALUES (?, ?, ?, ?, ?, 1)");
              $stmt->execute([$id, "Google User", $email, $data->role, $google_id]);
              echo json_encode(["status" => "success", "user" => ["id" => $id, "name" => "Google User", "role" => $data->role]]);

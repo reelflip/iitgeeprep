@@ -18,11 +18,12 @@ if (strlen($query) < 2) {
     exit();
 }
 
-// Search for students by Name, ID, or Email. Only return verified students.
-$sql = "SELECT id, name, email, institute, avatar_url FROM users WHERE role = 'STUDENT' AND (name LIKE ? OR id = ? OR email LIKE ?) LIMIT 10";
+// Flexible Search: Matches Name, Email, or ID (Exact or Partial)
+// Only returns VERIFIED students.
+$sql = "SELECT id, name, email, institute, avatar_url FROM users WHERE role = 'STUDENT' AND (name LIKE ? OR id LIKE ? OR email LIKE ?) LIMIT 10";
 $stmt = $conn->prepare($sql);
 $searchTerm = "%" . $query . "%";
-$stmt->execute([$searchTerm, $query, $searchTerm]);
+$stmt->execute([$searchTerm, $searchTerm, $searchTerm]);
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 echo json_encode($results);

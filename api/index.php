@@ -11,4 +11,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 include_once 'config.php';
- echo json_encode(["status" => "active", "version" => "12.14"]); ?>
+ echo json_encode(["status" => "active", "version" => "12.17"]); ?>

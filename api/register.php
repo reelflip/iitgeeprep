@@ -15,6 +15,7 @@ include_once 'config.php';
 $data = json_decode(file_get_contents("php://input"));
 
 if(!empty($data->name) && !empty($data->email) && !empty($data->password)) {
+    // 1. Check if email exists
     $check = $conn->prepare("SELECT id FROM users WHERE email = ?");
     $check->execute([$data->email]);
     if($check->rowCount() > 0) {
@@ -23,7 +24,28 @@ if(!empty($data->name) && !empty($data->email) && !empty($data->password)) {
         exit();
     }
 
-    $id = uniqid('user_');
+    // 2. Generate Unique 6-Digit Numeric ID
+    $id = null;
+    $attempts = 0;
+    while($attempts < 5) {
+        // Generate random 6 digit number (100000 to 999999)
+        $tempId = str_pad(mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+        
+        $checkId = $conn->prepare("SELECT id FROM users WHERE id = ?");
+        $checkId->execute([$tempId]);
+        if($checkId->rowCount() == 0) {
+            $id = $tempId;
+            break;
+        }
+        $attempts++;
+    }
+
+    if(!$id) {
+        http_response_code(500);
+        echo json_encode(["message" => "Server busy (ID Generation Failed). Please try again."]);
+        exit();
+    }
+
     $query = "INSERT INTO users (id, name, email, password_hash, role, target_exam, target_year, institute, gender, dob, security_question, security_answer) VALUES (:id, :name, :email, :pass, :role, :exam, :year, :inst, :gender, :dob, :sq, :sa)";
     $stmt = $conn->prepare($query);
     

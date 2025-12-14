@@ -16,10 +16,13 @@ if(!empty($data->user_id) && !empty($data->topic_id)) {
     $check = $conn->prepare("SELECT id FROM topic_progress WHERE user_id = ? AND topic_id = ?");
     $check->execute([$data->user_id, $data->topic_id]);
     
+    // Convert solvedQuestions array to JSON for storage if present
+    $solvedJson = isset($data->solvedQuestions) ? json_encode($data->solvedQuestions) : '[]';
+
     if($check->rowCount() > 0) {
-        $query = "UPDATE topic_progress SET status = :status, last_revised = :lr, revision_level = :rl, next_revision_date = :nrd, ex1_solved = :e1s, ex1_total = :e1t, ex2_solved = :e2s, ex2_total = :e2t WHERE user_id = :uid AND topic_id = :tid";
+        $query = "UPDATE topic_progress SET status = :status, last_revised = :lr, revision_level = :rl, next_revision_date = :nrd, solved_questions_json = :sqj WHERE user_id = :uid AND topic_id = :tid";
     } else {
-        $query = "INSERT INTO topic_progress (user_id, topic_id, status, last_revised, revision_level, next_revision_date, ex1_solved, ex1_total, ex2_solved, ex2_total) VALUES (:uid, :tid, :status, :lr, :rl, :nrd, :e1s, :e1t, :e2s, :e2t)";
+        $query = "INSERT INTO topic_progress (user_id, topic_id, status, last_revised, revision_level, next_revision_date, solved_questions_json) VALUES (:uid, :tid, :status, :lr, :rl, :nrd, :sqj)";
     }
     $stmt = $conn->prepare($query);
     $stmt->execute([
@@ -29,10 +32,7 @@ if(!empty($data->user_id) && !empty($data->topic_id)) {
         ':lr' => $data->lastRevised ?? date('Y-m-d H:i:s'),
         ':rl' => $data->revisionLevel ?? 0,
         ':nrd' => $data->nextRevisionDate ?? null,
-        ':e1s' => $data->ex1Solved ?? 0,
-        ':e1t' => $data->ex1Total ?? 30,
-        ':e2s' => $data->ex2Solved ?? 0,
-        ':e2t' => $data->ex2Total ?? 20
+        ':sqj' => $solvedJson
     ]);
     echo json_encode(["message" => "Saved"]);
 }

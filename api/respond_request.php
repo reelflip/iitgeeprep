@@ -17,6 +17,13 @@ if($data->accept) {
     $stmt->execute([$data->parent_id, $data->student_id]);
     $stmt2 = $conn->prepare("UPDATE users SET linked_student_id = ? WHERE id = ?");
     $stmt2->execute([$data->student_id, $data->parent_id]);
+    
+    // Cleanup notification
+    if(isset($data->notification_id)) {
+        $stmt3 = $conn->prepare("DELETE FROM notifications WHERE id = ?");
+        $stmt3->execute([$data->notification_id]);
+    }
+    
     echo json_encode(["message" => "Connected"]);
 }
 ?>

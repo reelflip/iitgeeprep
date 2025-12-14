@@ -11,5 +11,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 include_once 'config.php';
 
-echo json_encode(["status" => "active", "message" => "IITGEEPrep API v12.10 Operational", "timestamp" => date('c')]);
+echo json_encode(["status" => "active", "message" => "IITGEEPrep API v12.11 Operational", "timestamp" => date('c')]);
 ?>

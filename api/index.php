@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
-echo json_encode(["status" => "active", "message" => "IITGEEPrep API v12.8 Operational", "timestamp" => date('c')]);
+echo json_encode(["status" => "active", "message" => "IITGEEPrep API v12.10 Operational", "timestamp" => date('c')]);
 ?>

@@ -9,12 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
-$data = json_decode(file_get_contents("php://input"));
 $method = $_SERVER['REQUEST_METHOD'];
+$data = json_decode(file_get_contents("php://input"));
+
 if ($method === 'GET') {
-    $stmt = $conn->query("SELECT id, name, email, role, is_verified, created_at FROM users");
+    $stmt = $conn->query("SELECT id, name, email, role, is_verified, created_at FROM users ORDER BY created_at DESC");
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
 elseif ($method === 'PUT') {
@@ -23,7 +24,8 @@ elseif ($method === 'PUT') {
     echo json_encode(["message" => "Updated"]);
 }
 elseif ($method === 'DELETE') {
-    $conn->prepare("DELETE FROM users WHERE id = ?")->execute([$_GET['id']]);
+    $id = $_GET['id'];
+    $conn->prepare("DELETE FROM users WHERE id = ?")->execute([$id]);
     echo json_encode(["message" => "Deleted"]);
 }
 ?>

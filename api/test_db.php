@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
 try {
     // 1. Table Stats
@@ -32,22 +32,20 @@ try {
             (SELECT COUNT(*) FROM questions q WHERE q.topic_id = t.id) as question_count,
             (SELECT COUNT(*) FROM chapter_notes n WHERE n.topic_id = t.id) as note_count
         FROM topics t
-        HAVING question_count > 0 OR note_count > 0
-        ORDER BY t.subject, t.name";
-        
-        $stmt = $conn->query($sql);
-        $contentStats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        HAVING question_count > 0 OR note_count > 0";
+        $contentStats = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     echo json_encode([
         "status" => "CONNECTED",
         "db_host" => $host,
         "db_name" => $db_name,
-        "server_info" => $conn->getAttribute(PDO::ATTR_SERVER_INFO),
+        "server_info" => $conn->getAttribute(PDO::ATTR_SERVER_VERSION),
         "tables" => $tables,
         "content_stats" => $contentStats
     ]);
-} catch(Exception $e) {
+
+} catch(PDOException $e) {
     echo json_encode(["status" => "ERROR", "message" => $e->getMessage()]);
 }
 ?>

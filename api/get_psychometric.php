@@ -9,21 +9,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
 $user_id = $_GET['user_id'] ?? null;
-if ($user_id) {
-    $stmt = $conn->prepare("SELECT report_json, created_at FROM psychometric_results WHERE user_id = ? ORDER BY created_at DESC LIMIT 1");
+if($user_id) {
+    $stmt = $conn->prepare("SELECT report_json FROM psychometric_results WHERE user_id = ? ORDER BY date DESC LIMIT 1");
     $stmt->execute([$user_id]);
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    if ($result) {
-        echo json_encode([
-            "report" => json_decode($result['report_json']),
-            "date" => $result['created_at']
-        ]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($row) {
+        echo json_encode(["report" => json_decode($row['report_json'])]);
     } else {
-        echo json_encode(["message" => "No report found"]);
+        echo json_encode(["report" => null]);
     }
 }
 ?>

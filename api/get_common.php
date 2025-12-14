@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
 $common = [];
 $common['flashcards'] = $conn->query("SELECT * FROM flashcards")->fetchAll(PDO::FETCH_ASSOC);

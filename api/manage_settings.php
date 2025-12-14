@@ -9,27 +9,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
+$key = $_GET['key'] ?? null;
 $data = json_decode(file_get_contents("php://input"));
-$method = $_SERVER['REQUEST_METHOD'];
-if ($method === 'GET') {
-    $key = $_GET['key'] ?? null;
-    if ($key) {
-        $stmt = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = ?");
-        $stmt->execute([$key]);
-        $res = $stmt->fetch(PDO::FETCH_ASSOC);
-        echo json_encode(["value" => $res['setting_value'] ?? null]);
-    } else {
-        $stmt = $conn->query("SELECT * FROM system_settings");
-        echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-    }
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && $key) {
+    $stmt = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = ?");
+    $stmt->execute([$key]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    echo json_encode(["value" => $row ? $row['setting_value'] : null]);
 }
-elseif ($method === 'POST') {
-    $key = $data->key;
-    $value = $data->value;
+elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $conn->prepare("INSERT INTO system_settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?");
-    $stmt->execute([$key, $value, $value]);
+    $stmt->execute([$data->key, $data->value, $data->value]);
     echo json_encode(["message" => "Saved"]);
 }
 ?>

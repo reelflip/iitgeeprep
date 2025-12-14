@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
 $user_id = $_GET['user_id'] ?? null;
 if(!$user_id) { echo json_encode([]); exit(); }
@@ -18,7 +18,6 @@ $stmt = $conn->prepare("SELECT * FROM topic_progress WHERE user_id = ?");
 $stmt->execute([$user_id]);
 $progress = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Updated to fetch more attempts and include details for Analytics
 $stmt = $conn->prepare("SELECT * FROM test_attempts WHERE user_id = ? ORDER BY date DESC LIMIT 50");
 $stmt->execute([$user_id]);
 $attempts = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -9,20 +9,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
 $method = $_SERVER['REQUEST_METHOD'];
-if ($method === 'POST') {
-    $stmt = $conn->prepare("INSERT INTO mistakes (id, user_id, question_text, user_notes, subject_id, tags) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$data->id, $data->user_id, $data->questionText, $data->userNotes, $data->subjectId, json_encode($data->tags)]);
-} 
-elseif ($method === 'PUT') {
-    $stmt = $conn->prepare("UPDATE mistakes SET user_notes = ?, tags = ? WHERE id = ?");
-    $stmt->execute([$data->userNotes, json_encode($data->tags), $data->id]);
+$user_id = $_GET['user_id'] ?? $data->user_id ?? null;
+
+if ($method === 'GET' && $user_id) {
+    $stmt = $conn->prepare("SELECT * FROM mistakes WHERE user_id = ? ORDER BY date DESC");
+    $stmt->execute([$user_id]);
+    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+} elseif ($method === 'POST') {
+    $stmt = $conn->prepare("INSERT INTO mistakes (id, user_id, question, subject, note, date) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->execute([$data->id, $data->user_id, $data->question, $data->subject, $data->note, $data->date ?? date('Y-m-d H:i:s')]);
+    echo json_encode(["message" => "Logged"]);
+} elseif ($method === 'DELETE') {
+     $id = $_GET['id'];
+     $conn->prepare("DELETE FROM mistakes WHERE id = ?")->execute([$id]);
+     echo json_encode(["message" => "Deleted"]);
 }
-elseif ($method === 'DELETE') {
-    $conn->prepare("DELETE FROM mistakes WHERE id = ?")->execute([$_GET['id']]);
-}
-echo json_encode(["message" => "OK"]);
 ?>

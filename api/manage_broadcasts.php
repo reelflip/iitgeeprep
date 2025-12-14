@@ -9,10 +9,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-$stmt = $conn->prepare("INSERT INTO notifications (id, user_id, from_name, type, message) SELECT ?, id, 'Admin', 'INFO', ? FROM users WHERE role='STUDENT'");
-$stmt->execute([$data->id, $data->message]);
-echo json_encode(["message" => "Sent"]);
+$method = $_SERVER['REQUEST_METHOD'];
+
+if ($method === 'GET') {
+    $stmt = $conn->query("SELECT * FROM notifications WHERE type = 'BROADCAST' OR type = 'INFO' ORDER BY created_at DESC");
+    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+} elseif ($method === 'POST') {
+    $stmt = $conn->prepare("INSERT INTO notifications (id, title, message, type) VALUES (?, ?, ?, 'BROADCAST')");
+    $id = uniqid('notif_');
+    $stmt->execute([$id, $data->title, $data->message]);
+    echo json_encode(["message" => "Broadcast Sent"]);
+} elseif ($method === 'DELETE') {
+     $id = $_GET['id'];
+     $conn->prepare("DELETE FROM notifications WHERE id = ?")->execute([$id]);
+     echo json_encode(["message" => "Deleted"]);
+}
 ?>

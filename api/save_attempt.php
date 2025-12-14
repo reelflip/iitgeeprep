@@ -9,14 +9,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once 'config.php';
+include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
 $stmt = $conn->prepare("INSERT INTO test_attempts (id, user_id, test_id, score, total_marks, accuracy, correct_count, incorrect_count, unattempted_count, topic_id, difficulty) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 $id = uniqid('att_');
 $stmt->execute([
     $id, $data->user_id, $data->testId, $data->score, $data->totalQuestions*4, $data->accuracy_percent, 
-    $data->correctCount, $data->incorrectCount, $data->unattemptedCount, $data->topicId ?? NULL, $data->difficulty ?? 'MIXED'
+    $data->correctCount, $data->incorrectCount, $data->unattempted_count, $data->topicId ?? NULL, $data->difficulty ?? 'MIXED'
 ]);
 if(!empty($data->detailedResults)) {
     $dStmt = $conn->prepare("INSERT INTO attempt_details (attempt_id, question_id, status, selected_option) VALUES (?, ?, ?, ?)");

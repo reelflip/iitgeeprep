@@ -16,10 +16,30 @@ if(!$user_id) {
 try {
     $response = [];
 
-    // Profile (Aliased columns for React compatibility)
-    $stmt = $conn->prepare("SELECT id, name, email, role, target_exam as targetExam, target_year as targetYear, institute, parent_id as parentId, linked_student_id as linkedStudentId, is_verified as isVerified, school, phone, avatar_url as avatarUrl FROM users WHERE id = ?");
+    // Profile: Use SELECT * to avoid 1054 error if specific columns (school, phone) are missing in DB
+    $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
-    $response['userProfileSync'] = $stmt->fetch(PDO::FETCH_ASSOC);
+    $u = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if($u) {
+        $response['userProfileSync'] = [
+            "id" => $u['id'],
+            "name" => $u['name'],
+            "email" => $u['email'],
+            "role" => $u['role'],
+            "targetExam" => $u['target_exam'] ?? '',
+            "targetYear" => $u['target_year'] ?? 2025,
+            "institute" => $u['institute'] ?? '',
+            "parentId" => $u['parent_id'] ?? null,
+            "linkedStudentId" => $u['linked_student_id'] ?? null,
+            "isVerified" => $u['is_verified'] ?? 1,
+            "school" => $u['school'] ?? '',
+            "phone" => $u['phone'] ?? '',
+            "avatarUrl" => $u['avatar_url'] ?? ''
+        ];
+    } else {
+        $response['userProfileSync'] = null;
+    }
 
     // Progress
     $stmt = $conn->prepare("SELECT * FROM user_progress WHERE user_id = ?");

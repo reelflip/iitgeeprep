@@ -1,5 +1,9 @@
 <?php
-error_reporting(0); // Suppress warnings to ensure clean JSON
+// CRITICAL: Disable error display to client, log to file instead
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+error_reporting(E_ALL);
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -13,16 +17,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once 'config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
-if ($method === 'GET') {
-    $key = $_GET['key'] ?? '';
-    $stmt = $conn->prepare("SELECT value FROM settings WHERE setting_key = ?");
-    $stmt->execute([$key]);
-    $res = $stmt->fetch(PDO::FETCH_ASSOC);
-    echo json_encode($res ? $res : ["value" => null]);
-} elseif ($method === 'POST') {
-    $data = json_decode(file_get_contents("php://input"));
-    $stmt = $conn->prepare("INSERT INTO settings (setting_key, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value = ?");
-    $stmt->execute([$data->key, $data->value, $data->value]);
-    echo json_encode(["status" => "saved"]);
+try {
+    if ($method === 'GET') {
+        $key = $_GET['key'] ?? '';
+        $stmt = $conn->prepare("SELECT value FROM settings WHERE setting_key = ?");
+        $stmt->execute([$key]);
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        echo json_encode($res ? $res : ["value" => null]);
+    } elseif ($method === 'POST') {
+        $data = json_decode(file_get_contents("php://input"));
+        $stmt = $conn->prepare("INSERT INTO settings (setting_key, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value = ?");
+        $stmt->execute([$data->key, $data->value, $data->value]);
+        echo json_encode(["status" => "saved"]);
+    }
+} catch(Exception $e) {
+    http_response_code(500);
+    echo json_encode(["error" => $e->getMessage()]);
 }
 ?>

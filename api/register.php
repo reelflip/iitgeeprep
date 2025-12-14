@@ -1,5 +1,9 @@
 <?php
-error_reporting(0); // Suppress warnings to ensure clean JSON
+// CRITICAL: Disable error display to client, log to file instead
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+error_reporting(E_ALL);
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -15,56 +19,53 @@ include_once 'config.php';
 $data = json_decode(file_get_contents("php://input"));
 
 if(!empty($data->name) && !empty($data->email) && !empty($data->password)) {
-    // 1. Check if email exists
-    $check = $conn->prepare("SELECT id FROM users WHERE email = ?");
-    $check->execute([$data->email]);
-    if($check->rowCount() > 0) {
-        http_response_code(409);
-        echo json_encode(["message" => "Email already exists"]);
-        exit();
-    }
-
-    // 2. Generate Unique 6-Digit Numeric ID
-    $id = null;
-    $attempts = 0;
-    while($attempts < 5) {
-        // Generate random 6 digit number (100000 to 999999)
-        $tempId = str_pad(mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
-        
-        $checkId = $conn->prepare("SELECT id FROM users WHERE id = ?");
-        $checkId->execute([$tempId]);
-        if($checkId->rowCount() == 0) {
-            $id = $tempId;
-            break;
+    try {
+        $check = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $check->execute([$data->email]);
+        if($check->rowCount() > 0) {
+            http_response_code(409);
+            echo json_encode(["message" => "Email already exists"]);
+            exit();
         }
-        $attempts++;
-    }
 
-    if(!$id) {
+        $id = null;
+        $attempts = 0;
+        while($attempts < 5) {
+            $tempId = str_pad(mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+            $checkId = $conn->prepare("SELECT id FROM users WHERE id = ?");
+            $checkId->execute([$tempId]);
+            if($checkId->rowCount() == 0) {
+                $id = $tempId;
+                break;
+            }
+            $attempts++;
+        }
+
+        if(!$id) { throw new Exception("ID Generation Failed"); }
+
+        $query = "INSERT INTO users (id, name, email, password_hash, role, target_exam, target_year, institute, gender, dob, security_question, security_answer) VALUES (:id, :name, :email, :pass, :role, :exam, :year, :inst, :gender, :dob, :sq, :sa)";
+        $stmt = $conn->prepare($query);
+        
+        $stmt->execute([
+            ':id' => $id,
+            ':name' => $data->name,
+            ':email' => $data->email,
+            ':pass' => $data->password, 
+            ':role' => $data->role,
+            ':exam' => $data->targetExam ?? '',
+            ':year' => $data->targetYear ?? 2025,
+            ':inst' => $data->institute ?? '',
+            ':gender' => $data->gender ?? '',
+            ':dob' => $data->dob ?? '',
+            ':sq' => $data->securityQuestion ?? '',
+            ':sa' => $data->securityAnswer ?? ''
+        ]);
+
+        echo json_encode(["status" => "success", "user" => ["id" => $id, "name" => $data->name, "role" => $data->role]]);
+    } catch(Exception $e) {
         http_response_code(500);
-        echo json_encode(["message" => "Server busy (ID Generation Failed). Please try again."]);
-        exit();
+        echo json_encode(["message" => "DB Error: " . $e->getMessage()]);
     }
-
-    $query = "INSERT INTO users (id, name, email, password_hash, role, target_exam, target_year, institute, gender, dob, security_question, security_answer) VALUES (:id, :name, :email, :pass, :role, :exam, :year, :inst, :gender, :dob, :sq, :sa)";
-    $stmt = $conn->prepare($query);
-    
-    $stmt->execute([
-        ':id' => $id,
-        ':name' => $data->name,
-        ':email' => $data->email,
-        ':pass' => $data->password, // In production, use password_hash()
-        ':role' => $data->role,
-        ':exam' => $data->targetExam ?? '',
-        ':year' => $data->targetYear ?? 2025,
-        ':inst' => $data->institute ?? '',
-        ':gender' => $data->gender ?? '',
-        ':dob' => $data->dob ?? '',
-        ':sq' => $data->securityQuestion ?? '',
-        ':sa' => $data->securityAnswer ?? ''
-    ]);
-
-    echo json_encode(["status" => "success", "user" => ["id" => $id, "name" => $data->name, "role" => $data->role]]);
 } else {
     http_response_code(400);
     echo json_encode(["message" => "Incomplete data"]);

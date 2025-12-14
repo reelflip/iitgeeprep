@@ -1,5 +1,9 @@
 <?php
-error_reporting(0); // Suppress warnings to ensure clean JSON
+// CRITICAL: Disable error display to client, log to file instead
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+error_reporting(E_ALL);
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -12,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 include_once 'config.php';
 
-// Simple hit counter
 $today = date('Y-m-d');
 $conn->query("INSERT INTO analytics_visits (date, count) VALUES ('$today', 1) ON DUPLICATE KEY UPDATE count = count + 1");
 echo json_encode(["status" => "tracked"]);

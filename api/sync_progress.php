@@ -1,5 +1,9 @@
 <?php
-error_reporting(0); // Suppress warnings to ensure clean JSON
+// CRITICAL: Disable error display to client, log to file instead
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+error_reporting(E_ALL);
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
@@ -12,27 +16,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 include_once 'config.php';
 
+// Atomic Update using ON DUPLICATE KEY UPDATE to prevent race conditions
 $data = json_decode(file_get_contents("php://input"));
+
 if($data && isset($data->user_id) && isset($data->topic_id)) {
-    // Check exists
-    $check = $conn->prepare("SELECT id FROM user_progress WHERE user_id=? AND topic_id=?");
-    $check->execute([$data->user_id, $data->topic_id]);
-    
-    if($check->rowCount() > 0) {
-        $sql = "UPDATE user_progress SET status=?, last_revised=?, revision_level=?, next_revision_date=?, solved_questions_json=? WHERE user_id=? AND topic_id=?";
-        $conn->prepare($sql)->execute([
-            $data->status, $data->lastRevised, $data->revisionLevel, $data->nextRevisionDate, json_encode($data->solvedQuestions),
-            $data->user_id, $data->topic_id
+    try {
+        $solvedJson = isset($data->solvedQuestions) ? json_encode($data->solvedQuestions) : '[]';
+        
+        $sql = "INSERT INTO user_progress (user_id, topic_id, status, last_revised, revision_level, next_revision_date, solved_questions_json) 
+                VALUES (?, ?, ?, ?, ?, ?, ?) 
+                ON DUPLICATE KEY UPDATE 
+                status = VALUES(status), 
+                last_revised = VALUES(last_revised), 
+                revision_level = VALUES(revision_level), 
+                next_revision_date = VALUES(next_revision_date), 
+                solved_questions_json = VALUES(solved_questions_json)";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            $data->user_id, 
+            $data->topic_id, 
+            $data->status, 
+            $data->lastRevised, 
+            $data->revisionLevel, 
+            $data->nextRevisionDate, 
+            $solvedJson
         ]);
-    } else {
-        $sql = "INSERT INTO user_progress (user_id, topic_id, status, last_revised, revision_level, next_revision_date, solved_questions_json) VALUES (?,?,?,?,?,?,?)";
-        $conn->prepare($sql)->execute([
-            $data->user_id, $data->topic_id, $data->status, $data->lastRevised, $data->revisionLevel, $data->nextRevisionDate, json_encode($data->solvedQuestions)
-        ]);
+        
+        echo json_encode(["message" => "Synced Successfully"]);
+    } catch (PDOException $e) {
+        http_response_code(500);
+        echo json_encode(["error" => "Database Error: " . $e->getMessage()]);
     }
-    echo json_encode(["message" => "Synced"]);
 } else {
     http_response_code(400);
-    echo json_encode(["error" => "Invalid data"]);
+    echo json_encode(["error" => "Invalid Data Payload"]);
 }
 ?>

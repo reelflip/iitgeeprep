@@ -16,8 +16,8 @@ if(!$user_id) {
 try {
     $response = [];
 
-    // Profile
-    $stmt = $conn->prepare("SELECT id, name, email, role, target_exam, target_year, institute, parent_id, linked_student_id, is_verified FROM users WHERE id = ?");
+    // Profile (Aliased columns for React compatibility)
+    $stmt = $conn->prepare("SELECT id, name, email, role, target_exam as targetExam, target_year as targetYear, institute, parent_id as parentId, linked_student_id as linkedStudentId, is_verified as isVerified, school, phone, avatar_url as avatarUrl FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     $response['userProfileSync'] = $stmt->fetch(PDO::FETCH_ASSOC);
 

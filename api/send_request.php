@@ -12,14 +12,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-if ($data->action === 'search') {
-    $q = "%".$data->query."%";
-    $stmt = $conn->prepare("SELECT id, name, email FROM users WHERE (id LIKE ? OR name LIKE ? OR email LIKE ?) AND role = 'STUDENT'");
-    $stmt->execute([$data->query, $q, $data->query]);
-    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-} else {
-    $stmt = $conn->prepare("INSERT INTO notifications (id, user_id, from_id, from_name, type, message) VALUES (?, ?, ?, ?, 'connection_request', 'Wants to link account')");
-    $stmt->execute([uniqid('notif_'), $data->student_identifier, $data->parent_id, $data->parent_name]);
-    echo json_encode(["message" => "Request Sent"]);
+if($data->action === 'send') {
+    // Verify student exists
+    $stmt = $conn->prepare("SELECT id FROM users WHERE id = ? AND role = 'STUDENT'");
+    $stmt->execute([$data->student_identifier]);
+    if($stmt->rowCount() > 0) {
+        // Create Notification
+        $notif_id = uniqid('notif_');
+        $sql = "INSERT INTO notifications (id, from_id, from_name, to_id, type, message) VALUES (?, ?, ?, ?, 'connection_request', 'Parent Connection Request')";
+        $conn->prepare($sql)->execute([$notif_id, $data->parent_id, $data->parent_name, $data->student_identifier]);
+        echo json_encode(["message" => "Request Sent"]);
+    } else {
+        http_response_code(404);
+        echo json_encode(["message" => "Student Not Found"]);
+    }
 }
 ?>

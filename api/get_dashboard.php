@@ -11,63 +11,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 include_once 'config.php';
 
-$user_id = $_GET['user_id'] ?? null;
-if(!$user_id) { echo json_encode([]); exit(); }
+$user_id = $_GET['user_id'];
+$response = [];
 
-$stmt = $conn->prepare("SELECT * FROM topic_progress WHERE user_id = ?");
+// Profile
+$stmt = $conn->prepare("SELECT id, name, email, role, target_exam, target_year, institute, parent_id, linked_student_id, is_verified FROM users WHERE id = ?");
 $stmt->execute([$user_id]);
-$progress = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$response['userProfileSync'] = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$stmt = $conn->prepare("SELECT * FROM test_attempts WHERE user_id = ? ORDER BY date DESC LIMIT 50");
+// Progress
+$stmt = $conn->prepare("SELECT * FROM user_progress WHERE user_id = ?");
+$stmt->execute([$user_id]);
+$response['progress'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Attempts
+$stmt = $conn->prepare("SELECT * FROM test_attempts WHERE user_id = ?");
 $stmt->execute([$user_id]);
 $attempts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Decode detailed results
+foreach($attempts as &$att) {
+    $att['detailedResults'] = json_decode($att['detailed_results']);
+}
+$response['attempts'] = $attempts;
 
-foreach($attempts as &$attempt) {
-    $dStmt = $conn->prepare("SELECT * FROM attempt_details WHERE attempt_id = ?");
-    $dStmt->execute([$attempt['id']]);
-    $details = $dStmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    $detailedResults = [];
-    foreach($details as $d) {
-        $qStmt = $conn->prepare("SELECT subject_id, topic_id FROM questions WHERE id = ?");
-        $qStmt->execute([$d['question_id']]);
-        $qData = $qStmt->fetch(PDO::FETCH_ASSOC);
-        
-        $detailedResults[] = [
-            "questionId" => $d['question_id'],
-            "subjectId" => $qData ? $qData['subject_id'] : 'Unknown',
-            "topicId" => $qData ? $qData['topic_id'] : 'Unknown',
-            "status" => $d['status'],
-            "selectedOptionIndex" => $d['selected_option']
-        ];
-    }
-    $attempt['detailedResults'] = $detailedResults;
+// Timetable
+$stmt = $conn->prepare("SELECT config_json, slots_json FROM timetable WHERE user_id = ?");
+$stmt->execute([$user_id]);
+$tt = $stmt->fetch(PDO::FETCH_ASSOC);
+if($tt) {
+    $response['timetable'] = ['config' => json_decode($tt['config_json']), 'slots' => json_decode($tt['slots_json'])];
 }
 
-$stmt = $conn->prepare("SELECT * FROM goals WHERE user_id = ? AND date(created_at) = CURDATE()");
+// Notifications
+$stmt = $conn->prepare("SELECT * FROM notifications WHERE to_id = ? ORDER BY created_at DESC");
 $stmt->execute([$user_id]);
-$goals = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$response['notifications'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $conn->prepare("SELECT * FROM timetable_configs WHERE user_id = ?");
-$stmt->execute([$user_id]);
-$timetable = $stmt->fetch(PDO::FETCH_ASSOC);
-if($timetable) {
-    $timetable['config'] = json_decode($timetable['config_json']);
-    $timetable['slots'] = json_decode($timetable['slots_json']);
-    unset($timetable['config_json']);
-    unset($timetable['slots_json']);
-}
-
-$stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
-$stmt->execute([$user_id]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-unset($user['password_hash']);
-
-echo json_encode([
-    "progress" => $progress,
-    "attempts" => $attempts,
-    "goals" => $goals,
-    "timetable" => $timetable,
-    "userProfileSync" => $user
-]);
+echo json_encode($response);
 ?>

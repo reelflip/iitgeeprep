@@ -13,10 +13,11 @@ include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
 if($data->accept) {
-    $stmt = $conn->prepare("UPDATE users SET parent_id = ? WHERE id = ?");
-    $stmt->execute([$data->parent_id, $data->student_id]);
-    $stmt2 = $conn->prepare("UPDATE users SET linked_student_id = ? WHERE id = ?");
-    $stmt2->execute([$data->student_id, $data->parent_id]);
-    echo json_encode(["message" => "Connected"]);
+    // Link users
+    $conn->prepare("UPDATE users SET parent_id = ? WHERE id = ?")->execute([$data->parent_id, $data->student_id]);
+    $conn->prepare("UPDATE users SET linked_student_id = ? WHERE id = ?")->execute([$data->student_id, $data->parent_id]);
+    // Delete notification
+    $conn->prepare("DELETE FROM notifications WHERE id = ?")->execute([$data->notification_id]);
+    echo json_encode(["status" => "success"]);
 }
 ?>

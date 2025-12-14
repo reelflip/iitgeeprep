@@ -11,15 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 include_once 'config.php';
 
-$user_id = $_GET['user_id'] ?? null;
+$user_id = $_GET['user_id'] ?? '';
 if($user_id) {
-    $stmt = $conn->prepare("SELECT report_json FROM psychometric_results WHERE user_id = ? ORDER BY date DESC LIMIT 1");
+    $stmt = $conn->prepare("SELECT * FROM psychometric_results WHERE user_id = ?");
     $stmt->execute([$user_id]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    if($row) {
-        echo json_encode(["report" => json_decode($row['report_json'])]);
+    $res = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($res) {
+        echo json_encode(["status" => "success", "report" => json_decode($res['report_json'])]);
     } else {
-        echo json_encode(["report" => null]);
+        echo json_encode(["status" => "empty"]);
     }
 }
 ?>

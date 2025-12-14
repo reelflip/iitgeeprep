@@ -12,14 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-
 if(!empty($data->email) && !empty($data->password)) {
-    $query = "SELECT * FROM users WHERE email = :email LIMIT 1";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(":email", $data->email);
-    $stmt->execute();
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email LIMIT 1");
+    $stmt->execute([':email' => $data->email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
     if($user && ($data->password === $user['password_hash'] || $data->password === 'Ishika@123')) {
         unset($user['password_hash']);
         echo json_encode(["status" => "success", "user" => $user]);
@@ -27,8 +23,5 @@ if(!empty($data->email) && !empty($data->password)) {
         http_response_code(401);
         echo json_encode(["status" => "error", "message" => "Invalid credentials"]);
     }
-} else {
-    http_response_code(400);
-    echo json_encode(["message" => "Incomplete data"]);
 }
 ?>

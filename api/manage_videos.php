@@ -12,23 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $stmt = $conn->query("SELECT * FROM videos");
-    $videos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $map = [];
-    foreach($videos as $v) $map[$v['topic_id']] = $v;
-    echo json_encode($map);
-}
-elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $check = $conn->prepare("SELECT topic_id FROM videos WHERE topic_id = ?");
+if($data->topicId) {
+    $check = $conn->prepare("SELECT id FROM video_lessons WHERE topic_id = ?");
     $check->execute([$data->topicId]);
     if($check->rowCount() > 0) {
-        $stmt = $conn->prepare("UPDATE videos SET video_url = ?, description = ? WHERE topic_id = ?");
-        $stmt->execute([$data->url, $data->desc, $data->topicId]);
+        $conn->prepare("UPDATE video_lessons SET url = ?, description = ? WHERE topic_id = ?")->execute([$data->url, $data->desc, $data->topicId]);
     } else {
-        $stmt = $conn->prepare("INSERT INTO videos (topic_id, video_url, description) VALUES (?, ?, ?)");
-        $stmt->execute([$data->topicId, $data->url, $data->desc]);
+        $conn->prepare("INSERT INTO video_lessons (topic_id, url, description) VALUES (?, ?, ?)")->execute([$data->topicId, $data->url, $data->desc]);
     }
-    echo json_encode(["message" => "Saved"]);
+    echo json_encode(["status" => "success"]);
 }
 ?>

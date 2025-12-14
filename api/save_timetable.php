@@ -13,10 +13,17 @@ include_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"));
 if($data->user_id) {
+    $check = $conn->prepare("SELECT id FROM timetable WHERE user_id = ?");
+    $check->execute([$data->user_id]);
+    
     $config = json_encode($data->config);
     $slots = json_encode($data->slots);
-    $stmt = $conn->prepare("INSERT INTO timetable_configs (user_id, config_json, slots_json) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE config_json = ?, slots_json = ?");
-    $stmt->execute([$data->user_id, $config, $slots, $config, $slots]);
+    
+    if($check->rowCount() > 0) {
+        $conn->prepare("UPDATE timetable SET config_json=?, slots_json=? WHERE user_id=?")->execute([$config, $slots, $data->user_id]);
+    } else {
+        $conn->prepare("INSERT INTO timetable (user_id, config_json, slots_json) VALUES (?,?,?)")->execute([$data->user_id, $config, $slots]);
+    }
     echo json_encode(["message" => "Saved"]);
 }
 ?>

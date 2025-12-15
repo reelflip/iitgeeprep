@@ -10,7 +10,7 @@ include_once 'config.php';
 $data = json_decode(file_get_contents("php://input"));
 if(isset($data->user_id) && isset($data->testId)) {
     try {
-        // Ensure detailedResults is a string, even if empty
+        // Strict JSON encoding for LONGTEXT column
         $details = isset($data->detailedResults) ? json_encode($data->detailedResults) : '[]';
         
         $stmt = $conn->prepare("INSERT INTO test_attempts (id, user_id, test_id, score, total_marks, accuracy, detailed_results, topic_id, difficulty, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");

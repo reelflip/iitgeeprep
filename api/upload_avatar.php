@@ -6,6 +6,4 @@ error_reporting(E_ALL);
 
 include_once 'cors.php';
 include_once 'config.php';
-
-echo json_encode(["status" => "error", "message" => "Upload not configured"]);
-?>
+ echo json_encode(["status" => "error", "message" => "Upload not configured"]); ?>

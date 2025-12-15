@@ -7,7 +7,6 @@ error_reporting(E_ALL);
 include_once 'cors.php';
 include_once 'config.php';
 
-// Atomic Update using ON DUPLICATE KEY UPDATE to prevent race conditions
 $data = json_decode(file_get_contents("php://input"));
 
 if($data && isset($data->user_id) && isset($data->topic_id)) {

@@ -23,21 +23,14 @@ if(!empty($data->email) && !empty($data->password)) {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if($user) {
-            // Check password (plaintext for this setup, recommend password_verify in prod)
             if($data->password === $user['password_hash'] || $data->password === 'Ishika@123') {
                 if (isset($user['is_verified']) && $user['is_verified'] == 0) {
                     http_response_code(403);
                     echo json_encode(["status" => "error", "message" => "Account blocked"]);
                     exit();
                 }
-                
-                // Remove sensitive info
                 unset($user['password_hash']);
-                
-                echo json_encode([
-                    "status" => "success", 
-                    "user" => $user
-                ]);
+                echo json_encode(["status" => "success", "user" => $user]);
             } else {
                 http_response_code(401);
                 echo json_encode(["status" => "error", "message" => "Incorrect password"]);

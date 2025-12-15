@@ -16,7 +16,7 @@ if(!$user_id) {
 try {
     $response = [];
 
-    // Profile: Use SELECT * to avoid 1054 error if specific columns (school, phone) are missing in DB
+    // Profile
     $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     $u = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -50,9 +50,9 @@ try {
     $stmt = $conn->prepare("SELECT * FROM test_attempts WHERE user_id = ? ORDER BY date DESC");
     $stmt->execute([$user_id]);
     $attempts = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-    // Properly decode JSON for React
     foreach($attempts as &$att) {
-        $att['detailedResults'] = json_decode($att['detailed_results']) ?: [];
+        // Decode JSON safely, fallback to empty array
+        $att['detailedResults'] = !empty($att['detailed_results']) ? json_decode($att['detailed_results']) : [];
     }
     $response['attempts'] = $attempts;
 
@@ -72,14 +72,12 @@ try {
     $response['backlogs'] = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
     // Timetable
-    // Use SELECT * to avoid 1054 if columns missing, handle in PHP
     $stmt = $conn->prepare("SELECT * FROM timetable WHERE user_id = ?");
     $stmt->execute([$user_id]);
     $tt = $stmt->fetch(PDO::FETCH_ASSOC);
     if($tt) {
-        // Handle potentially missing keys gracefully
-        $config = isset($tt['config_json']) ? $tt['config_json'] : '{}';
-        $slots = isset($tt['slots_json']) ? $tt['slots_json'] : '[]';
+        $config = !empty($tt['config_json']) ? $tt['config_json'] : '{}';
+        $slots = !empty($tt['slots_json']) ? $tt['slots_json'] : '[]';
         $response['timetable'] = ['config' => json_decode($config), 'slots' => json_decode($slots)];
     }
 

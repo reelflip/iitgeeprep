@@ -10,8 +10,9 @@ include_once 'config.php';
 $data = json_decode(file_get_contents("php://input"));
 if(isset($data->user_id)) {
     try {
-        $config = json_encode($data->config);
-        $slots = json_encode($data->slots);
+        // Strict JSON encoding for LONGTEXT columns
+        $config = isset($data->config) ? json_encode($data->config) : '{}';
+        $slots = isset($data->slots) ? json_encode($data->slots) : '[]';
         
         $sql = "INSERT INTO timetable (user_id, config_json, slots_json, updated_at) 
                 VALUES (?, ?, ?, NOW()) 

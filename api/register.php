@@ -18,7 +18,6 @@ if (!$data) {
 
 if(!empty($data->name) && !empty($data->email) && !empty($data->password)) {
     try {
-        // Check duplicate email
         $check = $conn->prepare("SELECT id FROM users WHERE email = ?");
         $check->execute([$data->email]);
         if($check->rowCount() > 0) {
@@ -27,7 +26,6 @@ if(!empty($data->name) && !empty($data->email) && !empty($data->password)) {
             exit();
         }
 
-        // Generate ID
         $id = null;
         $attempts = 0;
         while($attempts < 5) {
@@ -51,7 +49,7 @@ if(!empty($data->name) && !empty($data->email) && !empty($data->password)) {
             ':id' => $id,
             ':name' => $data->name,
             ':email' => $data->email,
-            ':pass' => $data->password, // Note: Production should use password_hash()
+            ':pass' => $data->password,
             ':role' => $data->role,
             ':exam' => $data->targetExam ?? '',
             ':year' => $data->targetYear ?? 2025,
@@ -78,6 +76,6 @@ if(!empty($data->name) && !empty($data->email) && !empty($data->password)) {
     }
 } else {
     http_response_code(400);
-    echo json_encode(["status" => "error", "message" => "Missing required fields (name, email, password)"]);
+    echo json_encode(["status" => "error", "message" => "Missing required fields"]);
 }
 ?>

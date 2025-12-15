@@ -72,11 +72,15 @@ try {
     $response['backlogs'] = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
     // Timetable
-    $stmt = $conn->prepare("SELECT config_json, slots_json FROM timetable WHERE user_id = ?");
+    // Use SELECT * to avoid 1054 if columns missing, handle in PHP
+    $stmt = $conn->prepare("SELECT * FROM timetable WHERE user_id = ?");
     $stmt->execute([$user_id]);
     $tt = $stmt->fetch(PDO::FETCH_ASSOC);
     if($tt) {
-        $response['timetable'] = ['config' => json_decode($tt['config_json']), 'slots' => json_decode($tt['slots_json'])];
+        // Handle potentially missing keys gracefully
+        $config = isset($tt['config_json']) ? $tt['config_json'] : '{}';
+        $slots = isset($tt['slots_json']) ? $tt['slots_json'] : '[]';
+        $response['timetable'] = ['config' => json_decode($config), 'slots' => json_decode($slots)];
     }
 
     // Notifications

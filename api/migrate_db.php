@@ -49,6 +49,8 @@ try {
     checkAndAddColumn($conn, 'users', 'target_exam', 'VARCHAR(100)');
     checkAndAddColumn($conn, 'users', 'target_year', 'INT');
     checkAndAddColumn($conn, 'users', 'institute', 'VARCHAR(255)');
+    checkAndAddColumn($conn, 'users', 'gender', 'VARCHAR(50)');
+    checkAndAddColumn($conn, 'users', 'dob', 'VARCHAR(50)');
     
     // Test Attempts
     checkAndAddColumn($conn, 'test_attempts', 'detailed_results', 'LONGTEXT');
@@ -101,6 +103,11 @@ try {
     checkAndAddColumn($conn, 'notifications', 'to_id', 'VARCHAR(255)');
     checkAndAddColumn($conn, 'notifications', 'type', 'VARCHAR(50)');
     checkAndAddColumn($conn, 'notifications', 'message', 'TEXT');
+
+    // Psychometric
+    checkAndAddColumn($conn, 'psychometric_results', 'user_id', 'VARCHAR(255)');
+    checkAndAddColumn($conn, 'psychometric_results', 'report_json', 'LONGTEXT');
+    checkAndAddColumn($conn, 'psychometric_results', 'date', 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP');
 
     echo json_encode(["status" => "success", "message" => "Database schema verified and updated successfully."]);
 

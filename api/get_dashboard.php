@@ -41,18 +41,46 @@ try {
         $response['userProfileSync'] = null;
     }
 
-    // Progress
+    // Progress - MAP DB columns to Frontend types
     $stmt = $conn->prepare("SELECT * FROM user_progress WHERE user_id = ?");
     $stmt->execute([$user_id]);
-    $response['progress'] = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    $rawProgress = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    $response['progress'] = []; // Sending array, frontend handles it if it expects array or map
+    // Actually existing frontend expects array in "progress" key but processes it into a Map.
+    // We send raw array of objects with correct keys.
+    foreach($rawProgress as $p) {
+        $response['progress'][] = [
+            "topicId" => $p['topic_id'],
+            "status" => $p['status'],
+            "lastRevised" => $p['last_revised'],
+            "revisionLevel" => (int)$p['revision_level'],
+            "nextRevisionDate" => $p['next_revision_date'],
+            "solvedQuestions_json" => $p['solved_questions_json'] // Frontend handles parse
+        ];
+    }
 
-    // Attempts
+    // Attempts - CRITICAL FIX: MAP snake_case to camelCase
     $stmt = $conn->prepare("SELECT * FROM test_attempts WHERE user_id = ? ORDER BY date DESC");
     $stmt->execute([$user_id]);
-    $attempts = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-    foreach($attempts as &$att) {
-        // Decode JSON safely, fallback to empty array
-        $att['detailedResults'] = !empty($att['detailed_results']) ? json_decode($att['detailed_results']) : [];
+    $rawAttempts = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    $attempts = [];
+    foreach($rawAttempts as $att) {
+        $attempts[] = [
+            "id" => $att['id'],
+            "userId" => $att['user_id'],
+            "testId" => $att['test_id'],
+            "score" => (int)$att['score'],
+            "totalMarks" => (int)$att['total_marks'],
+            "accuracy_percent" => (float)$att['accuracy'], // DB has 'accuracy', Frontend wants 'accuracy_percent'
+            "detailedResults" => !empty($att['detailed_results']) ? json_decode($att['detailed_results']) : [],
+            "topicId" => $att['topic_id'],
+            "difficulty" => $att['difficulty'],
+            "totalQuestions" => (int)($att['total_questions'] ?? 0),
+            "correctCount" => (int)($att['correct_count'] ?? 0),
+            "incorrectCount" => (int)($att['incorrect_count'] ?? 0),
+            "unattemptedCount" => (int)($att['unattempted_count'] ?? 0),
+            "date" => $att['date']
+        ];
     }
     $response['attempts'] = $attempts;
 
@@ -84,7 +112,20 @@ try {
     // Notifications
     $stmt = $conn->prepare("SELECT * FROM notifications WHERE to_id = ? ORDER BY created_at DESC");
     $stmt->execute([$user_id]);
-    $response['notifications'] = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    // Map notifications too just in case
+    $response['notifications'] = [];
+    foreach($notifications as $n) {
+        $response['notifications'][] = [
+            "id" => $n['id'],
+            "fromId" => $n['from_id'],
+            "fromName" => $n['from_name'],
+            "toId" => $n['to_id'],
+            "type" => $n['type'],
+            "message" => $n['message'],
+            "date" => $n['created_at']
+        ];
+    }
 
     echo json_encode($response);
 } catch(Exception $e) {

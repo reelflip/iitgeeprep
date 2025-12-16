@@ -43,6 +43,10 @@ $schema = [
         'detailed_results' => 'LONGTEXT',
         'topic_id' => 'VARCHAR(255)',
         'difficulty' => 'VARCHAR(50)',
+        'total_questions' => 'INT DEFAULT 0',
+        'correct_count' => 'INT DEFAULT 0',
+        'incorrect_count' => 'INT DEFAULT 0',
+        'unattempted_count' => 'INT DEFAULT 0',
         'date' => 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
     ],
     'user_progress' => [
@@ -107,7 +111,8 @@ $schema = [
         'id' => 'INT AUTO_INCREMENT PRIMARY KEY',
         'user_id' => 'VARCHAR(255)',
         'report_json' => 'LONGTEXT',
-        'date' => 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
+        'date' => 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP',
+        'unique_constraint' => 'UNIQUE KEY (user_id)'
     ],
     'questions' => [
         'id' => 'VARCHAR(255) PRIMARY KEY',
@@ -201,6 +206,11 @@ try {
             }
         }
     }
+    
+    // Explicitly add UNIQUE constraint for psychometric_results if missing (Fixes retake issues)
+    try {
+        $conn->exec("ALTER TABLE psychometric_results ADD UNIQUE (user_id)");
+    } catch (Exception $e) { /* Ignore if exists */ }
     
     echo json_encode(["status" => "success", "message" => "Database schema synchronized successfully."]);
 

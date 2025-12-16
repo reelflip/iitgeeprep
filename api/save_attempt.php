@@ -13,17 +13,26 @@ if(isset($data->user_id) && isset($data->testId)) {
         // Strict JSON encoding for LONGTEXT column
         $details = isset($data->detailedResults) ? json_encode($data->detailedResults) : '[]';
         
-        $stmt = $conn->prepare("INSERT INTO test_attempts (id, user_id, test_id, score, total_marks, accuracy, detailed_results, topic_id, difficulty, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
+        // Use updated schema fields
+        $stmt = $conn->prepare("INSERT INTO test_attempts (
+            id, user_id, test_id, score, total_marks, accuracy, detailed_results, 
+            topic_id, difficulty, total_questions, correct_count, incorrect_count, unattempted_count, date
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
+        
         $stmt->execute([
             $data->id, 
             $data->user_id, 
             $data->testId, 
             $data->score, 
             $data->totalMarks, 
-            $data->accuracy_percent, 
+            $data->accuracy_percent, // Stored in 'accuracy' column
             $details,
             $data->topicId ?? null,
-            $data->difficulty ?? 'MIXED'
+            $data->difficulty ?? 'MIXED',
+            $data->totalQuestions ?? 0,
+            $data->correctCount ?? 0,
+            $data->incorrectCount ?? 0,
+            $data->unattemptedCount ?? 0
         ]);
         echo json_encode(["message" => "Saved"]);
     } catch(Exception $e) {

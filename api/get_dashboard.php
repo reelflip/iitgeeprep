@@ -8,10 +8,7 @@ include_once 'cors.php';
 include_once 'config.php';
 
 $user_id = $_GET['user_id'] ?? '';
-if(!$user_id) {
-    echo json_encode(["error" => "No User ID"]);
-    exit();
-}
+if(!$user_id) { echo json_encode(["error" => "No User ID"]); exit(); }
 
 try {
     $response = [];
@@ -20,7 +17,6 @@ try {
     $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     $u = $stmt->fetch(PDO::FETCH_ASSOC);
-    
     if($u) {
         $response['userProfileSync'] = [
             "id" => $u['id'],
@@ -37,29 +33,26 @@ try {
             "phone" => $u['phone'] ?? '',
             "avatarUrl" => $u['avatar_url'] ?? ''
         ];
-    } else {
-        $response['userProfileSync'] = null;
-    }
+    } else { $response['userProfileSync'] = null; }
 
-    // Progress - MAP DB columns to Frontend types
+    // Progress - Return keys matching App.tsx expectations (snake_case)
     $stmt = $conn->prepare("SELECT * FROM user_progress WHERE user_id = ?");
     $stmt->execute([$user_id]);
     $rawProgress = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-    $response['progress'] = []; // Sending array, frontend handles it if it expects array or map
-    // Actually existing frontend expects array in "progress" key but processes it into a Map.
-    // We send raw array of objects with correct keys.
+    $response['progress'] = []; 
     foreach($rawProgress as $p) {
+        // Crucial: Use snake_case here because App.tsx reads p.topic_id, p.last_revised, etc.
         $response['progress'][] = [
-            "topicId" => $p['topic_id'],
+            "topic_id" => $p['topic_id'], 
             "status" => $p['status'],
-            "lastRevised" => $p['last_revised'],
-            "revisionLevel" => (int)$p['revision_level'],
-            "nextRevisionDate" => $p['next_revision_date'],
-            "solvedQuestions_json" => $p['solved_questions_json'] // Frontend handles parse
+            "last_revised" => $p['last_revised'],
+            "revision_level" => (int)$p['revision_level'],
+            "next_revision_date" => $p['next_revision_date'],
+            "solved_questions_json" => $p['solved_questions_json']
         ];
     }
 
-    // Attempts - CRITICAL FIX: MAP snake_case to camelCase
+    // Attempts
     $stmt = $conn->prepare("SELECT * FROM test_attempts WHERE user_id = ? ORDER BY date DESC");
     $stmt->execute([$user_id]);
     $rawAttempts = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
@@ -71,7 +64,7 @@ try {
             "testId" => $att['test_id'],
             "score" => (int)$att['score'],
             "totalMarks" => (int)$att['total_marks'],
-            "accuracy_percent" => (float)$att['accuracy'], // DB has 'accuracy', Frontend wants 'accuracy_percent'
+            "accuracy_percent" => (float)$att['accuracy'],
             "detailedResults" => !empty($att['detailed_results']) ? json_decode($att['detailed_results']) : [],
             "topicId" => $att['topic_id'],
             "difficulty" => $att['difficulty'],
@@ -84,22 +77,18 @@ try {
     }
     $response['attempts'] = $attempts;
 
-    // Goals
     $stmt = $conn->prepare("SELECT * FROM goals WHERE user_id = ?");
     $stmt->execute([$user_id]);
     $response['goals'] = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
-    // Mistakes
     $stmt = $conn->prepare("SELECT * FROM mistake_logs WHERE user_id = ?");
     $stmt->execute([$user_id]);
     $response['mistakes'] = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
-    // Backlogs
     $stmt = $conn->prepare("SELECT * FROM backlogs WHERE user_id = ?");
     $stmt->execute([$user_id]);
     $response['backlogs'] = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
-    // Timetable
     $stmt = $conn->prepare("SELECT * FROM timetable WHERE user_id = ?");
     $stmt->execute([$user_id]);
     $tt = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -109,11 +98,9 @@ try {
         $response['timetable'] = ['config' => json_decode($config), 'slots' => json_decode($slots)];
     }
 
-    // Notifications
     $stmt = $conn->prepare("SELECT * FROM notifications WHERE to_id = ? ORDER BY created_at DESC");
     $stmt->execute([$user_id]);
     $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-    // Map notifications too just in case
     $response['notifications'] = [];
     foreach($notifications as $n) {
         $response['notifications'][] = [

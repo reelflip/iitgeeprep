@@ -10,7 +10,7 @@ try {
     $conn->exec("set names utf8mb4");
 } catch(PDOException $exception) {
     http_response_code(500);
-    echo json_encode(["status" => "error", "message" => "Database Connection Error: " . $exception->getMessage()]);
+    echo json_encode(["status" => "error", "message" => "Database Connection Error: " . $exception.getMessage()]);
     exit();
 }
 ?>

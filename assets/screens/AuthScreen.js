@@ -453,7 +453,7 @@ const AuthScreen = ({ onLogin, onNavigate }) => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-center mt-6 text-[9px] font-medium text-slate-300 uppercase tracking-[0.3em]", children: [
         "© ",
         (/* @__PURE__ */ new Date()).getFullYear(),
-        " IITGEEPrep • STABLE v12.24"
+        " IITGEEPrep • STABLE v12.25"
       ] })
     ] })
   ] });

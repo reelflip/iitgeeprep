@@ -143,7 +143,10 @@ const ProfileScreen = reactExports.lazy(() => __vitePreload(() => import("./scre
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
+    // Fix: Declare props and state members to guarantee their visibility to the TS compiler
+    __publicField(this, "props");
     __publicField(this, "state", { hasError: false });
+    this.props = props;
   }
   static getDerivedStateFromError(_error) {
     return { hasError: true };
@@ -190,6 +193,15 @@ const App = () => {
   const [chapterNotes, setChapterNotes] = reactExports.useState({});
   const [videoMap, setVideoMap] = reactExports.useState({});
   const [linkedData, setLinkedData] = reactExports.useState();
+  const clearState = reactExports.useCallback(() => {
+    setProgress({});
+    setTestAttempts([]);
+    setGoals([]);
+    setMistakes([]);
+    setBacklogs([]);
+    setTimetable({});
+    setLinkedData(void 0);
+  }, []);
   reactExports.useEffect(() => {
     if (user) {
       const isAdmin = user.role === "ADMIN" || user.role === "ADMIN_EXECUTIVE";
@@ -215,6 +227,7 @@ const App = () => {
       const res = await fetch(`/api/get_dashboard.php?user_id=${userId}`);
       if (res.ok) {
         const data = await res.json();
+        clearState();
         if (data.progress) {
           const progMap = {};
           data.progress.forEach((p) => {
@@ -271,7 +284,7 @@ const App = () => {
     } catch (e) {
       console.error(e);
     }
-  }, []);
+  }, [clearState]);
   reactExports.useEffect(() => {
     if (user) {
       loadDashboard(user.id);
@@ -297,12 +310,14 @@ const App = () => {
     loadGlobalContent();
   }, []);
   const handleLogin = (u) => {
+    clearState();
     setUser(u);
     const isAdmin = u.role === "ADMIN" || u.role === "ADMIN_EXECUTIVE";
     setScreen(isAdmin ? "overview" : "dashboard");
   };
   const handleLogout = () => {
     setUser(null);
+    clearState();
     setScreen("dashboard");
     localStorage.clear();
   };
@@ -414,7 +429,7 @@ const App = () => {
     switch (currentScreen) {
       case "dashboard":
       case "overview":
-        return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDashboardScreen, { user, onNavigate: setScreen, messageCount: 0 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DashboardScreen, { user, progress: (linkedData == null ? void 0 : linkedData.progress) || progress, testAttempts: (linkedData == null ? void 0 : linkedData.tests) || testAttempts, goals, toggleGoal, addGoal, setScreen, viewingStudentName: linkedData == null ? void 0 : linkedData.studentName, linkedPsychReport: linkedData == null ? void 0 : linkedData.psychReport });
+        return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDashboardScreen, { user, onNavigate: setScreen, messageCount: 0 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DashboardScreen, { user, progress: (linkedData == null ? void 0 : linkedData.progress) || progress, testAttempts: (linkedData == null ? void 0 : linkedData.tests) || testAttempts, goals, toggleGoal: (goal) => toggleGoal(goal), addGoal, setScreen, viewingStudentName: linkedData == null ? void 0 : linkedData.studentName, linkedPsychReport: linkedData == null ? void 0 : linkedData.psychReport });
       case "syllabus":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(SyllabusScreen, { user, subjects: SYLLABUS_DATA, progress: (linkedData == null ? void 0 : linkedData.progress) || progress, onUpdateProgress: updateProgress, chapterNotes, videoMap, questionBank, viewingStudentName: linkedData == null ? void 0 : linkedData.studentName, readOnly: user.role === "PARENT", addTestAttempt: handleAddTestAttempt, testAttempts: (linkedData == null ? void 0 : linkedData.tests) || testAttempts });
       case "tests":
@@ -463,7 +478,7 @@ const App = () => {
       case "ai-tutor":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(AITutorChat, { isFullScreen: true });
       default:
-        return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDashboardScreen, { user, onNavigate: setScreen }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DashboardScreen, { user, progress, testAttempts, goals, toggleGoal, addGoal, setScreen });
+        return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDashboardScreen, { user, onNavigate: setScreen }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DashboardScreen, { user, progress, testAttempts, goals, toggleGoal: (goal) => toggleGoal(goal), addGoal, setScreen });
     }
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ErrorBoundary, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex bg-slate-50 min-h-screen font-inter", children: [

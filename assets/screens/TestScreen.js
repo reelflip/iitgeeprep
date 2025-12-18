@@ -53,7 +53,7 @@ const TestScreen = ({ user, addTestAttempt, history, availableTests = [] }) => {
       setIsSubmitting(false);
       setRunningTest(null);
       setActiveTab("history");
-      alert(`Test Submitted Successfully!
+      alert(`Mock Test Submitted!
 Score: ${score}/${totalMarks}
 Accuracy: ${accuracy}%`);
     } catch (e) {
@@ -108,8 +108,8 @@ Accuracy: ${accuracy}%`);
     if (!questions || questions.length === 0) {
       return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed inset-0 z-50 bg-white flex flex-col items-center justify-center p-8", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(AlertCircle, { className: "w-16 h-16 text-red-500 mb-4" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-2xl font-bold text-slate-800", children: "Test Engine Error" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-500 mt-2", children: "No questions found for this test configuration." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-2xl font-bold text-slate-800", children: "Engine Initialization Error" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-500 mt-2", children: "No valid questions found for this test." }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleExit, className: "mt-8 px-8 py-3 bg-slate-900 text-white rounded-xl font-bold", children: "Back to Menu" })
       ] });
     }
@@ -127,7 +127,7 @@ Accuracy: ${accuracy}%`);
                 questions.length,
                 " Questions"
               ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "JEE Pattern" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "JEE Standard" })
             ] })
           ] })
         ] }),
@@ -139,7 +139,7 @@ Accuracy: ${accuracy}%`);
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white border-b border-slate-200 px-6 py-2 flex items-center justify-between", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold text-slate-400 uppercase tracking-widest mr-4 hidden md:block", children: "Navigation:" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "bg-blue-50 text-blue-600 px-3 py-1 rounded-lg text-[10px] font-black uppercase", children: "Standard Mock" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "bg-blue-50 text-blue-600 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest", children: "Active Test Engine" })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs font-bold text-slate-500", children: [
           "Progress: ",
@@ -185,12 +185,12 @@ Accuracy: ${accuracy}%`);
           )) }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-auto space-y-4 pt-8", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 bg-slate-50 rounded-xl space-y-2 border border-slate-100", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between text-[10px] font-bold text-slate-400 uppercase", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Attempted" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Answered" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-emerald-600", children: Object.keys(userAnswers).length })
               ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between text-[10px] font-bold text-slate-400 uppercase", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Remaining" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Pending" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-slate-600", children: questions.length - Object.keys(userAnswers).length })
               ] })
             ] }),
@@ -206,7 +206,7 @@ Accuracy: ${accuracy}%`);
                 ]
               }
             ),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleExit, className: "w-full text-slate-400 hover:text-red-500 text-xs font-bold uppercase transition-colors", children: "Discard & Exit" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleExit, className: "w-full text-slate-400 hover:text-red-500 text-[10px] font-black uppercase tracking-widest transition-colors", children: "Discard & Exit" })
           ] })
         ] })
       ] }),
@@ -244,18 +244,18 @@ Accuracy: ${accuracy}%`);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6 animate-in fade-in", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-3xl font-bold", children: isParent ? "Student Scorecards" : "Test Center" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-100 mt-1 opacity-90", children: isParent ? "Viewing verified performance history of your child." : "Challenge yourself with mock exams and track your improvement." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-3xl font-bold", children: isParent ? "Student Performance" : "Mock Test Center" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-100 mt-1 opacity-90", children: isParent ? "Viewing performance history of your child." : "Challenge yourself with exam-pattern mock tests." })
       ] }),
       !isParent && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex bg-white/20 p-1 rounded-xl backdrop-blur-sm border border-white/10 shrink-0", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setActiveTab("practice"), className: `px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "practice" ? "bg-white text-blue-700 shadow-lg" : "text-white hover:bg-white/10"}`, children: "Practice" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setActiveTab("history"), className: `px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "history" ? "bg-white text-blue-700 shadow-lg" : "text-white hover:bg-white/10"}`, children: "History" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setActiveTab("practice"), className: `px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "practice" ? "bg-white text-blue-700 shadow-lg" : "text-white hover:bg-white/10"}`, children: "Assessments" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setActiveTab("history"), className: `px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "history" ? "bg-white text-blue-700 shadow-lg" : "text-white hover:bg-white/10"}`, children: "Result History" })
       ] })
     ] }),
     activeTab === "practice" && !isParent && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-6 pb-20", children: availableTests.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "col-span-full py-20 text-center bg-white rounded-3xl border border-dashed text-slate-400", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { className: "w-12 h-12 mx-auto mb-4 opacity-20" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-bold uppercase tracking-widest text-xs", children: "No Mock Tests Available" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2", children: "Check back later or take chapter tests in the Syllabus tab." })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-bold uppercase tracking-widest text-xs", children: "No Mock Tests Assigned" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2", children: "Check the Syllabus tab for chapter-wise assessments." })
     ] }) : availableTests.map((test) => {
       var _a;
       return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-400 transition-all group", children: [
@@ -295,17 +295,17 @@ Accuracy: ${accuracy}%`);
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 border-b border-slate-200 bg-slate-50/50 flex justify-between items-center", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-black text-slate-800 text-sm uppercase tracking-widest flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Trophy, { className: "w-5 h-5 text-amber-500" }),
-          isParent ? "Student Performance History" : "Past Attempts"
+          "Performance Records"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-black bg-white border px-3 py-1 rounded-full text-slate-400", children: [
-          "TOTAL: ",
+          "COUNT: ",
           history.length
         ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "divide-y divide-slate-100", children: history.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-20 text-center text-slate-400", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { className: "w-16 h-16 mx-auto mb-4 opacity-10" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-bold text-slate-600", children: "No test records found." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs max-w-xs mx-auto mt-2", children: isParent ? "Your child hasn't taken any mock tests or chapter tests yet." : "You haven't completed any assessments. Time to take your first test!" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-bold text-slate-600 text-lg", children: "No assessment history found." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm max-w-xs mx-auto mt-2", children: "Take your first test in the 'Practice' tab to see your progress here." })
       ] }) : history.map((attempt) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 flex flex-col md:flex-row md:items-center justify-between hover:bg-slate-50 transition-colors group", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-4 items-center", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${attempt.accuracy_percent >= 75 ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trophy, { size: 20 }) }),
@@ -314,7 +314,7 @@ Accuracy: ${accuracy}%`);
             /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[10px] text-slate-400 font-bold uppercase mt-1 flex items-center gap-2", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: new Date(attempt.date).toLocaleDateString(void 0, { day: "numeric", month: "short", year: "numeric" }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-1 h-1 rounded-full bg-slate-300" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-blue-600", children: attempt.timeTakenSeconds ? `${Math.floor(attempt.timeTakenSeconds / 60)}m ${attempt.timeTakenSeconds % 60}s` : "JEE Standard" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-blue-600", children: attempt.timeTakenSeconds ? `${Math.floor(attempt.timeTakenSeconds / 60)}m ${attempt.timeTakenSeconds % 60}s` : "Standard Duration" })
             ] })
           ] })
         ] }),

@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, a as BookOpen, ao as Search, a8 as CheckCircle2, c as ChevronRight, s as ArrowLeft, ab as Clock, au as AlertTriangle, L as Loader2, S as Send, bn as StickyNote, Y as Youtube } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, a as BookOpen, ao as Search, a8 as CheckCircle2, c as ChevronRight, s as ArrowLeft, ab as Clock, L as Loader2, S as Send, bn as StickyNote } from "../vendor.js";
 import { B as BookReader } from "../components/BookReader.js";
 const statusColors = {
   "NOT_STARTED": "bg-slate-100 text-slate-600 border-slate-200",
@@ -34,6 +34,9 @@ const SyllabusScreen = ({
   const [activeSubjectFilter, setActiveSubjectFilter] = reactExports.useState("ALL");
   const [activeTopic, setActiveTopic] = reactExports.useState(null);
   const [activeNote, setActiveNote] = reactExports.useState(null);
+  const [testAnswers, setTestAnswers] = reactExports.useState({});
+  const [testResultsVisible, setTestResultsVisible] = reactExports.useState({});
+  const [testTimers, setTestTimers] = reactExports.useState({});
   const structuredSubjects = reactExports.useMemo(() => {
     const grouped = {
       "Physics": {},
@@ -77,28 +80,26 @@ const SyllabusScreen = ({
       solvedQuestions: []
     };
   };
-  const TopicDetailView = ({ topic, onClose }) => {
-    var _a;
+  const renderTopicDetail = (topic) => {
     const [activeTab, setActiveTab] = reactExports.useState("PRACTICE");
     const [isSubmitting, setIsSubmitting] = reactExports.useState(false);
-    const [timeElapsed, setTimeElapsed] = reactExports.useState(0);
     const topicData = getTopicProgress(topic.id);
-    const topicQuestions = reactExports.useMemo(() => questionBank.filter((q) => q.topicId === topic.id), [topic.id, questionBank]);
+    const topicQuestions = questionBank.filter((q) => q.topicId === topic.id);
     const videoLesson = videoMap[topic.id];
     const chapterNote = chapterNotes[topic.id];
-    const [selectedAnswers, setSelectedAnswers] = reactExports.useState({});
-    const [showResults, setShowResults] = reactExports.useState({});
-    reactExports.useEffect(() => {
-      let interval;
-      if (activeTab === "TEST") {
-        interval = setInterval(() => setTimeElapsed((prev) => prev + 1), 1e3);
-      }
-      return () => clearInterval(interval);
-    }, [activeTab]);
+    const currentAnswers = testAnswers[topic.id] || {};
+    const currentResultsVisible = testResultsVisible[topic.id] || {};
+    const currentTime = testTimers[topic.id] || 0;
     const handleCheckAnswer = (qId, optionIdx, correctIdx) => {
-      if (showResults[qId] || readOnly) return;
-      setSelectedAnswers((prev) => ({ ...prev, [qId]: optionIdx }));
-      setShowResults((prev) => ({ ...prev, [qId]: true }));
+      if (currentResultsVisible[qId] || readOnly) return;
+      setTestAnswers((prev) => ({
+        ...prev,
+        [topic.id]: { ...prev[topic.id], [qId]: optionIdx }
+      }));
+      setTestResultsVisible((prev) => ({
+        ...prev,
+        [topic.id]: { ...prev[topic.id], [qId]: true }
+      }));
       if (optionIdx === correctIdx) {
         const currentSolved = topicData.solvedQuestions || [];
         if (!currentSolved.includes(qId)) {
@@ -106,17 +107,18 @@ const SyllabusScreen = ({
         }
       }
     };
-    const handleSubmitTest = async () => {
-      if (Object.keys(selectedAnswers).length === 0) {
-        if (!confirm("You haven't answered any questions. Are you sure you want to submit?")) return;
+    const handleSubmitChapterTest = async () => {
+      if (Object.keys(currentAnswers).length === 0) {
+        alert("Please answer at least one question before submitting.");
+        return;
       }
       setIsSubmitting(true);
       const results = topicQuestions.map((q) => ({
         questionId: q.id,
         subjectId: q.subjectId,
         topicId: q.topicId,
-        status: selectedAnswers[q.id] === void 0 ? "UNATTEMPTED" : selectedAnswers[q.id] === q.correctOptionIndex ? "CORRECT" : "INCORRECT",
-        selectedOptionIndex: selectedAnswers[q.id]
+        status: currentAnswers[q.id] === void 0 ? "UNATTEMPTED" : currentAnswers[q.id] === q.correctOptionIndex ? "CORRECT" : "INCORRECT",
+        selectedOptionIndex: currentAnswers[q.id]
       }));
       const correctCount = results.filter((r) => r.status === "CORRECT").length;
       const incorrectCount = results.filter((r) => r.status === "INCORRECT").length;
@@ -138,31 +140,21 @@ const SyllabusScreen = ({
         unattemptedCount,
         detailedResults: results,
         topicId: topic.id,
-        timeTakenSeconds: timeElapsed
+        timeTakenSeconds: currentTime
       };
       if (addTestAttempt) {
-        try {
-          await addTestAttempt(attempt);
-          if (score > totalMarks / 2) {
-            onUpdateProgress(topic.id, { status: "COMPLETED" });
-          }
-          alert(`Test Submitted Successfully! Score: ${score}/${totalMarks}`);
-          onClose();
-        } catch (e) {
-          alert("Error saving test result. Please check your connection.");
-        }
+        await addTestAttempt(attempt);
+        alert(`Chapter Test Submitted!
+Score: ${score}/${totalMarks}
+Result saved to history.`);
+        setActiveTopic(null);
       }
       setIsSubmitting(false);
-    };
-    const formatTime = (seconds) => {
-      const m = Math.floor(seconds / 60);
-      const s = seconds % 60;
-      return `${m}:${s.toString().padStart(2, "0")}`;
     };
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed inset-0 z-50 bg-slate-50 flex flex-col animate-in slide-in-from-right-4 duration-300", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm shrink-0", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: onClose, className: "p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { className: "w-6 h-6" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setActiveTopic(null), className: "p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { className: "w-6 h-6" }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest gap-2", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: topic.subject }),
@@ -174,7 +166,11 @@ const SyllabusScreen = ({
         ] }),
         activeTab === "TEST" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4 px-4 py-2 bg-slate-900 text-white rounded-xl", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { className: "w-4 h-4 text-blue-400" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono font-bold", children: formatTime(timeElapsed) })
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono font-bold", children: [
+            Math.floor(currentTime / 60),
+            ":",
+            (currentTime % 60).toString().padStart(2, "0")
+          ] })
         ] }),
         !readOnly && activeTab !== "TEST" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-slate-400 uppercase tracking-wider hidden md:block", children: "Update Status" }),
@@ -200,38 +196,25 @@ const SyllabusScreen = ({
       )) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-4xl mx-auto p-4 md:p-8 space-y-8", children: [
         (activeTab === "PRACTICE" || activeTab === "TEST") && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-bold text-slate-800", children: activeTab === "TEST" ? "Timed Assessment" : "Chapter Question Bank" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-500 mt-1", children: activeTab === "TEST" ? "Formal attempt. Results will be saved to your scorecard and visible to parents." : `Review ${topicQuestions.length} practice problems at your own pace.` })
-            ] }),
-            activeTab === "PRACTICE" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-right", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-2xl font-black text-blue-600", children: [
-                Math.round((((_a = topicData.solvedQuestions) == null ? void 0 : _a.length) || 0) / (topicQuestions.length || 1) * 100),
-                "%"
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-bold text-slate-400 uppercase", children: "Mastery" })
-            ] })
-          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-bold text-slate-800", children: activeTab === "TEST" ? "Formal Assessment" : "Practice Bank" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-500 mt-1", children: activeTab === "TEST" ? "Timed attempt. Your results will be saved permanently to your scorecard." : `Explore ${topicQuestions.length} practice problems.` })
+          ] }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6 pb-24", children: [
-            topicQuestions.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-12 text-center text-slate-400 bg-white rounded-2xl border border-dashed", children: "No questions available for this topic yet." }) : topicQuestions.map((q, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `bg-white p-6 rounded-2xl border transition-all ${selectedAnswers[q.id] !== void 0 ? "border-blue-200" : "border-slate-200 shadow-sm"}`, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-start mb-4", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-black bg-slate-100 text-slate-500 px-2 py-1 rounded", children: [
-                  "QUESTION ",
-                  idx + 1
-                ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-[10px] font-bold px-2 py-1 rounded uppercase ${q.difficulty === "HARD" ? "bg-red-50 text-red-600" : q.difficulty === "MEDIUM" ? "bg-amber-50 text-amber-600" : "bg-green-50 text-green-600"}`, children: q.difficulty })
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-800 font-medium leading-relaxed mb-4", children: q.text }),
+            topicQuestions.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-12 text-center text-slate-400 bg-white rounded-2xl border border-dashed", children: "No questions available for this topic." }) : topicQuestions.map((q, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `bg-white p-6 rounded-2xl border transition-all ${currentAnswers[q.id] !== void 0 ? "border-blue-200" : "border-slate-200 shadow-sm"}`, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-between items-start mb-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-black bg-slate-100 text-slate-500 px-2 py-1 rounded", children: [
+                "QUESTION ",
+                idx + 1
+              ] }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-800 font-medium mb-4", children: q.text }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-3", children: q.options.map((opt, oIdx) => {
-                const isSelected = selectedAnswers[q.id] === oIdx;
+                const isSelected = currentAnswers[q.id] === oIdx;
                 const isCorrect = oIdx === q.correctOptionIndex;
-                const revealed = showResults[q.id] || activeTab === "TEST" && isSubmitting;
-                let btnStyle = "bg-slate-50 border-slate-100 text-slate-600 hover:bg-slate-100";
-                if (activeTab === "PRACTICE" && revealed) {
-                  if (isCorrect) btnStyle = "bg-green-100 border-green-500 text-green-800 ring-2 ring-green-500/20";
+                const revealed = activeTab === "PRACTICE" && currentResultsVisible[q.id];
+                let btnStyle = "bg-slate-50 border-slate-100 text-slate-600";
+                if (revealed) {
+                  if (isCorrect) btnStyle = "bg-green-100 border-green-500 text-green-800 font-bold";
                   else if (isSelected) btnStyle = "bg-red-100 border-red-500 text-red-800";
-                  else btnStyle = "bg-slate-50 border-slate-100 text-slate-400 opacity-50";
                 } else if (isSelected) {
                   btnStyle = "bg-blue-600 border-blue-600 text-white shadow-lg";
                 }
@@ -240,9 +223,14 @@ const SyllabusScreen = ({
                   {
                     onClick: () => {
                       if (activeTab === "PRACTICE") handleCheckAnswer(q.id, oIdx, q.correctOptionIndex);
-                      else setSelectedAnswers((prev) => ({ ...prev, [q.id]: oIdx }));
+                      else {
+                        setTestAnswers((prev) => ({
+                          ...prev,
+                          [topic.id]: { ...prev[topic.id], [q.id]: oIdx }
+                        }));
+                      }
                     },
-                    className: `p-4 rounded-xl border text-left text-sm font-medium transition-all ${btnStyle}`,
+                    className: `p-4 rounded-xl border text-left text-sm transition-all ${btnStyle}`,
                     children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "mr-2 font-bold uppercase", children: [
                         String.fromCharCode(65 + oIdx),
@@ -254,87 +242,66 @@ const SyllabusScreen = ({
                   },
                   oIdx
                 );
-              }) }),
-              activeTab === "PRACTICE" && showResults[q.id] && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `mt-4 p-4 rounded-xl text-sm font-bold flex items-center gap-2 animate-in fade-in slide-in-from-top-2 ${selectedAnswers[q.id] === q.correctOptionIndex ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`, children: selectedAnswers[q.id] === q.correctOptionIndex ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { className: "w-4 h-4" }),
-                " Correct!"
-              ] }) : (
-                /* Fix: Added AlertTriangle to imports and used here to resolve Error in file screens/SyllabusScreen.tsx on line 320 */
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTriangle, { className: "w-4 h-4" }),
-                  " The right answer is ",
-                  String.fromCharCode(65 + q.correctOptionIndex),
-                  "."
-                ] })
-              ) })
+              }) })
             ] }, q.id)),
-            activeTab === "TEST" && topicQuestions.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-center pt-8 pb-12 gap-4", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "button",
-                {
-                  onClick: onClose,
-                  className: "bg-white border border-slate-200 text-slate-500 px-8 py-4 rounded-2xl font-black text-lg hover:bg-slate-50 transition-all shadow-sm active:scale-95",
-                  children: "Discard"
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                "button",
-                {
-                  onClick: handleSubmitTest,
-                  disabled: isSubmitting,
-                  className: "bg-slate-900 text-white px-12 py-4 rounded-2xl font-black text-lg hover:bg-blue-600 transition-all shadow-xl flex items-center gap-3 active:scale-95 disabled:opacity-50",
-                  children: [
-                    isSubmitting ? /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Send, {}),
-                    "Submit Chapter Test"
-                  ]
-                }
-              )
-            ] })
+            activeTab === "TEST" && topicQuestions.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center pt-8 pb-12", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "button",
+              {
+                onClick: handleSubmitChapterTest,
+                disabled: isSubmitting,
+                className: "bg-slate-900 text-white px-12 py-4 rounded-2xl font-black text-lg hover:bg-blue-600 transition-all shadow-xl flex items-center gap-3 active:scale-95 disabled:opacity-50",
+                children: [
+                  isSubmitting ? /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Send, {}),
+                  "Submit Chapter Test"
+                ]
+              }
+            ) })
           ] })
         ] }),
         activeTab === "NOTES" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-6", children: chapterNote ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-center", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(StickyNote, { className: "w-12 h-12 text-blue-500 mx-auto mb-4" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-xl font-bold text-slate-800 mb-2", children: "Detailed Chapter Notes" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-slate-500 text-sm mb-6", children: [
-            "Expert-curated theory, formulas, and diagrams for ",
-            topic.name,
-            "."
-          ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "button",
             {
               onClick: () => setActiveNote({ title: topic.name, pages: chapterNote.pages }),
-              className: "bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 flex items-center justify-center mx-auto gap-2",
+              className: "bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition-all flex items-center justify-center mx-auto gap-2",
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "w-5 h-5" }),
                 " Open Reader Mode"
               ]
             }
           )
-        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-12 text-center text-slate-400 bg-white rounded-2xl border border-dashed", children: "Notes for this topic are currently being prepared." }) }),
-        activeTab === "VIDEOS" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-6", children: videoLesson ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "aspect-video w-full rounded-2xl overflow-hidden bg-slate-900 shadow-xl border border-slate-800", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "iframe",
-            {
-              src: videoLesson.videoUrl,
-              className: "w-full h-full",
-              allowFullScreen: true,
-              title: topic.name
-            }
-          ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-6 rounded-2xl border border-slate-200", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-bold text-slate-800 flex items-center gap-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Youtube, { className: "w-5 h-5 text-red-600" }),
-              " Video Explanation"
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-slate-600 mt-2 leading-relaxed", children: videoLesson.description || "Comprehensive lecture covering the core concepts of this topic." })
-          ] })
-        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-12 text-center text-slate-400 bg-white rounded-2xl border border-dashed", children: "Video lessons are coming soon." }) })
+        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-12 text-center text-slate-400 bg-white rounded-2xl border border-dashed", children: [
+          "Notes for this topic are currently being prepared.",
+          (user.role === "ADMIN" || user.role === "ADMIN_EXECUTIVE") && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-xs text-blue-500", children: "Go to Syllabus Admin to add notes." })
+        ] }) }),
+        activeTab === "VIDEOS" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-6", children: videoLesson ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "aspect-video w-full rounded-2xl overflow-hidden bg-slate-900 shadow-xl border border-slate-800", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "iframe",
+          {
+            src: videoLesson.videoUrl,
+            className: "w-full h-full",
+            allowFullScreen: true,
+            title: topic.name
+          }
+        ) }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-12 text-center text-slate-400 bg-white rounded-2xl border border-dashed", children: "Video lessons are coming soon." }) })
       ] }) })
     ] });
   };
+  reactExports.useEffect(() => {
+    let interval;
+    if (activeTopic) {
+      interval = setInterval(() => {
+        setTestTimers((prev) => ({
+          ...prev,
+          [activeTopic.id]: (prev[activeTopic.id] || 0) + 1
+        }));
+      }, 1e3);
+    }
+    return () => clearInterval(interval);
+  }, [activeTopic]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-8 font-inter animate-in fade-in slide-in-from-bottom-4 relative", children: [
-    activeTopic && /* @__PURE__ */ jsxRuntimeExports.jsx(TopicDetailView, { topic: activeTopic, onClose: () => setActiveTopic(null) }),
+    activeTopic && renderTopicDetail(activeTopic),
     activeNote && /* @__PURE__ */ jsxRuntimeExports.jsx(BookReader, { title: activeNote.title, pages: activeNote.pages, onClose: () => setActiveNote(null) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10", children: [

@@ -168,7 +168,7 @@ const AdminSystemScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { className: "text-blue-400" }),
           " Admin System"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 mt-2", children: "v12.23 Maintenance Panel" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 mt-2", children: "v12.25 Maintenance Panel" })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex bg-slate-800 p-1 rounded-xl border border-slate-700", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setActiveTab("ai"), className: `px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "ai" ? "bg-blue-600 text-white" : "text-slate-400"}`, children: "AI" }),
@@ -274,7 +274,7 @@ const AdminSystemScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-2xl border border-slate-200 p-6", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-black uppercase tracking-wider text-xs mb-6 flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Database, { className: "text-blue-500" }),
-          " Database Schema (v12.23)"
+          " Database Schema (v12.25)"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-3 max-h-[400px] overflow-y-auto", children: dbTables.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between p-3 bg-slate-50 rounded-lg border", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-bold text-slate-700", children: t.name }),

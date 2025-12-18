@@ -551,7 +551,7 @@ try {
   {
     name: "index.php",
     folder: "deployment/api",
-    content: `${phpHeader} echo json_encode(["status" => "active", "version" => "12.24", "engine" => "IITGEE_PROD"]); ?>`
+    content: `${phpHeader} echo json_encode(["status" => "active", "version" => "12.25", "engine" => "IITGEE_PROD"]); ?>`
   },
   {
     name: "login.php",
@@ -869,7 +869,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = json_decode(file_get_contents('php://input'));
     $stmt = $conn->prepare("INSERT INTO mistake_logs (id, user_id, question, subject, note, date) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$data->id, $data->user_id, $data->question, $data->subject, $data->note, $data->date]);
+    $stmt->execute([$id, $data->user_id, $data->question, $data->subject, $data->note, $data->date]);
     echo json_encode(["status" => "success"]);
 } elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     $id = $_GET['id'];
@@ -948,7 +948,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 try {
     $stats = [];
     $stats['totalUsers'] = $conn->query("SELECT COUNT(*) FROM users")->fetchColumn();
-    $stats['totalVisits'] = $conn->query("SELECT SUM(count) FROM analytics_visits")->fetchColumn() ?: 0;
+    $stats['totalVisits'] = $conn->query("SUM(count) FROM analytics_visits")->fetchColumn() ?: 0;
     $stmt = $conn->query("SELECT date, count as visits FROM analytics_visits ORDER BY date DESC LIMIT 7");
     $stats['dailyTraffic'] = array_reverse($stmt->fetchAll(PDO::FETCH_ASSOC));
     echo json_encode($stats);
@@ -1186,7 +1186,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   }
 ];
 const generateSQLSchema = () => {
-  let sql = `-- IITGEEPrep Complete Database Export v12.24
+  let sql = `-- IITGEEPrep Complete Database Export v12.25
 `;
   sql += `SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO"; START TRANSACTION; SET time_zone = "+00:00";
 
@@ -1250,7 +1250,7 @@ class E2ETestRunner {
   }
   downloadJSONReport() {
     const report = {
-      metadata: { appName: "IITGEEPrep", version: "12.24", generatedAt: (/* @__PURE__ */ new Date()).toISOString() },
+      metadata: { appName: "IITGEEPrep", version: "12.25", generatedAt: (/* @__PURE__ */ new Date()).toISOString() },
       summary: {
         totalTests: this.logs.length,
         passed: this.logs.filter((l) => l.status === "PASS").length,
@@ -1262,13 +1262,13 @@ class E2ETestRunner {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `IITGEEPrep_Diagnostic_Audit_v12_24.json`;
+    a.download = `IITGEEPrep_Diagnostic_Audit_v12_25.json`;
     a.click();
   }
   async runFullAudit() {
     var _a;
     this.logs = [];
-    this.log("START", "Comprehensive Multi-Role Audit Initialized (v12.24)", "PASS");
+    this.log("START", "Comprehensive Multi-Role Audit Initialized (v12.25)", "PASS");
     this.log("H.01", "API Root Endpoint Connectivity", "RUNNING");
     const root = await this.safeFetch("/api/index.php", { method: "GET" });
     this.log("H.01", "API Root Endpoint Connectivity", root.ok ? "PASS" : "FAIL", root.ok ? "Operational" : root.error, root.latency);

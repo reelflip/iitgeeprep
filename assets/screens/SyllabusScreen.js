@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, a as BookOpen, ao as Search, a8 as CheckCircle2, c as ChevronRight, s as ArrowLeft, ab as Clock, L as Loader2, S as Send, bn as StickyNote } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, a as BookOpen, ao as Search, a8 as CheckCircle2, c as ChevronRight, s as ArrowLeft, ab as Clock, L as Loader2, S as Send, bj as StickyNote } from "../vendor.js";
 import { B as BookReader } from "../components/BookReader.js";
 const statusColors = {
   "NOT_STARTED": "bg-slate-100 text-slate-600 border-slate-200",
@@ -15,6 +15,198 @@ const statusLabels = {
   "COMPLETED": "Completed",
   "REVISE": "Revise",
   "BACKLOG": "Backlog"
+};
+const TopicDetailView = ({
+  topic,
+  onClose,
+  topicData,
+  topicQuestions,
+  videoLesson,
+  chapterNote,
+  readOnly,
+  onUpdateProgress,
+  addTestAttempt,
+  currentAnswers,
+  currentResultsVisible,
+  currentTime,
+  onAnswerQuestion,
+  onUpdateTestAnswer,
+  onOpenNoteReader
+}) => {
+  const [activeTab, setActiveTab] = reactExports.useState("PRACTICE");
+  const [isSubmitting, setIsSubmitting] = reactExports.useState(false);
+  const handleSubmitChapterTest = async () => {
+    if (Object.keys(currentAnswers).length === 0) {
+      alert("Please answer at least one question before submitting.");
+      return;
+    }
+    setIsSubmitting(true);
+    const results = topicQuestions.map((q) => ({
+      questionId: q.id,
+      subjectId: q.subjectId,
+      topicId: q.topicId,
+      status: currentAnswers[q.id] === void 0 ? "UNATTEMPTED" : currentAnswers[q.id] === q.correctOptionIndex ? "CORRECT" : "INCORRECT",
+      selectedOptionIndex: currentAnswers[q.id]
+    }));
+    const correctCount = results.filter((r) => r.status === "CORRECT").length;
+    const incorrectCount = results.filter((r) => r.status === "INCORRECT").length;
+    const unattemptedCount = results.filter((r) => r.status === "UNATTEMPTED").length;
+    const score = correctCount * 4 - incorrectCount * 1;
+    const totalMarks = topicQuestions.length * 4;
+    const attempt = {
+      id: `ct_${Date.now()}`,
+      date: (/* @__PURE__ */ new Date()).toISOString(),
+      title: `${topic.name} - Chapter Test`,
+      score,
+      totalMarks,
+      accuracy: Math.round(correctCount / (correctCount + incorrectCount || 1) * 100),
+      accuracy_percent: Math.round(correctCount / (correctCount + incorrectCount || 1) * 100),
+      testId: `ct_${topic.id}`,
+      totalQuestions: topicQuestions.length,
+      correctCount,
+      incorrectCount,
+      unattemptedCount,
+      detailedResults: results,
+      topicId: topic.id,
+      timeTakenSeconds: currentTime
+    };
+    if (addTestAttempt) {
+      await addTestAttempt(attempt);
+      alert(`Chapter Test Submitted!
+Score: ${score}/${totalMarks}
+Result saved to history.`);
+      onClose();
+    }
+    setIsSubmitting(false);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed inset-0 z-50 bg-slate-50 flex flex-col animate-in slide-in-from-right-4 duration-300", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm shrink-0", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: onClose, className: "p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { className: "w-6 h-6" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: topic.subject }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronRight, { className: "w-3 h-3" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: topic.chapter })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-black text-slate-900 leading-tight", children: topic.name })
+        ] })
+      ] }),
+      activeTab === "TEST" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4 px-4 py-2 bg-slate-900 text-white rounded-xl", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { className: "w-4 h-4 text-blue-400" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono font-bold", children: [
+          Math.floor(currentTime / 60),
+          ":",
+          (currentTime % 60).toString().padStart(2, "0")
+        ] })
+      ] }),
+      !readOnly && activeTab !== "TEST" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-slate-400 uppercase tracking-wider hidden md:block", children: "Update Status" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "select",
+          {
+            value: topicData.status,
+            onChange: (e) => onUpdateProgress(topic.id, { status: e.target.value }),
+            className: `px-4 py-2 rounded-xl text-xs font-bold border outline-none transition-all ${statusColors[topicData.status || "NOT_STARTED"]}`,
+            children: Object.entries(statusLabels).map(([val, label]) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: val, className: "bg-white text-slate-800", children: label }, val))
+          }
+        )
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-white border-b border-slate-100 flex justify-center px-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-4 md:gap-8 overflow-x-auto no-scrollbar", children: ["PRACTICE", "TEST", "NOTES", "VIDEOS"].map((tab) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        onClick: () => setActiveTab(tab),
+        className: `py-4 text-xs font-black uppercase tracking-widest border-b-2 transition-all whitespace-nowrap ${activeTab === tab ? "border-blue-600 text-blue-600" : "border-transparent text-slate-400 hover:text-slate-600"}`,
+        children: tab === "TEST" ? "🔥 Chapter Test" : tab
+      },
+      tab
+    )) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-4xl mx-auto p-4 md:p-8 space-y-8", children: [
+      (activeTab === "PRACTICE" || activeTab === "TEST") && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-bold text-slate-800", children: activeTab === "TEST" ? "Formal Assessment" : "Practice Bank" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-500 mt-1", children: activeTab === "TEST" ? "Timed attempt. Your results will be saved permanently to your scorecard." : `Explore ${topicQuestions.length} practice problems.` })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6 pb-24", children: [
+          topicQuestions.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-12 text-center text-slate-400 bg-white rounded-2xl border border-dashed", children: "No questions available for this topic." }) : topicQuestions.map((q, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `bg-white p-6 rounded-2xl border transition-all ${currentAnswers[q.id] !== void 0 ? "border-blue-200" : "border-slate-200 shadow-sm"}`, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-between items-start mb-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-black bg-slate-100 text-slate-500 px-2 py-1 rounded", children: [
+              "QUESTION ",
+              idx + 1
+            ] }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-800 font-medium mb-4", children: q.text }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-3", children: q.options.map((opt, oIdx) => {
+              const isSelected = currentAnswers[q.id] === oIdx;
+              const isCorrect = oIdx === q.correctOptionIndex;
+              const revealed = activeTab === "PRACTICE" && currentResultsVisible[q.id];
+              let btnStyle = "bg-slate-50 border-slate-100 text-slate-600";
+              if (revealed) {
+                if (isCorrect) btnStyle = "bg-green-100 border-green-500 text-green-800 font-bold";
+                else if (isSelected) btnStyle = "bg-red-100 border-red-500 text-red-800";
+              } else if (isSelected) {
+                btnStyle = "bg-blue-600 border-blue-600 text-white shadow-lg";
+              }
+              return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  onClick: () => {
+                    if (activeTab === "PRACTICE") onAnswerQuestion(q.id, oIdx, q.correctOptionIndex);
+                    else onUpdateTestAnswer(q.id, oIdx);
+                  },
+                  className: `p-4 rounded-xl border text-left text-sm transition-all ${btnStyle}`,
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "mr-2 font-bold uppercase", children: [
+                      String.fromCharCode(65 + oIdx),
+                      "."
+                    ] }),
+                    " ",
+                    opt
+                  ]
+                },
+                oIdx
+              );
+            }) })
+          ] }, q.id)),
+          activeTab === "TEST" && topicQuestions.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center pt-8 pb-12", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "button",
+            {
+              onClick: handleSubmitChapterTest,
+              disabled: isSubmitting,
+              className: "bg-slate-900 text-white px-12 py-4 rounded-2xl font-black text-lg hover:bg-blue-600 transition-all shadow-xl flex items-center gap-3 active:scale-95 disabled:opacity-50",
+              children: [
+                isSubmitting ? /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Send, {}),
+                "Submit Chapter Test"
+              ]
+            }
+          ) })
+        ] })
+      ] }),
+      activeTab === "NOTES" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-6", children: chapterNote ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-center", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(StickyNote, { className: "w-12 h-12 text-blue-500 mx-auto mb-4" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-xl font-bold text-slate-800 mb-2", children: "Detailed Chapter Notes" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            onClick: () => onOpenNoteReader(topic.name, chapterNote.pages),
+            className: "bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition-all flex items-center justify-center mx-auto gap-2",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "w-5 h-5" }),
+              " Open Reader Mode"
+            ]
+          }
+        )
+      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-12 text-center text-slate-400 bg-white rounded-2xl border border-dashed", children: "Notes for this topic are currently being prepared." }) }),
+      activeTab === "VIDEOS" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-6", children: videoLesson ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "aspect-video w-full rounded-2xl overflow-hidden bg-slate-900 shadow-xl border border-slate-800", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "iframe",
+        {
+          src: videoLesson.videoUrl,
+          className: "w-full h-full",
+          allowFullScreen: true,
+          title: topic.name
+        }
+      ) }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-12 text-center text-slate-400 bg-white rounded-2xl border border-dashed", children: "Video lessons are coming soon." }) })
+    ] }) })
+  ] });
 };
 const SyllabusScreen = ({
   user,
@@ -80,213 +272,29 @@ const SyllabusScreen = ({
       solvedQuestions: []
     };
   };
-  const renderTopicDetail = (topic) => {
-    const [activeTab, setActiveTab] = reactExports.useState("PRACTICE");
-    const [isSubmitting, setIsSubmitting] = reactExports.useState(false);
-    const topicData = getTopicProgress(topic.id);
-    const topicQuestions = questionBank.filter((q) => q.topicId === topic.id);
-    const videoLesson = videoMap[topic.id];
-    const chapterNote = chapterNotes[topic.id];
-    const currentAnswers = testAnswers[topic.id] || {};
-    const currentResultsVisible = testResultsVisible[topic.id] || {};
-    const currentTime = testTimers[topic.id] || 0;
-    const handleCheckAnswer = (qId, optionIdx, correctIdx) => {
-      if (currentResultsVisible[qId] || readOnly) return;
-      setTestAnswers((prev) => ({
-        ...prev,
-        [topic.id]: { ...prev[topic.id], [qId]: optionIdx }
-      }));
-      setTestResultsVisible((prev) => ({
-        ...prev,
-        [topic.id]: { ...prev[topic.id], [qId]: true }
-      }));
-      if (optionIdx === correctIdx) {
-        const currentSolved = topicData.solvedQuestions || [];
-        if (!currentSolved.includes(qId)) {
-          onUpdateProgress(topic.id, { solvedQuestions: [...currentSolved, qId] });
-        }
+  const handleAnswerQuestion = (topicId, qId, optionIdx, correctIdx) => {
+    if (readOnly) return;
+    setTestAnswers((prev) => ({
+      ...prev,
+      [topicId]: { ...prev[topicId], [qId]: optionIdx }
+    }));
+    setTestResultsVisible((prev) => ({
+      ...prev,
+      [topicId]: { ...prev[topicId], [qId]: true }
+    }));
+    if (optionIdx === correctIdx) {
+      const topicData = getTopicProgress(topicId);
+      const currentSolved = topicData.solvedQuestions || [];
+      if (!currentSolved.includes(qId)) {
+        onUpdateProgress(topicId, { solvedQuestions: [...currentSolved, qId] });
       }
-    };
-    const handleSubmitChapterTest = async () => {
-      if (Object.keys(currentAnswers).length === 0) {
-        alert("Please answer at least one question before submitting.");
-        return;
-      }
-      setIsSubmitting(true);
-      const results = topicQuestions.map((q) => ({
-        questionId: q.id,
-        subjectId: q.subjectId,
-        topicId: q.topicId,
-        status: currentAnswers[q.id] === void 0 ? "UNATTEMPTED" : currentAnswers[q.id] === q.correctOptionIndex ? "CORRECT" : "INCORRECT",
-        selectedOptionIndex: currentAnswers[q.id]
-      }));
-      const correctCount = results.filter((r) => r.status === "CORRECT").length;
-      const incorrectCount = results.filter((r) => r.status === "INCORRECT").length;
-      const unattemptedCount = results.filter((r) => r.status === "UNATTEMPTED").length;
-      const score = correctCount * 4 - incorrectCount * 1;
-      const totalMarks = topicQuestions.length * 4;
-      const attempt = {
-        id: `ct_${Date.now()}`,
-        date: (/* @__PURE__ */ new Date()).toISOString(),
-        title: `${topic.name} - Chapter Test`,
-        score,
-        totalMarks,
-        accuracy: Math.round(correctCount / (correctCount + incorrectCount || 1) * 100),
-        accuracy_percent: Math.round(correctCount / (correctCount + incorrectCount || 1) * 100),
-        testId: `ct_${topic.id}`,
-        totalQuestions: topicQuestions.length,
-        correctCount,
-        incorrectCount,
-        unattemptedCount,
-        detailedResults: results,
-        topicId: topic.id,
-        timeTakenSeconds: currentTime
-      };
-      if (addTestAttempt) {
-        await addTestAttempt(attempt);
-        alert(`Chapter Test Submitted!
-Score: ${score}/${totalMarks}
-Result saved to history.`);
-        setActiveTopic(null);
-      }
-      setIsSubmitting(false);
-    };
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed inset-0 z-50 bg-slate-50 flex flex-col animate-in slide-in-from-right-4 duration-300", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm shrink-0", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setActiveTopic(null), className: "p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { className: "w-6 h-6" }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest gap-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: topic.subject }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronRight, { className: "w-3 h-3" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: topic.chapter })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-black text-slate-900 leading-tight", children: topic.name })
-          ] })
-        ] }),
-        activeTab === "TEST" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4 px-4 py-2 bg-slate-900 text-white rounded-xl", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { className: "w-4 h-4 text-blue-400" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono font-bold", children: [
-            Math.floor(currentTime / 60),
-            ":",
-            (currentTime % 60).toString().padStart(2, "0")
-          ] })
-        ] }),
-        !readOnly && activeTab !== "TEST" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-slate-400 uppercase tracking-wider hidden md:block", children: "Update Status" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "select",
-            {
-              value: topicData.status,
-              onChange: (e) => onUpdateProgress(topic.id, { status: e.target.value }),
-              className: `px-4 py-2 rounded-xl text-xs font-bold border outline-none transition-all ${statusColors[topicData.status || "NOT_STARTED"]}`,
-              children: Object.entries(statusLabels).map(([val, label]) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: val, className: "bg-white text-slate-800", children: label }, val))
-            }
-          )
-        ] })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-white border-b border-slate-100 flex justify-center px-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-4 md:gap-8 overflow-x-auto no-scrollbar", children: ["PRACTICE", "TEST", "NOTES", "VIDEOS"].map((tab) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "button",
-        {
-          onClick: () => setActiveTab(tab),
-          className: `py-4 text-xs font-black uppercase tracking-widest border-b-2 transition-all whitespace-nowrap ${activeTab === tab ? "border-blue-600 text-blue-600" : "border-transparent text-slate-400 hover:text-slate-600"}`,
-          children: tab === "TEST" ? "🔥 Chapter Test" : tab
-        },
-        tab
-      )) }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-4xl mx-auto p-4 md:p-8 space-y-8", children: [
-        (activeTab === "PRACTICE" || activeTab === "TEST") && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-bold text-slate-800", children: activeTab === "TEST" ? "Formal Assessment" : "Practice Bank" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-500 mt-1", children: activeTab === "TEST" ? "Timed attempt. Your results will be saved permanently to your scorecard." : `Explore ${topicQuestions.length} practice problems.` })
-          ] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6 pb-24", children: [
-            topicQuestions.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-12 text-center text-slate-400 bg-white rounded-2xl border border-dashed", children: "No questions available for this topic." }) : topicQuestions.map((q, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `bg-white p-6 rounded-2xl border transition-all ${currentAnswers[q.id] !== void 0 ? "border-blue-200" : "border-slate-200 shadow-sm"}`, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-between items-start mb-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-black bg-slate-100 text-slate-500 px-2 py-1 rounded", children: [
-                "QUESTION ",
-                idx + 1
-              ] }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-800 font-medium mb-4", children: q.text }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-3", children: q.options.map((opt, oIdx) => {
-                const isSelected = currentAnswers[q.id] === oIdx;
-                const isCorrect = oIdx === q.correctOptionIndex;
-                const revealed = activeTab === "PRACTICE" && currentResultsVisible[q.id];
-                let btnStyle = "bg-slate-50 border-slate-100 text-slate-600";
-                if (revealed) {
-                  if (isCorrect) btnStyle = "bg-green-100 border-green-500 text-green-800 font-bold";
-                  else if (isSelected) btnStyle = "bg-red-100 border-red-500 text-red-800";
-                } else if (isSelected) {
-                  btnStyle = "bg-blue-600 border-blue-600 text-white shadow-lg";
-                }
-                return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  "button",
-                  {
-                    onClick: () => {
-                      if (activeTab === "PRACTICE") handleCheckAnswer(q.id, oIdx, q.correctOptionIndex);
-                      else {
-                        setTestAnswers((prev) => ({
-                          ...prev,
-                          [topic.id]: { ...prev[topic.id], [q.id]: oIdx }
-                        }));
-                      }
-                    },
-                    className: `p-4 rounded-xl border text-left text-sm transition-all ${btnStyle}`,
-                    children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "mr-2 font-bold uppercase", children: [
-                        String.fromCharCode(65 + oIdx),
-                        "."
-                      ] }),
-                      " ",
-                      opt
-                    ]
-                  },
-                  oIdx
-                );
-              }) })
-            ] }, q.id)),
-            activeTab === "TEST" && topicQuestions.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center pt-8 pb-12", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              "button",
-              {
-                onClick: handleSubmitChapterTest,
-                disabled: isSubmitting,
-                className: "bg-slate-900 text-white px-12 py-4 rounded-2xl font-black text-lg hover:bg-blue-600 transition-all shadow-xl flex items-center gap-3 active:scale-95 disabled:opacity-50",
-                children: [
-                  isSubmitting ? /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Send, {}),
-                  "Submit Chapter Test"
-                ]
-              }
-            ) })
-          ] })
-        ] }),
-        activeTab === "NOTES" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-6", children: chapterNote ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(StickyNote, { className: "w-12 h-12 text-blue-500 mx-auto mb-4" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-xl font-bold text-slate-800 mb-2", children: "Detailed Chapter Notes" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            "button",
-            {
-              onClick: () => setActiveNote({ title: topic.name, pages: chapterNote.pages }),
-              className: "bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition-all flex items-center justify-center mx-auto gap-2",
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "w-5 h-5" }),
-                " Open Reader Mode"
-              ]
-            }
-          )
-        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-12 text-center text-slate-400 bg-white rounded-2xl border border-dashed", children: [
-          "Notes for this topic are currently being prepared.",
-          (user.role === "ADMIN" || user.role === "ADMIN_EXECUTIVE") && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-xs text-blue-500", children: "Go to Syllabus Admin to add notes." })
-        ] }) }),
-        activeTab === "VIDEOS" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-6", children: videoLesson ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "aspect-video w-full rounded-2xl overflow-hidden bg-slate-900 shadow-xl border border-slate-800", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "iframe",
-          {
-            src: videoLesson.videoUrl,
-            className: "w-full h-full",
-            allowFullScreen: true,
-            title: topic.name
-          }
-        ) }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-12 text-center text-slate-400 bg-white rounded-2xl border border-dashed", children: "Video lessons are coming soon." }) })
-      ] }) })
-    ] });
+    }
+  };
+  const handleUpdateTestAnswer = (topicId, qId, optionIdx) => {
+    setTestAnswers((prev) => ({
+      ...prev,
+      [topicId]: { ...prev[topicId], [qId]: optionIdx }
+    }));
   };
   reactExports.useEffect(() => {
     let interval;
@@ -301,7 +309,26 @@ Result saved to history.`);
     return () => clearInterval(interval);
   }, [activeTopic]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-8 font-inter animate-in fade-in slide-in-from-bottom-4 relative", children: [
-    activeTopic && renderTopicDetail(activeTopic),
+    activeTopic && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TopicDetailView,
+      {
+        topic: activeTopic,
+        onClose: () => setActiveTopic(null),
+        topicData: getTopicProgress(activeTopic.id),
+        topicQuestions: questionBank.filter((q) => q.topicId === activeTopic.id),
+        videoLesson: videoMap[activeTopic.id],
+        chapterNote: chapterNotes[activeTopic.id],
+        readOnly,
+        onUpdateProgress,
+        addTestAttempt,
+        currentAnswers: testAnswers[activeTopic.id] || {},
+        currentResultsVisible: testResultsVisible[activeTopic.id] || {},
+        currentTime: testTimers[activeTopic.id] || 0,
+        onAnswerQuestion: (qId, opt, corr) => handleAnswerQuestion(activeTopic.id, qId, opt, corr),
+        onUpdateTestAnswer: (qId, opt) => handleUpdateTestAnswer(activeTopic.id, qId, opt),
+        onOpenNoteReader: (title, pages) => setActiveNote({ title, pages })
+      }
+    ),
     activeNote && /* @__PURE__ */ jsxRuntimeExports.jsx(BookReader, { title: activeNote.title, pages: activeNote.pages, onClose: () => setActiveNote(null) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10", children: [
@@ -331,7 +358,8 @@ Result saved to history.`);
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4", children: chapter.topics.map((topic) => {
         var _a;
         const topicData = getTopicProgress(topic.id);
-        const qCount = (questionBank || []).filter((q) => q.topicId === topic.id).length;
+        const qBankFiltered = questionBank || [];
+        const qCount = qBankFiltered.filter((q) => q.topicId === topic.id).length;
         const solvedCount = ((_a = topicData.solvedQuestions) == null ? void 0 : _a.length) || 0;
         const qPercent = qCount > 0 ? Math.round(solvedCount / qCount * 100) : 0;
         return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { onClick: () => !summaryOnly ? setActiveTopic(topic) : null, className: `bg-white border border-slate-200 rounded-xl p-5 shadow-sm transition-all duration-200 group relative overflow-hidden ${!summaryOnly ? "hover:shadow-lg hover:border-blue-300 cursor-pointer" : ""}`, children: [

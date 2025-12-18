@@ -2,7 +2,7 @@ const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/screens/AuthScr
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-import { r as reactExports, b8 as React, j as jsxRuntimeExports, bG as createRoot } from "./vendor.js";
+import { r as reactExports, b8 as React, j as jsxRuntimeExports, bC as createRoot } from "./vendor.js";
 import { N as Navigation, M as MobileNavigation } from "./components/Navigation.js";
 import { A as AITutorChat } from "./components/AITutorChat.js";
 import { P as PublicLayout } from "./components/PublicLayout.js";
@@ -143,7 +143,6 @@ const ProfileScreen = reactExports.lazy(() => __vitePreload(() => import("./scre
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    // Fix: Declare props and state members to guarantee their visibility to the TS compiler
     __publicField(this, "props");
     __publicField(this, "state", { hasError: false });
     this.props = props;
@@ -221,6 +220,31 @@ const App = () => {
   reactExports.useEffect(() => {
     localStorage.setItem("last_screen", currentScreen);
   }, [currentScreen]);
+  const mapProgress = (p) => ({
+    topicId: p.topicId || p.topic_id,
+    status: p.status,
+    lastRevised: p.lastRevised || p.last_revised,
+    revisionLevel: (p.revisionLevel !== void 0 ? p.revisionLevel : p.revision_level) || 0,
+    nextRevisionDate: p.nextRevisionDate || p.next_revision_date,
+    solvedQuestions: p.solvedQuestions || (p.solved_questions_json ? JSON.parse(p.solved_questions_json) : [])
+  });
+  const mapAttempt = (a) => ({
+    id: a.id,
+    date: a.date,
+    title: a.title || "Mock Test",
+    score: Number(a.score),
+    totalMarks: Number(a.totalMarks || a.total_marks),
+    accuracy: Number(a.accuracy),
+    accuracy_percent: Number(a.accuracy_percent || a.accuracy),
+    testId: a.testId || a.test_id,
+    totalQuestions: Number(a.totalQuestions || a.total_questions),
+    correctCount: Number(a.correctCount || a.correct_count),
+    incorrectCount: Number(a.incorrectCount || a.incorrect_count),
+    unattemptedCount: Number(a.unattemptedCount || a.unattempted_count),
+    topicId: a.topicId || a.topic_id,
+    difficulty: a.difficulty,
+    detailedResults: a.detailedResults || (a.detailed_results ? JSON.parse(a.detailed_results) : [])
+  });
   const loadDashboard = reactExports.useCallback(async (userId) => {
     var _a, _b;
     try {
@@ -231,18 +255,12 @@ const App = () => {
         if (data.progress) {
           const progMap = {};
           data.progress.forEach((p) => {
-            progMap[p.topic_id] = {
-              topicId: p.topic_id,
-              status: p.status,
-              lastRevised: p.last_revised,
-              revisionLevel: p.revision_level || 0,
-              nextRevisionDate: p.next_revision_date,
-              solvedQuestions: p.solved_questions_json ? JSON.parse(p.solved_questions_json) : []
-            };
+            const mapped = mapProgress(p);
+            progMap[mapped.topicId] = mapped;
           });
           setProgress(progMap);
         }
-        if (data.attempts) setTestAttempts(data.attempts);
+        if (data.attempts) setTestAttempts(data.attempts.map(mapAttempt));
         if (data.goals) setGoals(data.goals.map((g) => ({ ...g, completed: g.completed == 1 })));
         if (data.mistakes) setMistakes(data.mistakes);
         if (data.backlogs) setBacklogs(data.backlogs);
@@ -257,14 +275,8 @@ const App = () => {
               const sData = await sRes.json();
               const sProgMap = {};
               (_a = sData.progress) == null ? void 0 : _a.forEach((p) => {
-                sProgMap[p.topic_id] = {
-                  topicId: p.topic_id,
-                  status: p.status,
-                  lastRevised: p.last_revised,
-                  revisionLevel: p.revision_level,
-                  nextRevisionDate: p.next_revision_date,
-                  solvedQuestions: p.solved_questions_json ? JSON.parse(p.solved_questions_json) : []
-                };
+                const mapped = mapProgress(p);
+                sProgMap[mapped.topicId] = mapped;
               });
               let psychReport;
               if (psychRes.ok) {
@@ -273,7 +285,7 @@ const App = () => {
               }
               setLinkedData({
                 progress: sProgMap,
-                tests: sData.attempts || [],
+                tests: (sData.attempts || []).map(mapAttempt),
                 studentName: ((_b = sData.userProfileSync) == null ? void 0 : _b.name) || "Student",
                 psychReport
               });

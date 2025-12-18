@@ -1,12 +1,12 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/screens/AuthScreen.js","assets/vendor.js","assets/screens/DashboardScreen.js","assets/shared-core.js","assets/screens/AdminDashboardScreen.js","assets/components/StatCard.js","assets/screens/SyllabusScreen.js","assets/components/BookReader.js","assets/screens/RevisionScreen.js","assets/screens/TimetableScreen.js","assets/screens/TestScreen.js","assets/screens/FlashcardScreen.js","assets/screens/MistakesScreen.js","assets/screens/AnalyticsScreen.js","assets/screens/WellnessScreen.js","assets/screens/BacklogScreen.js","assets/screens/HacksScreen.js","assets/screens/PsychometricScreen.js","assets/screens/AdminUserManagementScreen.js","assets/screens/AdminInboxScreen.js","assets/screens/AdminSyllabusScreen.js","assets/components/RichTextEditor.js","assets/screens/AdminTestManagerScreen.js","assets/components/Button.js","assets/screens/AdminAnalyticsScreen.js","assets/screens/AdminSystemScreen.js","assets/screens/DeploymentScreen.js","assets/screens/DiagnosticsScreen.js","assets/screens/ContentManagerScreen.js","assets/screens/AdminBlogScreen.js","assets/screens/PublicBlogScreen.js","assets/screens/AboutUsScreen.js","assets/screens/ExamGuideScreen.js","assets/screens/ContactUsScreen.js","assets/screens/PrivacyPolicyScreen.js","assets/screens/FeaturesScreen.js","assets/screens/ParentFamilyScreen.js","assets/screens/ProfileScreen.js"])))=>i.map(i=>d[i]);
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/screens/AuthScreen.js","assets/vendor.js","assets/shared-core.js","assets/screens/DashboardScreen.js","assets/screens/AdminDashboardScreen.js","assets/components/StatCard.js","assets/screens/SyllabusScreen.js","assets/components/BookReader.js","assets/screens/RevisionScreen.js","assets/screens/TimetableScreen.js","assets/screens/TestScreen.js","assets/screens/FlashcardScreen.js","assets/screens/MistakesScreen.js","assets/screens/AnalyticsScreen.js","assets/screens/WellnessScreen.js","assets/screens/BacklogScreen.js","assets/screens/HacksScreen.js","assets/screens/PsychometricScreen.js","assets/screens/AdminUserManagementScreen.js","assets/screens/AdminInboxScreen.js","assets/screens/AdminSyllabusScreen.js","assets/components/RichTextEditor.js","assets/screens/AdminTestManagerScreen.js","assets/components/Button.js","assets/screens/AdminAnalyticsScreen.js","assets/screens/AdminSystemScreen.js","assets/screens/DeploymentScreen.js","assets/screens/DiagnosticsScreen.js","assets/screens/ContentManagerScreen.js","assets/screens/AdminBlogScreen.js","assets/screens/PublicBlogScreen.js","assets/screens/AboutUsScreen.js","assets/screens/ExamGuideScreen.js","assets/screens/ContactUsScreen.js","assets/screens/PrivacyPolicyScreen.js","assets/screens/FeaturesScreen.js","assets/screens/ParentFamilyScreen.js","assets/screens/ProfileScreen.js"])))=>i.map(i=>d[i]);
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-import { r as reactExports, b6 as React, j as jsxRuntimeExports, bF as createRoot } from "./vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, bE as createRoot, b8 as React } from "./vendor.js";
 import { N as Navigation, M as MobileNavigation } from "./components/Navigation.js";
 import { A as AITutorChat } from "./components/AITutorChat.js";
 import { P as PublicLayout } from "./components/PublicLayout.js";
-import { c as generateInitialQuestionBank, M as MOCK_TESTS_DATA, S as SYLLABUS_DATA, d as calculateNextRevision } from "./shared-core.js";
+import { d as generateInitialQuestionBank, M as MOCK_TESTS_DATA, S as SYLLABUS_DATA, e as calculateNextRevision } from "./shared-core.js";
 (function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -108,28 +108,28 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
     return baseModule().catch(handlePreloadError);
   });
 };
-const AuthScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AuthScreen.js"), true ? __vite__mapDeps([0,1]) : void 0).then((m) => ({ default: m.AuthScreen })));
-const DashboardScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/DashboardScreen.js"), true ? __vite__mapDeps([2,1,3]) : void 0).then((m) => ({ default: m.DashboardScreen })));
+const AuthScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AuthScreen.js"), true ? __vite__mapDeps([0,1,2]) : void 0).then((m) => ({ default: m.AuthScreen })));
+const DashboardScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/DashboardScreen.js"), true ? __vite__mapDeps([3,1,2]) : void 0).then((m) => ({ default: m.DashboardScreen })));
 const AdminDashboardScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminDashboardScreen.js"), true ? __vite__mapDeps([4,1,5]) : void 0).then((m) => ({ default: m.AdminDashboardScreen })));
 const SyllabusScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/SyllabusScreen.js"), true ? __vite__mapDeps([6,1,7]) : void 0).then((m) => ({ default: m.SyllabusScreen })));
-const RevisionScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/RevisionScreen.js"), true ? __vite__mapDeps([8,1,3]) : void 0).then((m) => ({ default: m.RevisionScreen })));
-const TimetableScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/TimetableScreen.js"), true ? __vite__mapDeps([9,1,3]) : void 0).then((m) => ({ default: m.TimetableScreen })));
+const RevisionScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/RevisionScreen.js"), true ? __vite__mapDeps([8,1,2]) : void 0).then((m) => ({ default: m.RevisionScreen })));
+const TimetableScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/TimetableScreen.js"), true ? __vite__mapDeps([9,1,2]) : void 0).then((m) => ({ default: m.TimetableScreen })));
 const TestScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/TestScreen.js"), true ? __vite__mapDeps([10,1]) : void 0).then((m) => ({ default: m.TestScreen })));
 const FlashcardScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/FlashcardScreen.js"), true ? __vite__mapDeps([11,1]) : void 0).then((m) => ({ default: m.FlashcardScreen })));
 const MistakesScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/MistakesScreen.js"), true ? __vite__mapDeps([12,1]) : void 0).then((m) => ({ default: m.MistakesScreen })));
-const AnalyticsScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AnalyticsScreen.js"), true ? __vite__mapDeps([13,1,3]) : void 0).then((m) => ({ default: m.AnalyticsScreen })));
+const AnalyticsScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AnalyticsScreen.js"), true ? __vite__mapDeps([13,1,2]) : void 0).then((m) => ({ default: m.AnalyticsScreen })));
 const WellnessScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/WellnessScreen.js"), true ? __vite__mapDeps([14,1]) : void 0).then((m) => ({ default: m.WellnessScreen })));
 const BacklogScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/BacklogScreen.js"), true ? __vite__mapDeps([15,1]) : void 0).then((m) => ({ default: m.BacklogScreen })));
 const HacksScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/HacksScreen.js"), true ? __vite__mapDeps([16,1]) : void 0).then((m) => ({ default: m.HacksScreen })));
-const PsychometricScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/PsychometricScreen.js"), true ? __vite__mapDeps([17,1,3]) : void 0).then((m) => ({ default: m.PsychometricScreen })));
+const PsychometricScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/PsychometricScreen.js"), true ? __vite__mapDeps([17,1,2]) : void 0).then((m) => ({ default: m.PsychometricScreen })));
 const AdminUserManagementScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminUserManagementScreen.js"), true ? __vite__mapDeps([18,1]) : void 0).then((m) => ({ default: m.AdminUserManagementScreen })));
 const AdminInboxScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminInboxScreen.js"), true ? __vite__mapDeps([19,1]) : void 0).then((m) => ({ default: m.AdminInboxScreen })));
 const AdminSyllabusScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminSyllabusScreen.js"), true ? __vite__mapDeps([20,1,21]) : void 0).then((m) => ({ default: m.AdminSyllabusScreen })));
-const AdminTestManagerScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminTestManagerScreen.js"), true ? __vite__mapDeps([22,1,23,3]) : void 0).then((m) => ({ default: m.AdminTestManagerScreen })));
+const AdminTestManagerScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminTestManagerScreen.js"), true ? __vite__mapDeps([22,1,23,2]) : void 0).then((m) => ({ default: m.AdminTestManagerScreen })));
 const AdminAnalyticsScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminAnalyticsScreen.js"), true ? __vite__mapDeps([24,1]) : void 0).then((m) => ({ default: m.AdminAnalyticsScreen })));
 const AdminSystemScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminSystemScreen.js"), true ? __vite__mapDeps([25,1]) : void 0).then((m) => ({ default: m.AdminSystemScreen })));
-const DeploymentScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/DeploymentScreen.js"), true ? __vite__mapDeps([26,1,3]) : void 0).then((m) => ({ default: m.DeploymentScreen })));
-const DiagnosticsScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/DiagnosticsScreen.js"), true ? __vite__mapDeps([27,1,3]) : void 0).then((m) => ({ default: m.DiagnosticsScreen })));
+const DeploymentScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/DeploymentScreen.js"), true ? __vite__mapDeps([26,1,2]) : void 0).then((m) => ({ default: m.DeploymentScreen })));
+const DiagnosticsScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/DiagnosticsScreen.js"), true ? __vite__mapDeps([27,1,2]) : void 0).then((m) => ({ default: m.DiagnosticsScreen })));
 const ContentManagerScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/ContentManagerScreen.js"), true ? __vite__mapDeps([28,1]) : void 0).then((m) => ({ default: m.ContentManagerScreen })));
 const AdminBlogScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminBlogScreen.js"), true ? __vite__mapDeps([29,1,21]) : void 0).then((m) => ({ default: m.AdminBlogScreen })));
 const PublicBlogScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/PublicBlogScreen.js"), true ? __vite__mapDeps([30,1]) : void 0).then((m) => ({ default: m.PublicBlogScreen })));
@@ -138,15 +138,13 @@ const ExamGuideScreen = reactExports.lazy(() => __vitePreload(() => import("./sc
 const ContactUsScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/ContactUsScreen.js"), true ? __vite__mapDeps([33,1,23]) : void 0).then((m) => ({ default: m.ContactUsScreen })));
 const PrivacyPolicyScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/PrivacyPolicyScreen.js"), true ? __vite__mapDeps([34,1]) : void 0).then((m) => ({ default: m.PrivacyPolicyScreen })));
 const FeaturesScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/FeaturesScreen.js"), true ? __vite__mapDeps([35,1]) : void 0).then((m) => ({ default: m.FeaturesScreen })));
-const ParentFamilyScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/ParentFamilyScreen.js"), true ? __vite__mapDeps([36,1,17,3]) : void 0).then((m) => ({ default: m.ParentFamilyScreen })));
-const ProfileScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/ProfileScreen.js"), true ? __vite__mapDeps([37,1,3]) : void 0).then((m) => ({ default: m.ProfileScreen })));
-class ErrorBoundary extends React.Component {
+const ParentFamilyScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/ParentFamilyScreen.js"), true ? __vite__mapDeps([36,1,17,2]) : void 0).then((m) => ({ default: m.ParentFamilyScreen })));
+const ProfileScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/ProfileScreen.js"), true ? __vite__mapDeps([37,1,2]) : void 0).then((m) => ({ default: m.ProfileScreen })));
+class ErrorBoundary extends reactExports.Component {
   constructor() {
     super(...arguments);
-    // Fix: Removed redundant constructor and initialized state directly for better type inference.
     __publicField(this, "state", { hasError: false });
   }
-  // Fix: Added error parameter to static getDerivedStateFromError to correctly implement the error boundary.
   static getDerivedStateFromError(_error) {
     return { hasError: true };
   }
@@ -212,6 +210,7 @@ const App = () => {
     localStorage.setItem("last_screen", currentScreen);
   }, [currentScreen]);
   const loadDashboard = reactExports.useCallback(async (userId) => {
+    var _a, _b;
     try {
       const res = await fetch(`/api/get_dashboard.php?user_id=${userId}`);
       if (res.ok) {
@@ -223,9 +222,9 @@ const App = () => {
               topicId: p.topic_id,
               status: p.status,
               lastRevised: p.last_revised,
-              revisionLevel: p.revision_level,
-              nextRevisionDate: p.next_revision_date,
-              solvedQuestions: p.solved_questions_json ? JSON.parse(p.solved_questions_json) : []
+              revision_level: p.revision_level,
+              next_revision_date: p.next_revision_date,
+              solved_questions_json: p.solved_questions_json ? JSON.parse(p.solved_questions_json) : []
             };
           });
           setProgress(progMap);
@@ -236,7 +235,37 @@ const App = () => {
         if (data.backlogs) setBacklogs(data.backlogs);
         if (data.timetable) setTimetable(data.timetable);
         if (data.notifications && data.userProfileSync) {
-          setUser({ ...data.userProfileSync, notifications: data.notifications });
+          const updatedUser = { ...data.userProfileSync, notifications: data.notifications };
+          setUser(updatedUser);
+          if (updatedUser.role === "PARENT" && updatedUser.linkedStudentId) {
+            const sRes = await fetch(`/api/get_dashboard.php?user_id=${updatedUser.linkedStudentId}`);
+            const psychRes = await fetch(`/api/get_psychometric.php?user_id=${updatedUser.linkedStudentId}`);
+            if (sRes.ok) {
+              const sData = await sRes.json();
+              const sProgMap = {};
+              (_a = sData.progress) == null ? void 0 : _a.forEach((p) => {
+                sProgMap[p.topic_id] = {
+                  topicId: p.topic_id,
+                  status: p.status,
+                  lastRevised: p.last_revised,
+                  revision_level: p.revision_level,
+                  next_revision_date: p.next_revision_date,
+                  solved_questions_json: p.solved_questions_json ? JSON.parse(p.solved_questions_json) : []
+                };
+              });
+              let psychReport;
+              if (psychRes.ok) {
+                const pData = await psychRes.json();
+                psychReport = pData.report;
+              }
+              setLinkedData({
+                progress: sProgMap,
+                tests: sData.attempts || [],
+                studentName: ((_b = sData.userProfileSync) == null ? void 0 : _b.name) || "Student",
+                psychReport
+              });
+            }
+          }
         }
       }
     } catch (e) {
@@ -276,6 +305,22 @@ const App = () => {
     setUser(null);
     setScreen("dashboard");
     localStorage.clear();
+  };
+  const handleAcceptRequest = async (notificationId) => {
+    if (!user) return;
+    try {
+      const res = await fetch("/api/respond_request.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notification_id: notificationId, action: "ACCEPT" })
+      });
+      if (res.ok) {
+        loadDashboard(user.id);
+        alert("Request Accepted! Account is now linked.");
+      }
+    } catch (e) {
+      alert("Failed to respond to request.");
+    }
   };
   const updateProgress = async (topicId, updates) => {
     const current = progress[topicId] || { topicId, status: "NOT_STARTED", lastRevised: null, revisionLevel: 0, nextRevisionDate: null, solvedQuestions: [] };
@@ -324,6 +369,19 @@ const App = () => {
       }
     }
   };
+  const handleSendRequest = async (studentId) => {
+    if (!user) return { success: false, message: "Not logged in" };
+    try {
+      const res = await fetch("/api/send_request.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ from_id: user.id, from_name: user.name, to_id: studentId })
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, message: "Connection Error" };
+    }
+  };
   if (!user) {
     const publicScreens = ["about", "blog", "exams", "privacy", "contact", "features"];
     if (publicScreens.includes(currentScreen)) {
@@ -343,13 +401,13 @@ const App = () => {
     switch (currentScreen) {
       case "dashboard":
       case "overview":
-        return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDashboardScreen, { user, onNavigate: setScreen, messageCount: 0 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DashboardScreen, { user, progress, testAttempts, goals, toggleGoal, addGoal, setScreen });
+        return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDashboardScreen, { user, onNavigate: setScreen, messageCount: 0 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DashboardScreen, { user, progress: (linkedData == null ? void 0 : linkedData.progress) || progress, testAttempts: (linkedData == null ? void 0 : linkedData.tests) || testAttempts, goals, toggleGoal, addGoal, setScreen, viewingStudentName: linkedData == null ? void 0 : linkedData.studentName, linkedPsychReport: linkedData == null ? void 0 : linkedData.psychReport });
       case "syllabus":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(SyllabusScreen, { user, subjects: SYLLABUS_DATA, progress, onUpdateProgress: updateProgress, chapterNotes, videoMap, questionBank });
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(SyllabusScreen, { user, subjects: SYLLABUS_DATA, progress: (linkedData == null ? void 0 : linkedData.progress) || progress, onUpdateProgress: updateProgress, chapterNotes, videoMap, questionBank, viewingStudentName: linkedData == null ? void 0 : linkedData.studentName, readOnly: user.role === "PARENT" });
       case "tests":
-        return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminTestManagerScreen, { questionBank, tests, syllabus: SYLLABUS_DATA, onAddQuestion: (q) => setQuestionBank([...questionBank, q]), onCreateTest: (t) => setTests([...tests, t]), onDeleteQuestion: (id) => setQuestionBank(questionBank.filter((q) => q.id !== id)), onDeleteTest: (id) => setTests(tests.filter((t) => t.id !== id)) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(TestScreen, { user, addTestAttempt: (a) => setTestAttempts([...testAttempts, a]), history: testAttempts, availableTests: tests });
+        return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminTestManagerScreen, { questionBank, tests, syllabus: SYLLABUS_DATA, onAddQuestion: (q) => setQuestionBank([...questionBank, q]), onCreateTest: (t) => setTests([...tests, t]), onDeleteQuestion: (id) => setQuestionBank(questionBank.filter((q) => q.id !== id)), onDeleteTest: (id) => setTests(tests.filter((t) => t.id !== id)) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(TestScreen, { user, addTestAttempt: (a) => setTestAttempts([...testAttempts, a]), history: (linkedData == null ? void 0 : linkedData.tests) || testAttempts, availableTests: tests });
       case "analytics":
-        return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminAnalyticsScreen, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx(AnalyticsScreen, { user, progress, testAttempts });
+        return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminAnalyticsScreen, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx(AnalyticsScreen, { user, progress: (linkedData == null ? void 0 : linkedData.progress) || progress, testAttempts: (linkedData == null ? void 0 : linkedData.tests) || testAttempts, viewingStudentName: linkedData == null ? void 0 : linkedData.studentName });
       case "timetable":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(TimetableScreen, { user, savedConfig: timetable.config, savedSlots: timetable.slots, onSave: (c, s) => setTimetable({ config: c, slots: s }) });
       case "revision":
@@ -365,12 +423,11 @@ const App = () => {
       case "wellness":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(WellnessScreen, {});
       case "profile":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(ProfileScreen, { user, onAcceptRequest: () => {
-        }, onUpdateUser: (upd) => setUser({ ...user, ...upd }) });
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(ProfileScreen, { user, onAcceptRequest: handleAcceptRequest, onUpdateUser: (upd) => setUser({ ...user, ...upd }), linkedStudentName: linkedData == null ? void 0 : linkedData.studentName });
       case "psychometric":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(PsychometricScreen, { user });
       case "family":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(ParentFamilyScreen, { user, onSendRequest: async (id) => ({ success: true, message: "Request sent" }), linkedData });
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(ParentFamilyScreen, { user, onSendRequest: handleSendRequest, linkedData });
       case "users":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(AdminUserManagementScreen, {});
       case "inbox":
@@ -398,9 +455,9 @@ const App = () => {
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ErrorBoundary, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex bg-slate-50 min-h-screen font-inter", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Navigation, { currentScreen, setScreen, logout: handleLogout, user }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("main", { className: "flex-1 md:ml-64 p-4 md:p-8 pb-24 md:pb-8 max-w-[1600px] mx-auto w-full", children: /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.Suspense, { fallback: /* @__PURE__ */ jsxRuntimeExports.jsx(LoadingView, {}), children: renderContent() }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("main", { className: "flex-1 md:ml-64 p-4 md:p-8 pb-24 md:pb-8 max-w-[1600px] mx-auto w-full", children: /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.Suspense, { fallback: /* @__PURE__ */ jsxRuntimeExports.jsx(LoadingView, {}), children: user && renderContent() }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(MobileNavigation, { currentScreen, setScreen, logout: handleLogout, user }),
-    user.role === "STUDENT" && currentScreen !== "ai-tutor" && /* @__PURE__ */ jsxRuntimeExports.jsx(AITutorChat, {})
+    user && user.role === "STUDENT" && currentScreen !== "ai-tutor" && /* @__PURE__ */ jsxRuntimeExports.jsx(AITutorChat, {})
   ] }) });
 };
 const container = document.getElementById("root");

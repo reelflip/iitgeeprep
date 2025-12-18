@@ -1,5 +1,5 @@
-import { r as reactExports, j as jsxRuntimeExports, av as RefreshCw, aI as Database, o as Activity, b0 as PlugZap, b1 as Package, b2 as Download, b3 as JSZip } from "../vendor.js";
-import { g as getBackendFiles, a as generateSQLSchema } from "../shared-core.js";
+import { r as reactExports, j as jsxRuntimeExports, av as RefreshCw, aI as Database, o as Activity, b2 as PlugZap, b3 as Package, b4 as Download, b5 as JSZip } from "../vendor.js";
+import { g as getBackendFiles, b as generateSQLSchema } from "../shared-core.js";
 const DeploymentScreen = () => {
   const [activeTab, setActiveTab] = reactExports.useState("guide");
   const [dbConfig, setDbConfig] = reactExports.useState({ host: "localhost", name: "u123456789_iitjee", user: "u123456789_admin", pass: "" });

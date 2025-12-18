@@ -285,6 +285,41 @@ const MOCK_TESTS_DATA = [
     questions: generateInitialQuestionBank().slice(30, 50)
   }
 ];
+const COACHING_INSTITUTES = [
+  "Allen Career Institute",
+  "Fiitjee",
+  "Sri Chaitanya",
+  "Narayana",
+  "Resonance",
+  "Vibrant Academy",
+  "Aakash Institute",
+  "Motion Education",
+  "Reliable Institute",
+  "Physics Wallah (Vidyapeeth)",
+  "Unacademy Centre",
+  "Self Study / Other"
+];
+const TARGET_YEARS = [2025, 2026, 2027];
+const TARGET_EXAMS = [
+  "JEE Main & Advanced",
+  "JEE Main Only",
+  "BITSAT",
+  "VITEEE",
+  "NEET (Physics/Chem)",
+  "MHT-CET",
+  "WBJEE"
+];
+const NATIONAL_EXAMS = [
+  "Custom / Self-Made",
+  "JEE Advanced",
+  "JEE Main",
+  "BITSAT",
+  "VITEEE",
+  "WBJEE",
+  "MHT-CET",
+  "COMEDK",
+  "MET (Manipal)"
+];
 const PSYCHOMETRIC_QUESTIONS = [
   // 1. Academic Stress & Burnout
   { id: 1, text: "I often feel overwhelmed by the sheer volume of the JEE syllabus.", dimension: "Academic Stress & Burnout", polarity: "NEGATIVE" },
@@ -464,26 +499,6 @@ Your profile is balanced. To jump to the next percentile, focus on marginal gain
     // Ensure we send the tailored tips
   };
 };
-const TARGET_EXAMS = [
-  "JEE Main & Advanced",
-  "JEE Main Only",
-  "BITSAT",
-  "VITEEE",
-  "NEET (Physics/Chem)",
-  "MHT-CET",
-  "WBJEE"
-];
-const NATIONAL_EXAMS = [
-  "Custom / Self-Made",
-  "JEE Advanced",
-  "JEE Main",
-  "BITSAT",
-  "VITEEE",
-  "WBJEE",
-  "MHT-CET",
-  "COMEDK",
-  "MET (Manipal)"
-];
 const phpHeader = `<?php
 // CRITICAL: Disable error display to client, log to file instead
 ini_set('display_errors', 0);
@@ -572,11 +587,24 @@ $data = json_decode(file_get_contents('php://input'));
 if(!empty($data->email) && !empty($data->password)) {
     try {
         $id = str_pad(mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
-        $sql = "INSERT INTO users (id, name, email, password_hash, role) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO users (id, name, email, password_hash, role, institute, target_exam, target_year, dob, gender, security_question, security_answer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->execute([$id, $data->name, $data->email, $data->password, $data->role]);
+        $stmt->execute([
+            $id, 
+            $data->name, 
+            $data->email, 
+            $data->password, 
+            $data->role,
+            $data->institute ?? null,
+            $data->targetExam ?? null,
+            $data->targetYear ?? 2025,
+            $data->dob ?? null,
+            $data->gender ?? null,
+            $data->securityQuestion ?? null,
+            $data->securityAnswer ?? null
+        ]);
         echo json_encode(["status" => "success", "user" => ["id" => $id, "name" => $data->name, "role" => $data->role, "email" => $data->email]]);
-    } catch(Exception $e) { http_response_code(500); echo json_encode(["error" => "Email might already exist."]); }
+    } catch(Exception $e) { http_response_code(500); echo json_encode(["error" => "Registration failed. Email may exist."]); }
 }
 ?>`
   },
@@ -607,8 +635,10 @@ if(!empty($data->credential)) {
         } else {
             $id = str_pad(mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
             $role = !empty($data->role) ? $data->role : 'STUDENT';
-            $ins = $conn->prepare("INSERT INTO users (id, name, email, google_id, avatar_url, role) VALUES (?, ?, ?, ?, ?, ?)");
-            $ins->execute([$id, $name, $email, $google_id, $avatar, $role]);
+            $targetExam = ($role === 'STUDENT') ? 'JEE Main & Advanced' : null;
+            $targetYear = ($role === 'STUDENT') ? 2025 : null;
+            $ins = $conn->prepare("INSERT INTO users (id, name, email, google_id, avatar_url, role, target_exam, target_year) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $ins->execute([$id, $name, $email, $google_id, $avatar, $role, $targetExam, $targetYear]);
             $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
             $stmt->execute([$id]);
             $newUser = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -1048,7 +1078,7 @@ try {
     folder: "deployment/api",
     content: `${phpHeader}
 $schema = [
-    'users' => "(id VARCHAR(255) PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) UNIQUE, password_hash VARCHAR(255), role VARCHAR(50) DEFAULT 'STUDENT', target_exam VARCHAR(100), target_year INT, institute VARCHAR(255), gender VARCHAR(50), dob DATE, is_verified TINYINT(1) DEFAULT 1, google_id VARCHAR(255), parent_id VARCHAR(255), linked_student_id VARCHAR(255), school VARCHAR(255), phone VARCHAR(50), avatar_url VARCHAR(500), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)",
+    'users' => "(id VARCHAR(255) PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) UNIQUE, password_hash VARCHAR(255), role VARCHAR(50) DEFAULT 'STUDENT', target_exam VARCHAR(100), target_year INT, institute VARCHAR(255), gender VARCHAR(50), dob DATE, is_verified TINYINT(1) DEFAULT 1, google_id VARCHAR(255), parent_id VARCHAR(255), linked_student_id VARCHAR(255), school VARCHAR(255), phone VARCHAR(50), avatar_url VARCHAR(500), security_question TEXT, security_answer TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)",
     'test_attempts' => "(id VARCHAR(255) PRIMARY KEY, user_id VARCHAR(255), test_id VARCHAR(255), score INT, total_marks INT, accuracy FLOAT, detailed_results LONGTEXT, topic_id VARCHAR(255), difficulty VARCHAR(50), total_questions INT DEFAULT 0, correct_count INT DEFAULT 0, incorrect_count INT DEFAULT 0, unattempted_count INT DEFAULT 0, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)",
     'user_progress' => "(id INT AUTO_INCREMENT PRIMARY KEY, user_id VARCHAR(255), topic_id VARCHAR(255), status VARCHAR(50), last_revised DATETIME, revision_level INT, next_revision_date DATETIME, solved_questions_json LONGTEXT, UNIQUE KEY (user_id, topic_id))",
     'timetable' => "(user_id VARCHAR(255) PRIMARY KEY, config_json LONGTEXT, slots_json LONGTEXT, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)",
@@ -1071,6 +1101,10 @@ try {
     foreach ($schema as $table => $def) {
         $conn->exec("CREATE TABLE IF NOT EXISTS $table $def");
     }
+    // Update users table with missing security columns if needed
+    try { $conn->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS security_question TEXT"); } catch(Exception $e){}
+    try { $conn->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS security_answer TEXT"); } catch(Exception $e){}
+    
     echo json_encode(["status" => "success", "message" => "Schema synchronized."]);
 } catch(Exception $e) { http_response_code(500); echo json_encode(["status" => "error", "message" => $e->getMessage()]); }
 ?>`
@@ -1158,7 +1192,7 @@ const generateSQLSchema = () => {
 
 `;
   const tables = [
-    `CREATE TABLE users (id VARCHAR(255) PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) UNIQUE, password_hash VARCHAR(255), role VARCHAR(50) DEFAULT 'STUDENT', target_exam VARCHAR(100), target_year INT, institute VARCHAR(255), gender VARCHAR(50), dob DATE, is_verified TINYINT(1) DEFAULT 1, google_id VARCHAR(255), parent_id VARCHAR(255), linked_student_id VARCHAR(255), school VARCHAR(255), phone VARCHAR(50), avatar_url VARCHAR(500), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`,
+    `CREATE TABLE users (id VARCHAR(255) PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) UNIQUE, password_hash VARCHAR(255), role VARCHAR(50) DEFAULT 'STUDENT', target_exam VARCHAR(100), target_year INT, institute VARCHAR(255), gender VARCHAR(50), dob DATE, is_verified TINYINT(1) DEFAULT 1, google_id VARCHAR(255), parent_id VARCHAR(255), linked_student_id VARCHAR(255), school VARCHAR(255), phone VARCHAR(50), avatar_url VARCHAR(500), security_question TEXT, security_answer TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`,
     `CREATE TABLE test_attempts (id VARCHAR(255) PRIMARY KEY, user_id VARCHAR(255), test_id VARCHAR(255), score INT, total_marks INT, accuracy FLOAT, detailed_results LONGTEXT, topic_id VARCHAR(255), difficulty VARCHAR(50), total_questions INT DEFAULT 0, correct_count INT DEFAULT 0, incorrect_count INT DEFAULT 0, unattempted_count INT DEFAULT 0, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, INDEX(user_id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`,
     `CREATE TABLE user_progress (id INT AUTO_INCREMENT PRIMARY KEY, user_id VARCHAR(255), topic_id VARCHAR(255), status VARCHAR(50), last_revised DATETIME, revision_level INT, next_revision_date DATETIME, solved_questions_json LONGTEXT, UNIQUE KEY (user_id, topic_id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`,
     `CREATE TABLE timetable (user_id VARCHAR(255) PRIMARY KEY, config_json LONGTEXT, slots_json LONGTEXT, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`,
@@ -1364,16 +1398,18 @@ class E2ETestRunner {
   }
 }
 export {
+  COACHING_INSTITUTES as C,
   E2ETestRunner as E,
   MOCK_TESTS_DATA as M,
   NATIONAL_EXAMS as N,
   PSYCHOMETRIC_QUESTIONS as P,
   SYLLABUS_DATA as S,
   TARGET_EXAMS as T,
-  generateSQLSchema as a,
-  generatePsychometricReport as b,
-  generateInitialQuestionBank as c,
-  calculateNextRevision as d,
+  TARGET_YEARS as a,
+  generateSQLSchema as b,
+  generatePsychometricReport as c,
+  generateInitialQuestionBank as d,
+  calculateNextRevision as e,
   formatDate as f,
   getBackendFiles as g
 };

@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, b4 as Beaker, b2 as Download, av as RefreshCw, b5 as Play, o as Activity, aC as Terminal, b6 as React, a8 as CheckCircle2, aM as XCircle } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, b6 as Beaker, b4 as Download, av as RefreshCw, b7 as Play, o as Activity, aC as Terminal, b8 as React, a8 as CheckCircle2, aM as XCircle } from "../vendor.js";
 import { E as E2ETestRunner } from "../shared-core.js";
 const DiagnosticsScreen = () => {
   const [isRunning, setIsRunning] = reactExports.useState(false);

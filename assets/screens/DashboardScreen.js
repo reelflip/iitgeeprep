@@ -1,6 +1,6 @@
-import { r as reactExports, j as jsxRuntimeExports, m as Users, as as ArrowRight, ab as Clock, a4 as Target, a$ as Trophy, A as AlertCircle } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, m as Users, as as ArrowRight, ab as Clock, a4 as Target, a$ as Trophy, f as Brain, b0 as Sparkles, A as AlertCircle, H as Heart, b1 as Zap, l as Lightbulb } from "../vendor.js";
 import { S as SYLLABUS_DATA } from "../shared-core.js";
-const DashboardScreen = ({ user, viewingStudentName, progress, testAttempts, goals, toggleGoal, addGoal, setScreen }) => {
+const DashboardScreen = ({ user, viewingStudentName, progress, testAttempts, goals, toggleGoal, addGoal, setScreen, linkedPsychReport }) => {
   const [newGoalText, setNewGoalText] = reactExports.useState("");
   const totalTopics = SYLLABUS_DATA.length;
   const completedTopics = Object.values(progress).filter((p) => p.status === "COMPLETED").length;
@@ -16,6 +16,13 @@ const DashboardScreen = ({ user, viewingStudentName, progress, testAttempts, goa
       addGoal(newGoalText);
       setNewGoalText("");
     }
+  };
+  const getParentTipIcon = (tip) => {
+    if (tip.includes("Stress") || tip.includes("Burnout")) return /* @__PURE__ */ jsxRuntimeExports.jsx(Heart, { className: "w-5 h-5 text-rose-500" });
+    if (tip.includes("Study Support") || tip.includes("Strategy")) return /* @__PURE__ */ jsxRuntimeExports.jsx(Brain, { className: "w-5 h-5 text-blue-500" });
+    if (tip.includes("Focus") || tip.includes("Habits")) return /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "w-5 h-5 text-amber-500" });
+    if (tip.includes("Motivation") || tip.includes("Mindset")) return /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { className: "w-5 h-5 text-purple-500" });
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Lightbulb, { className: "w-5 h-5 text-slate-500" });
   };
   if (user.role === "PARENT" && !user.linkedStudentId) {
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-8 animate-in fade-in", children: [
@@ -141,7 +148,66 @@ const DashboardScreen = ({ user, viewingStudentName, progress, testAttempts, goa
         ] })
       ] })
     ] }),
-    !viewingStudentName ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-6 rounded-xl border border-slate-100 shadow-sm", children: [
+    user.role === "PARENT" && viewingStudentName && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-3 gap-6", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "lg:col-span-1 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between h-full", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-violet-600 mb-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Brain, { className: "w-5 h-5" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-bold text-sm uppercase tracking-wider", children: "Psychological Readiness" })
+          ] }),
+          linkedPsychReport ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-end gap-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-5xl font-black text-slate-800", children: [
+                linkedPsychReport.overallScore,
+                "%"
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold text-slate-400 uppercase mb-2", children: "Overall Score" })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold text-slate-500 uppercase block mb-1", children: "Assessment Profile" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "inline-block px-3 py-1 bg-violet-50 text-violet-700 text-sm font-bold rounded-lg border border-violet-100", children: linkedPsychReport.profileType })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-slate-600 leading-relaxed line-clamp-3", children: linkedPsychReport.summary })
+          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "py-8 text-center", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { className: "w-6 h-6 text-slate-300" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-slate-500 font-medium", children: "Waiting for student to complete assessment." })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            onClick: () => setScreen("family"),
+            className: "w-full mt-6 py-2.5 bg-slate-50 text-slate-600 hover:text-blue-600 hover:bg-blue-50 border border-slate-200 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2",
+            children: [
+              "View Full Report ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { className: "w-4 h-4" })
+            ]
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "lg:col-span-2 bg-gradient-to-br from-indigo-900 to-slate-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { className: "w-5 h-5 text-amber-400" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-bold text-sm uppercase tracking-wider text-indigo-100", children: "Actionable Guidance for Parents" })
+          ] }),
+          linkedPsychReport && linkedPsychReport.parentTips ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: linkedPsychReport.parentTips.slice(0, 4).map((tip, idx) => {
+            const parts = tip.split(":");
+            const title = parts.length > 1 ? parts[0] : "General";
+            const content = parts.length > 1 ? parts.slice(1).join(":") : parts[0];
+            return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/10 hover:bg-white/15 transition-all", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "shrink-0 mt-0.5", children: getParentTipIcon(tip) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { className: "text-[10px] font-black uppercase text-amber-400 tracking-widest mb-1", children: title }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-indigo-50 leading-relaxed font-medium", children: content })
+              ] })
+            ] }) }, idx);
+          }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-48 flex items-center justify-center border-2 border-dashed border-white/10 rounded-2xl", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-indigo-300 text-sm italic", children: "Guidance insights will appear once the student completes their assessment." }) })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Brain, { className: "absolute -bottom-10 -right-10 w-48 h-48 text-white opacity-[0.03] pointer-events-none" })
+      ] })
+    ] }),
+    user.role === "STUDENT" && !viewingStudentName && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-6 rounded-xl border border-slate-100 shadow-sm", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center mb-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xl text-blue-600", children: "🎯" }),
@@ -185,19 +251,6 @@ const DashboardScreen = ({ user, viewingStudentName, progress, testAttempts, goa
           }
         )
       ] })
-    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-blue-900 rounded-xl p-6 text-white shadow-lg flex items-center justify-between", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-bold mb-1", children: "Student Performance Insights" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-200 text-sm", children: "Review subject-wise readiness and psychometric analysis." })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "button",
-        {
-          onClick: () => setScreen("family"),
-          className: "bg-white text-blue-900 px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-blue-50 transition-colors",
-          children: "Analyze Readiness"
-        }
-      )
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-yellow-50 p-6 rounded-xl border border-yellow-100", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-3", children: [

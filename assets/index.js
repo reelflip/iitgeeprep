@@ -2,7 +2,7 @@ const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/screens/AuthScr
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-import { r as reactExports, j as jsxRuntimeExports, bE as createRoot, b8 as React } from "./vendor.js";
+import { r as reactExports, b8 as React, j as jsxRuntimeExports, bG as createRoot } from "./vendor.js";
 import { N as Navigation, M as MobileNavigation } from "./components/Navigation.js";
 import { A as AITutorChat } from "./components/AITutorChat.js";
 import { P as PublicLayout } from "./components/PublicLayout.js";
@@ -140,9 +140,9 @@ const PrivacyPolicyScreen = reactExports.lazy(() => __vitePreload(() => import("
 const FeaturesScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/FeaturesScreen.js"), true ? __vite__mapDeps([35,1]) : void 0).then((m) => ({ default: m.FeaturesScreen })));
 const ParentFamilyScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/ParentFamilyScreen.js"), true ? __vite__mapDeps([36,1,17,2]) : void 0).then((m) => ({ default: m.ParentFamilyScreen })));
 const ProfileScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/ProfileScreen.js"), true ? __vite__mapDeps([37,1,2]) : void 0).then((m) => ({ default: m.ProfileScreen })));
-class ErrorBoundary extends reactExports.Component {
-  constructor() {
-    super(...arguments);
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
     __publicField(this, "state", { hasError: false });
   }
   static getDerivedStateFromError(_error) {
@@ -222,9 +222,9 @@ const App = () => {
               topicId: p.topic_id,
               status: p.status,
               lastRevised: p.last_revised,
-              revision_level: p.revision_level,
-              next_revision_date: p.next_revision_date,
-              solved_questions_json: p.solved_questions_json ? JSON.parse(p.solved_questions_json) : []
+              revisionLevel: p.revision_level || 0,
+              nextRevisionDate: p.next_revision_date,
+              solvedQuestions: p.solved_questions_json ? JSON.parse(p.solved_questions_json) : []
             };
           });
           setProgress(progMap);
@@ -248,9 +248,9 @@ const App = () => {
                   topicId: p.topic_id,
                   status: p.status,
                   lastRevised: p.last_revised,
-                  revision_level: p.revision_level,
-                  next_revision_date: p.next_revision_date,
-                  solved_questions_json: p.solved_questions_json ? JSON.parse(p.solved_questions_json) : []
+                  revisionLevel: p.revision_level,
+                  nextRevisionDate: p.next_revision_date,
+                  solvedQuestions: p.solved_questions_json ? JSON.parse(p.solved_questions_json) : []
                 };
               });
               let psychReport;
@@ -322,6 +322,19 @@ const App = () => {
       alert("Failed to respond to request.");
     }
   };
+  const handleAddTestAttempt = async (attempt) => {
+    setTestAttempts((prev) => [attempt, ...prev]);
+    if (user && !user.id.startsWith("demo_")) {
+      try {
+        await fetch("/api/save_attempt.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...attempt, user_id: user.id })
+        });
+      } catch (e) {
+      }
+    }
+  };
   const updateProgress = async (topicId, updates) => {
     const current = progress[topicId] || { topicId, status: "NOT_STARTED", lastRevised: null, revisionLevel: 0, nextRevisionDate: null, solvedQuestions: [] };
     const updated = { ...current, ...updates };
@@ -330,7 +343,7 @@ const App = () => {
       updated.nextRevisionDate = calculateNextRevision(0, updated.lastRevised);
     }
     setProgress((prev) => ({ ...prev, [topicId]: updated }));
-    if (user) {
+    if (user && !user.id.startsWith("demo_")) {
       try {
         await fetch("/api/sync_progress.php", {
           method: "POST",
@@ -403,9 +416,9 @@ const App = () => {
       case "overview":
         return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDashboardScreen, { user, onNavigate: setScreen, messageCount: 0 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DashboardScreen, { user, progress: (linkedData == null ? void 0 : linkedData.progress) || progress, testAttempts: (linkedData == null ? void 0 : linkedData.tests) || testAttempts, goals, toggleGoal, addGoal, setScreen, viewingStudentName: linkedData == null ? void 0 : linkedData.studentName, linkedPsychReport: linkedData == null ? void 0 : linkedData.psychReport });
       case "syllabus":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(SyllabusScreen, { user, subjects: SYLLABUS_DATA, progress: (linkedData == null ? void 0 : linkedData.progress) || progress, onUpdateProgress: updateProgress, chapterNotes, videoMap, questionBank, viewingStudentName: linkedData == null ? void 0 : linkedData.studentName, readOnly: user.role === "PARENT" });
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(SyllabusScreen, { user, subjects: SYLLABUS_DATA, progress: (linkedData == null ? void 0 : linkedData.progress) || progress, onUpdateProgress: updateProgress, chapterNotes, videoMap, questionBank, viewingStudentName: linkedData == null ? void 0 : linkedData.studentName, readOnly: user.role === "PARENT", addTestAttempt: handleAddTestAttempt, testAttempts: (linkedData == null ? void 0 : linkedData.tests) || testAttempts });
       case "tests":
-        return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminTestManagerScreen, { questionBank, tests, syllabus: SYLLABUS_DATA, onAddQuestion: (q) => setQuestionBank([...questionBank, q]), onCreateTest: (t) => setTests([...tests, t]), onDeleteQuestion: (id) => setQuestionBank(questionBank.filter((q) => q.id !== id)), onDeleteTest: (id) => setTests(tests.filter((t) => t.id !== id)) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(TestScreen, { user, addTestAttempt: (a) => setTestAttempts([...testAttempts, a]), history: (linkedData == null ? void 0 : linkedData.tests) || testAttempts, availableTests: tests });
+        return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminTestManagerScreen, { questionBank, tests, syllabus: SYLLABUS_DATA, onAddQuestion: (q) => setQuestionBank([...questionBank, q]), onCreateTest: (t) => setTests([...tests, t]), onDeleteQuestion: (id) => setQuestionBank(questionBank.filter((q) => q.id !== id)), onDeleteTest: (id) => setTests(tests.filter((t) => t.id !== id)) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(TestScreen, { user, addTestAttempt: handleAddTestAttempt, history: (linkedData == null ? void 0 : linkedData.tests) || testAttempts, availableTests: tests });
       case "analytics":
         return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminAnalyticsScreen, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx(AnalyticsScreen, { user, progress: (linkedData == null ? void 0 : linkedData.progress) || progress, testAttempts: (linkedData == null ? void 0 : linkedData.tests) || testAttempts, viewingStudentName: linkedData == null ? void 0 : linkedData.studentName });
       case "timetable":

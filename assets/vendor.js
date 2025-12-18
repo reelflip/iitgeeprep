@@ -8082,6 +8082,16 @@ const Phone = createLucideIcon("Phone", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
+const PlayCircle = createLucideIcon("PlayCircle", [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["polygon", { points: "10 8 16 12 10 16 10 8", key: "1cimsy" }]
+]);
+/**
+ * @license lucide-react v0.344.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
 const Play = createLucideIcon("Play", [
   ["polygon", { points: "5 3 19 12 5 21 5 3", key: "191637" }]
 ]);
@@ -8167,6 +8177,16 @@ const RefreshCw = createLucideIcon("RefreshCw", [
   ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
   ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
   ["path", { d: "M8 16H3v5", key: "1cv678" }]
+]);
+/**
+ * @license lucide-react v0.344.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const RotateCcw = createLucideIcon("RotateCcw", [
+  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
+  ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
 ]);
 /**
  * @license lucide-react v0.344.0 - ISC
@@ -35452,11 +35472,13 @@ export {
   Play as b7,
   React as b8,
   Award as b9,
-  Trees as bA,
-  Waves as bB,
-  Radio as bC,
-  Volume2 as bD,
-  createRoot as bE,
+  Pause as bA,
+  CloudRain as bB,
+  Trees as bC,
+  Waves as bD,
+  Radio as bE,
+  Volume2 as bF,
+  createRoot as bG,
   Bell as ba,
   ShieldCheck as bb,
   ThumbsUp as bc,
@@ -35471,18 +35493,18 @@ export {
   HeartPulse as bl,
   HelpCircle as bm,
   StickyNote as bn,
-  CalendarDays as bo,
-  Map$5 as bp,
-  CheckSquare as bq,
-  Flag as br,
-  Briefcase as bs,
-  Moon as bt,
-  Sun as bu,
-  Coffee as bv,
-  Wind as bw,
-  Music as bx,
-  Pause as by,
-  CloudRain as bz,
+  PlayCircle as bo,
+  RotateCcw as bp,
+  CalendarDays as bq,
+  Map$5 as br,
+  CheckSquare as bs,
+  Flag as bt,
+  Briefcase as bu,
+  Moon as bv,
+  Sun as bw,
+  Coffee as bx,
+  Wind as by,
+  Music as bz,
   ChevronRight as c,
   LogOut as d,
   LayoutDashboard as e,

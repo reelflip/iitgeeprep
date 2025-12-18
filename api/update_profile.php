@@ -6,4 +6,18 @@ error_reporting(E_ALL);
 
 include_once 'cors.php';
 include_once 'config.php';
- $data = json_decode(file_get_contents("php://input")); if(isset($data->id)) { try { $sql = "UPDATE users SET institute = ?, school = ?, target_year = ?, target_exam = ?, phone = ? WHERE id = ?"; $stmt = $conn->prepare($sql); $stmt->execute([$data->institute ?? '', $data->school ?? '', $data->targetYear ?? 2025, $data->targetExam ?? '', $data->phone ?? '', $data->id]); echo json_encode(["message" => "Updated"]); } catch(Exception $e) { http_response_code(500); echo json_encode(["error" => $e->getMessage()]); } } ?>
+
+$data = json_decode(file_get_contents('php://input'));
+if(!empty($data->id)) {
+    $fields = []; $values = [];
+    foreach(['name','target_exam','target_year','institute','school','phone','dob','gender'] as $f) {
+        if(isset($data->$f)) { $fields[] = "$f = ?"; $values[] = $data->$f; }
+    }
+    if($fields) {
+        $values[] = $data->id;
+        $stmt = $conn->prepare("UPDATE users SET " . implode(', ', $fields) . " WHERE id = ?");
+        $stmt->execute($values);
+        echo json_encode(["status" => "success"]);
+    }
+}
+?>

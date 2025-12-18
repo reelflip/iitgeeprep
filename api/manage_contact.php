@@ -6,4 +6,13 @@ error_reporting(E_ALL);
 
 include_once 'cors.php';
 include_once 'config.php';
- $method = $_SERVER['REQUEST_METHOD']; if ($method === 'GET') { $stmt = $conn->query("SELECT * FROM contact_messages ORDER BY created_at DESC"); echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC)); } elseif ($method === 'DELETE') { $conn->prepare("DELETE FROM contact_messages WHERE id = ?")->execute([$_GET['id']]); } ?>
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $stmt = $conn->query("SELECT * FROM contact_messages ORDER BY created_at DESC");
+    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+} elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+    $stmt = $conn->prepare("DELETE FROM contact_messages WHERE id = ?");
+    $stmt->execute([$_GET['id']]);
+    echo json_encode(["status" => "success"]);
+}
+?>

@@ -6,4 +6,14 @@ error_reporting(E_ALL);
 
 include_once 'cors.php';
 include_once 'config.php';
- $data = json_decode(file_get_contents("php://input")); if($data->id) { try { $conn->prepare("DELETE FROM users WHERE id = ?")->execute([$data->id]); $conn->prepare("DELETE FROM user_progress WHERE user_id = ?")->execute([$data->id]); $conn->prepare("DELETE FROM test_attempts WHERE user_id = ?")->execute([$data->id]); echo json_encode(["status" => "success"]); } catch(Exception $e) { http_response_code(500); echo json_encode(["error" => $e->getMessage()]); } } ?>
+
+$user_id = $_GET['user_id'] ?? '';
+if($user_id) {
+    try {
+        $conn->prepare("DELETE FROM users WHERE id = ?")->execute([$user_id]);
+        $conn->prepare("DELETE FROM user_progress WHERE user_id = ?")->execute([$user_id]);
+        $conn->prepare("DELETE FROM test_attempts WHERE user_id = ?")->execute([$user_id]);
+        echo json_encode(["status" => "success"]);
+    } catch(Exception $e) { http_response_code(500); }
+}
+?>

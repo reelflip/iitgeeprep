@@ -6,4 +6,20 @@ error_reporting(E_ALL);
 
 include_once 'cors.php';
 include_once 'config.php';
- $method = $_SERVER['REQUEST_METHOD']; if ($method === 'GET') { $stmt = $conn->query("SELECT * FROM topics"); echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC)); } elseif ($method === 'POST') { $data = json_decode(file_get_contents("php://input")); $stmt = $conn->prepare("INSERT INTO topics (id, name, chapter, subject) VALUES (?, ?, ?, ?)"); $stmt->execute([$data->id, $data->name, $data->chapter, $data->subject]); echo json_encode(["message" => "Created"]); } elseif ($method === 'DELETE') { $conn->prepare("DELETE FROM topics WHERE id = ?")->execute([$_GET['id']]); echo json_encode(["message" => "Deleted"]); } ?>
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $stmt = $conn->query("SELECT * FROM topics");
+    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+} elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $data = json_decode(file_get_contents('php://input'));
+    $id = 't_'.time();
+    $stmt = $conn->prepare("INSERT INTO topics (id, name, chapter, subject) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$id, $data->name, $data->chapter, $data->subject]);
+    echo json_encode(["status" => "success", "id" => $id]);
+} elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+    $id = $_GET['id'];
+    $stmt = $conn->prepare("DELETE FROM topics WHERE id = ?");
+    $stmt->execute([$id]);
+    echo json_encode(["status" => "success"]);
+}
+?>

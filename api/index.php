@@ -6,4 +6,4 @@ error_reporting(E_ALL);
 
 include_once 'cors.php';
 include_once 'config.php';
- echo json_encode(["status" => "active", "version" => "12.22"]); ?>
+ echo json_encode(["status" => "active", "version" => "12.24", "engine" => "IITGEE_PROD"]); ?>

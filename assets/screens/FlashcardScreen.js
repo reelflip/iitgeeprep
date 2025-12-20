@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, k as Layers, R as RotateCw, a as Brain, Z as Zap, bd as ThumbsUp, be as Star, u as ArrowLeft, ax as ArrowRight } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, i as Layers, R as RotateCw, a as Brain, Z as Zap, b9 as ThumbsUp, ba as Star, t as ArrowLeft, aj as ArrowRight } from "../vendor.js";
 const DEMO_CARDS = [
   { id: 1, front: "Newton's Second Law", back: "F = ma\n(Force equals mass times acceleration)", subjectId: "Physics" },
   { id: 2, front: "∫ sin(x) dx", back: "-cos(x) + C", subjectId: "Maths" },

@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, I as Inbox, ay as FileWarning, a7 as AlertTriangle, a9 as RefreshCw, at as Search, L as Loader2, az as Mail, av as Trash2, e as ChevronRight } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, I as Inbox, ak as FileWarning, a5 as AlertTriangle, a7 as RefreshCw, af as Search, L as Loader2, al as Mail, ah as Trash2, d as ChevronRight } from "../vendor.js";
 const AdminInboxScreen = () => {
   const [messages, setMessages] = reactExports.useState([]);
   const [loading, setLoading] = reactExports.useState(true);

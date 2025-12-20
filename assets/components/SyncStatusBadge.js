@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, a7 as AlertTriangle, a8 as CheckCircle2, a9 as RefreshCw } from "../vendor.js";
+import { j as jsxRuntimeExports, a5 as AlertTriangle, a6 as CheckCircle2, a7 as RefreshCw } from "../vendor.js";
 const SyncStatusBadge = ({ status, show = true }) => {
   if (!show || status === "IDLE") return null;
   const styles = {

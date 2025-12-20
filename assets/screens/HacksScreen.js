@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, m as Lightbulb, a as Brain, Z as Zap } from "../vendor.js";
+import { j as jsxRuntimeExports, l as Lightbulb, a as Brain, Z as Zap } from "../vendor.js";
 const HacksScreen = ({ hacks }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6 animate-in fade-in slide-in-from-bottom-4 pb-12", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden", children: [

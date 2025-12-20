@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, t as TrendingUp, aZ as WifiOff, a8 as CheckCircle2, G as GraduationCap, o as Users, a_ as Building, C as ChevronDown, aa as Target, i as Calendar, U as User, az as Mail, aG as Lock, aQ as Shield, aJ as Key, L as Loader2, ax as ArrowRight } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, s as TrendingUp, aS as WifiOff, a6 as CheckCircle2, aT as GraduationCap, n as Users, aU as Building, C as ChevronDown, a8 as Target, h as Calendar, U as User, al as Mail, as as Lock, aC as Shield, av as Key, L as Loader2, aj as ArrowRight } from "../vendor.js";
 import { C as COACHING_INSTITUTES, T as TARGET_EXAMS, a as TARGET_YEARS } from "../shared-core.js";
 const SECURITY_QUESTIONS = [
   "What is the name of your first pet?",
@@ -445,7 +445,6 @@ const AuthScreen = ({ onLogin, onNavigate }) => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-4xl mx-auto flex flex-wrap justify-center gap-x-8 gap-y-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("about"), className: "hover:text-blue-600 transition-colors", children: "About Us" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("features"), className: "hover:text-blue-600 transition-colors", children: "Features" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("exams"), className: "hover:text-blue-600 transition-colors", children: "Exam Guide" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("blog"), className: "hover:text-blue-600 transition-colors", children: "Blog" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("contact"), className: "hover:text-blue-600 transition-colors", children: "Contact" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("privacy"), className: "hover:text-blue-600 transition-colors", children: "Privacy Policy" })

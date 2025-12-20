@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, c as BookOpen, aa as Target, h as BarChart2, a as Brain, R as RotateCw, o as Users, t as TrendingUp, F as FileText, q as Activity, bc as Bell, aP as ShieldCheck, ag as Clock, k as Layers, n as Heart } from "../vendor.js";
+import { j as jsxRuntimeExports, b as BookOpen, a8 as Target, g as BarChart2, a as Brain, R as RotateCw, n as Users, s as TrendingUp, F as FileText, p as Activity, b8 as Bell, aB as ShieldCheck, aZ as Clock, i as Layers, m as Heart } from "../vendor.js";
 const FeaturesScreen = () => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "animate-in fade-in slide-in-from-bottom-4 pb-12 font-inter", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-slate-900 text-white pt-20 pb-24 px-4 relative overflow-hidden", children: [

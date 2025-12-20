@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, k as Layers, o as Users, c as BookOpen, F as FileText, aw as Server, ax as ArrowRight } from "../vendor.js";
+import { j as jsxRuntimeExports, i as Layers, n as Users, b as BookOpen, F as FileText, ai as Server, aj as ArrowRight } from "../vendor.js";
 import { S as StatCard } from "../components/StatCard.js";
 const AdminDashboardScreen = ({ user, onNavigate, messageCount = 0 }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-8 animate-in fade-in slide-in-from-bottom-4", children: [

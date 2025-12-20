@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, q as Activity, aF as Terminal, L as Loader2, aG as Lock, aH as ToggleRight, aI as ToggleLeft, aJ as Key, a9 as RefreshCw, aK as BarChart3, ae as Globe, as as Save, aL as Database, aM as FileCode, a8 as CheckCircle2 } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, p as Activity, ar as Terminal, L as Loader2, as as Lock, at as ToggleRight, au as ToggleLeft, av as Key, a7 as RefreshCw, aw as BarChart3, ac as Globe, ae as Save, ax as Database, ay as FileCode, a6 as CheckCircle2 } from "../vendor.js";
 const AI_MODELS = [
   { id: "gemini-3-flash-preview", name: "Gemini 3 Flash", provider: "Google", description: "Ultra-fast, optimized for quick doubts and scheduling.", strength: "Speed", color: "blue" },
   { id: "gemini-3-pro-preview", name: "Gemini 3 Pro", provider: "Google", description: "Deep reasoning and complex Physics problem solving.", strength: "Reasoning", color: "indigo" },

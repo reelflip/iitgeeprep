@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, f as LogOut, r as reactExports, M as MoreHorizontal, X, g as LayoutDashboard, c as BookOpen, B as Bot, F as FileText, a as Brain, T as Timer, h as BarChart2, i as Calendar, R as RotateCw, G as GraduationCap, A as AlertCircle, k as Layers, l as ListTodo, m as Lightbulb, n as Heart, U as User, o as Users, p as Settings, I as Inbox, P as PenTool, q as Activity, s as UploadCloud } from "../vendor.js";
+import { j as jsxRuntimeExports, e as LogOut, r as reactExports, M as MoreHorizontal, X, f as LayoutDashboard, b as BookOpen, B as Bot, F as FileText, a as Brain, T as Timer, g as BarChart2, h as Calendar, R as RotateCw, A as AlertCircle, i as Layers, k as ListTodo, l as Lightbulb, m as Heart, U as User, n as Users, o as Settings, I as Inbox, P as PenTool, p as Activity, q as UploadCloud } from "../vendor.js";
 const STUDENT_MENU = [
   { id: "dashboard", icon: LayoutDashboard, label: "Home" },
   { id: "syllabus", icon: BookOpen, label: "Syllabus" },
@@ -9,7 +9,6 @@ const STUDENT_MENU = [
   { id: "analytics", icon: BarChart2, label: "Analytics" },
   { id: "timetable", icon: Calendar, label: "Timetable" },
   { id: "revision", icon: RotateCw, label: "Revision" },
-  { id: "exams", icon: GraduationCap, label: "Exam Guide" },
   { id: "mistakes", icon: AlertCircle, label: "Mistakes" },
   { id: "flashcards", icon: Layers, label: "Cards" },
   { id: "backlogs", icon: ListTodo, label: "Backlogs" },

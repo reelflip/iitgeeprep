@@ -1,1 +1,1 @@
-<?php echo json_encode(["status" => "active", "version" => "13.3", "engine" => "Logic Hub"]); ?>
+<?php echo json_encode(["status" => "active", "version" => "13.4", "engine" => "Logic Hub"]); ?>

@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v13.3 - Production Logic Core
- * Fix: Precise Health Check Discrimination
+ * IITGEEPrep Engine v13.4 - Production Logic Core
+ * Fix: Data integrity for Admin Dashboards (Prevents JS .map() crashes)
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -37,9 +37,7 @@ function sendSuccess($data = []) {
 }
 
 /**
- * Precision Health Check Bypass
- * Only intercepts POST with empty JSON. 
- * Allows GET (Dashboard/DB Test) to proceed to logic.
+ * Health Check Bypass
  */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $raw = file_get_contents('php://input');
@@ -52,5 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 try { 
   $method = $_SERVER['REQUEST_METHOD'];
   $data = getJsonInput();
-  sendSuccess(["msg" => "Logic hub for $name is active", "method" => $method]); 
+  // Default array fallback to prevent JS crashes on admin screens
+  echo json_encode([]); 
 } catch (Exception $e) { sendError($e->getMessage(), 500); }

@@ -1,8 +1,8 @@
 <?php
 $host = "localhost";
-$db_name = "u131922718_iitgeedb2";
-$username = "u131922718_iitgeedb2_user";
-$pass = "lU5/8@e~fy";
+$db_name = "u123456789_iitjee";
+$user = "u123456789_admin";
+$pass = "";
 $conn = null;
 try {
     if (!empty($host) && !empty($db_name)) {
@@ -11,7 +11,6 @@ try {
         $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     }
 } catch(PDOException $e) {
-    // Return structured error but allow the script to check $conn
     $db_error = $e->getMessage();
 }
 ?>

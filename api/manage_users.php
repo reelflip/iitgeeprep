@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v13.3 - Production Logic Core
- * Fix: Precise Health Check Discrimination
+ * IITGEEPrep Engine v13.4 - Production Logic Core
+ * Fix: Data integrity for Admin Dashboards (Prevents JS .map() crashes)
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -37,9 +37,7 @@ function sendSuccess($data = []) {
 }
 
 /**
- * Precision Health Check Bypass
- * Only intercepts POST with empty JSON. 
- * Allows GET (Dashboard/DB Test) to proceed to logic.
+ * Health Check Bypass
  */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $raw = file_get_contents('php://input');
@@ -49,8 +47,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-try { 
-  $method = $_SERVER['REQUEST_METHOD'];
-  $data = getJsonInput();
-  sendSuccess(["msg" => "Logic hub for $name is active", "method" => $method]); 
+try {
+    $method = $_SERVER['REQUEST_METHOD'];
+    if ($method === 'GET') {
+        $group = $_GET['group'] ?? 'USERS';
+        if ($group === 'ADMINS') {
+            $stmt = $conn->prepare("SELECT id, name, email, role, is_verified, created_at FROM users WHERE role LIKE 'ADMIN%'");
+        } else {
+            $stmt = $conn->prepare("SELECT id, name, email, role, is_verified, created_at FROM users WHERE role NOT LIKE 'ADMIN%'");
+        }
+        $stmt->execute();
+        echo json_encode($stmt->fetchAll());
+    } else if ($method === 'PUT') {
+        $data = getJsonInput();
+        $stmt = $conn->prepare("UPDATE users SET is_verified = ? WHERE id = ?");
+        $stmt->execute([getV($data, 'isVerified') ? 1 : 0, getV($data, 'id')]);
+        sendSuccess();
+    } else if ($method === 'DELETE') {
+        $id = $_GET['id'] ?? '';
+        $stmt = $conn->prepare("DELETE FROM users WHERE id = ? AND role NOT LIKE 'ADMIN%'");
+        $stmt->execute([$id]);
+        sendSuccess();
+    }
 } catch (Exception $e) { sendError($e->getMessage(), 500); }

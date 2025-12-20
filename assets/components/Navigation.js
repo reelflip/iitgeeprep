@@ -84,7 +84,7 @@ const Navigation = ({ currentScreen, setScreen, logout, user }) => {
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mt-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1.5 py-0.5 bg-slate-800 rounded", children: (user == null ? void 0 : user.role) || "STUDENT" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-slate-600", children: "• v12.27" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-slate-600", children: "• v12.28" })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { className: "flex-1 space-y-1 pb-4", children: menuItems.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(

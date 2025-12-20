@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.29 - Full Restore
- * Production Backend Infrastructure - Hardened & Stable
+ * IITGEEPrep Pro Engine v12.34 - Sync Release
+ * Complete Backend Suite - Synchronized & Hardened
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -12,8 +12,9 @@ include_once 'config.php';
 
 function getJsonInput() {
     $raw = file_get_contents('php://input');
+    if (!$raw) return null;
     $data = json_decode($raw);
-    if ($raw && json_last_error() !== JSON_ERROR_NONE) {
+    if (json_last_error() !== JSON_ERROR_NONE) {
         http_response_code(400);
         echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
         exit;
@@ -37,6 +38,8 @@ function requireProps($data, $props) {
 }
 
 $uid = $_GET['user_id'];
-$r = $conn->query("SELECT * FROM psychometric_results WHERE user_id = '$uid'")->fetch(PDO::FETCH_ASSOC);
+$stmt = $conn->prepare("SELECT * FROM psychometric_results WHERE user_id = ?");
+$stmt->execute([$uid]);
+$r = $stmt->fetch();
 echo json_encode(["report" => $r ? json_decode($r['report_json']) : null]);
 ?>

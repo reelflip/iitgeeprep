@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.29 - Full Restore
- * Production Backend Infrastructure - Hardened & Stable
+ * IITGEEPrep Pro Engine v12.34 - Sync Release
+ * Complete Backend Suite - Synchronized & Hardened
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -12,8 +12,9 @@ include_once 'config.php';
 
 function getJsonInput() {
     $raw = file_get_contents('php://input');
+    if (!$raw) return null;
     $data = json_decode($raw);
-    if ($raw && json_last_error() !== JSON_ERROR_NONE) {
+    if (json_last_error() !== JSON_ERROR_NONE) {
         http_response_code(400);
         echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
         exit;
@@ -39,7 +40,7 @@ function requireProps($data, $props) {
 $res = [
     "totalUsers" => $conn->query("SELECT count(*) FROM users")->fetchColumn(),
     "totalVisits" => $conn->query("SELECT sum(count) FROM analytics_visits")->fetchColumn(),
-    "dailyTraffic" => $conn->query("SELECT date, count as visits FROM analytics_visits ORDER BY date DESC LIMIT 7")->fetchAll(PDO::FETCH_ASSOC)
+    "dailyTraffic" => $conn->query("SELECT date, count as visits FROM analytics_visits ORDER BY date DESC LIMIT 7")->fetchAll()
 ];
 echo json_encode($res);
 ?>

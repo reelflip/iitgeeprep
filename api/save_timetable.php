@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.29 - Full Restore
- * Production Backend Infrastructure - Hardened & Stable
+ * IITGEEPrep Pro Engine v12.34 - Sync Release
+ * Complete Backend Suite - Synchronized & Hardened
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -12,8 +12,9 @@ include_once 'config.php';
 
 function getJsonInput() {
     $raw = file_get_contents('php://input');
+    if (!$raw) return null;
     $data = json_decode($raw);
-    if ($raw && json_last_error() !== JSON_ERROR_NONE) {
+    if (json_last_error() !== JSON_ERROR_NONE) {
         http_response_code(400);
         echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
         exit;
@@ -41,5 +42,5 @@ requireProps($d, ['user_id', 'config', 'slots']);
 $sql = "INSERT INTO timetable (user_id, config_json, slots_json) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE config_json=VALUES(config_json), slots_json=VALUES(slots_json)";
 $stmt = $conn->prepare($sql);
 $stmt->execute([$d->user_id, json_encode($d->config), json_encode($d->slots)]);
-echo json_encode(["status" => "success"]);
+echo json_encode(["status" => "success", "version" => "12.34"]);
 ?>

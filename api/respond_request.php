@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v12.43 - Command Central Core
- * 100% Complete 38-File Backend Deployment
+ * IITGEEPrep Engine v13.0 - Ultimate Sync Core
+ * Production Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -14,12 +14,7 @@ function getJsonInput() {
     $raw = file_get_contents('php://input');
     if (!$raw) return null;
     $data = json_decode($raw);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400);
-        echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
-        exit;
-    }
-    return $data;
+    return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
 }
 
 function getV($data, $p) {
@@ -30,13 +25,13 @@ function getV($data, $p) {
     return null;
 }
 
-$d = getJsonInput();
-if(getV($d, 'action') === 'accept') {
-    $sId = getV($d, 'studentId');
-    $pId = getV($d, 'parentId');
-    $conn->prepare("UPDATE users SET linked_student_id = ? WHERE id = ?")->execute([$sId, $pId]);
-    $conn->prepare("UPDATE users SET parent_id = ? WHERE id = ?")->execute([$pId, $sId]);
+$data = getJsonInput();
+$notId = getV($data, 'notificationId');
+$action = getV($data, 'action');
+if ($action === 'ACCEPT') {
+    $not = $conn->query("SELECT from_id, to_id FROM notifications WHERE id='$notId'")->fetch();
+    $conn->prepare("UPDATE users SET parent_id=? WHERE id=?")->execute([$not['from_id'], $not['to_id']]);
+    $conn->prepare("UPDATE users SET linked_student_id=? WHERE id=?")->execute([$not['to_id'], $not['from_id']]);
 }
-$conn->prepare("DELETE FROM notifications WHERE id = ?")->execute([getV($d, 'notifId')]);
+$conn->prepare("DELETE FROM notifications WHERE id=?")->execute([$notId]);
 echo json_encode(["status" => "success"]);
-?>

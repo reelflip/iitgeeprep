@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v12.43 - Command Central Core
- * 100% Complete 38-File Backend Deployment
+ * IITGEEPrep Engine v13.0 - Ultimate Sync Core
+ * Production Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -14,12 +14,7 @@ function getJsonInput() {
     $raw = file_get_contents('php://input');
     if (!$raw) return null;
     $data = json_decode($raw);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400);
-        echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
-        exit;
-    }
-    return $data;
+    return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
 }
 
 function getV($data, $p) {
@@ -30,24 +25,16 @@ function getV($data, $p) {
     return null;
 }
 
-$uid = $_GET['user_id'] ?? null;
-if(!$uid) { echo json_encode(["error" => "Missing user_id"]); exit; }
+$userId = $_GET['user_id'] ?? '';
 $res = [];
-$u = $conn->prepare("SELECT * FROM users WHERE id = ?"); $u->execute([$uid]); $res['userProfileSync'] = $u->fetch();
-$p = $conn->prepare("SELECT * FROM user_progress WHERE user_id = ?"); $p->execute([$uid]); $res['progress'] = $p->fetchAll();
-$a = $conn->prepare("SELECT id, date, title, score, total_marks, accuracy as accuracy_percent, total_questions, correct_count, incorrect_count, unattempted_count, topic_id, difficulty, detailed_results FROM test_attempts WHERE user_id = ? ORDER BY date DESC"); 
-$a->execute([$uid]); 
-$res['attempts'] = $a->fetchAll();
-$g = $conn->prepare("SELECT * FROM goals WHERE user_id = ?"); $g->execute([$uid]); $res['goals'] = $g->fetchAll();
-$b = $conn->prepare("SELECT * FROM backlogs WHERE user_id = ?"); $b->execute([$uid]); $res['backlogs'] = $b->fetchAll();
-$m = $conn->prepare("SELECT * FROM mistake_logs WHERE user_id = ?"); $m->execute([$uid]); $res['mistakes'] = $m->fetchAll();
-$t = $conn->prepare("SELECT * FROM timetable WHERE user_id = ?"); $t->execute([$uid]); $res['timetable'] = $t->fetch();
-$ps = $conn->prepare("SELECT * FROM psychometric_results WHERE user_id = ?"); $ps->execute([$uid]); $res['psychometric'] = $ps->fetch();
-$n = $conn->prepare("SELECT * FROM notifications WHERE to_id = ? ORDER BY date DESC"); $n->execute([$uid]); $res['notifications'] = $n->fetchAll();
-$st = $conn->prepare("SELECT section, is_synced FROM sync_status WHERE user_id = ?"); $st->execute([$uid]); $res['syncStatus'] = $st->fetchAll();
-// Content for App Load
-$res['blogs'] = $conn->query("SELECT * FROM blog_posts ORDER BY date DESC")->fetchAll();
-$res['flashcards'] = $conn->query("SELECT * FROM flashcards")->fetchAll();
-$res['hacks'] = $conn->query("SELECT * FROM memory_hacks")->fetchAll();
+$res['progress'] = $conn->query("SELECT * FROM user_progress WHERE user_id = '$userId'")->fetchAll();
+$res['attempts'] = $conn->query("SELECT * FROM test_attempts WHERE user_id = '$userId' ORDER BY date DESC")->fetchAll();
+$res['goals'] = $conn->query("SELECT * FROM goals WHERE user_id = '$userId'")->fetchAll();
+$res['backlogs'] = $conn->query("SELECT * FROM backlogs WHERE user_id = '$userId' ORDER BY created_at DESC")->fetchAll();
+$res['mistakes'] = $conn->query("SELECT * FROM mistake_logs WHERE user_id = '$userId' ORDER BY date DESC")->fetchAll();
+$res['timetable'] = $conn->query("SELECT * FROM timetable WHERE user_id = '$userId'")->fetch();
+$res['blogs'] = $conn->query("SELECT * FROM blog_posts ORDER BY date DESC LIMIT 10")->fetchAll();
+$res['flashcards'] = $conn->query("SELECT * FROM flashcards LIMIT 50")->fetchAll();
+$res['hacks'] = $conn->query("SELECT * FROM memory_hacks LIMIT 20")->fetchAll();
+$res['notifications'] = $conn->query("SELECT * FROM notifications WHERE to_id = '$userId' AND is_read = 0")->fetchAll();
 echo json_encode($res);
-?>

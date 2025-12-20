@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v12.43 - Command Central Core
- * 100% Complete 38-File Backend Deployment
+ * IITGEEPrep Engine v13.0 - Ultimate Sync Core
+ * Production Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -14,12 +14,7 @@ function getJsonInput() {
     $raw = file_get_contents('php://input');
     if (!$raw) return null;
     $data = json_decode($raw);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400);
-        echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
-        exit;
-    }
-    return $data;
+    return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
 }
 
 function getV($data, $p) {
@@ -30,10 +25,8 @@ function getV($data, $p) {
     return null;
 }
 
-$res = [
-    "totalUsers" => $conn->query("SELECT count(*) FROM users")->fetchColumn(),
-    "totalVisits" => $conn->query("SELECT sum(count) FROM analytics_visits")->fetchColumn(),
-    "dailyTraffic" => $conn->query("SELECT date, count as visits FROM analytics_visits ORDER BY date DESC LIMIT 7")->fetchAll()
-];
+$res = [];
+$res['totalVisits'] = $conn->query("SELECT SUM(count) FROM analytics_visits")->fetchColumn();
+$res['totalUsers'] = $conn->query("SELECT count(*) FROM users")->fetchColumn();
+$res['dailyTraffic'] = $conn->query("SELECT date, count as visits FROM analytics_visits ORDER BY date DESC LIMIT 7")->fetchAll();
 echo json_encode($res);
-?>

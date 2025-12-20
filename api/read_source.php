@@ -25,14 +25,6 @@ function getV($data, $p) {
     return null;
 }
 
-$method = $_SERVER['REQUEST_METHOD'];
-if ($method === 'GET') {
-    $stmt = $conn->prepare("SELECT value FROM settings WHERE setting_key = ?");
-    $stmt->execute([$_GET['key']]);
-    echo json_encode(["value" => $stmt->fetchColumn()]);
-} else if ($method === 'POST') {
-    $data = getJsonInput();
-    $stmt = $conn->prepare("INSERT INTO settings (setting_key, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value = VALUES(value)");
-    $stmt->execute([getV($data, 'key'), getV($data, 'value')]);
-    echo json_encode(["status" => "success"]);
-}
+$file = $_GET['file'] ?? '';
+if (file_exists($file)) { echo json_encode(["source" => file_get_contents($file)]); } 
+else { echo json_encode(["error" => "Not found"]); }

@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v12.43 - Command Central Core
- * 100% Complete 38-File Backend Deployment
+ * IITGEEPrep Engine v13.0 - Ultimate Sync Core
+ * Production Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -14,12 +14,7 @@ function getJsonInput() {
     $raw = file_get_contents('php://input');
     if (!$raw) return null;
     $data = json_decode($raw);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400);
-        echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
-        exit;
-    }
-    return $data;
+    return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
 }
 
 function getV($data, $p) {
@@ -30,11 +25,12 @@ function getV($data, $p) {
     return null;
 }
 
-$d = getJsonInput();
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $conn->prepare("INSERT INTO mistake_logs (id, user_id, question, subject, note, date) VALUES (?,?,?,?,?,?)")->execute([getV($d, 'id'), getV($d, 'userId'), getV($d, 'question'), getV($d, 'subject'), getV($d, 'note'), date('Y-m-d H:i:s')]);
-} else if($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $conn->prepare("DELETE FROM mistake_logs WHERE id = ?")->execute([$_GET['id']]);
+$method = $_SERVER['REQUEST_METHOD'];
+$data = getJsonInput();
+if ($method === 'POST') {
+    $id = 'err_' . uniqid();
+    $conn->prepare("INSERT INTO mistake_logs (id, user_id, question, subject, note) VALUES (?, ?, ?, ?, ?)")->execute([$id, getV($data, 'userId'), getV($data, 'question'), getV($data, 'subject'), getV($data, 'note')]);
+    echo json_encode(["status" => "success", "id" => $id]);
+} else if ($method === 'GET') {
+    echo json_encode($conn->query("SELECT * FROM mistake_logs WHERE user_id = '".$_GET['user_id']."'")->fetchAll());
 }
-echo json_encode(["status" => "success"]);
-?>

@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v12.43 - Command Central Core
- * 100% Complete 38-File Backend Deployment
+ * IITGEEPrep Engine v13.0 - Ultimate Sync Core
+ * Production Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -14,12 +14,7 @@ function getJsonInput() {
     $raw = file_get_contents('php://input');
     if (!$raw) return null;
     $data = json_decode($raw);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400);
-        echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
-        exit;
-    }
-    return $data;
+    return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
 }
 
 function getV($data, $p) {
@@ -30,15 +25,17 @@ function getV($data, $p) {
     return null;
 }
 
-if($_SERVER['REQUEST_METHOD'] === 'GET') {
-    echo json_encode($conn->query("SELECT * FROM tests")->fetchAll());
-} else if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $d = getJsonInput();
-    $s = $conn->prepare("INSERT INTO tests (id, title, duration, questions_json, category, difficulty, exam_type) VALUES (?,?,?,?,?,?,?)");
-    $s->execute([getV($d, 'id'), getV($d, 'title'), getV($d, 'durationMinutes') ?? getV($d, 'duration'), json_encode(getV($d, 'questions')), getV($d, 'category'), getV($d, 'difficulty'), getV($d, 'examType')]);
+$method = $_SERVER['REQUEST_METHOD'];
+if ($method === 'GET') {
+    $tests = $conn->query("SELECT * FROM tests")->fetchAll();
+    foreach($tests as &$t) { $t['questions'] = json_decode($t['questions_json']); }
+    echo json_encode($tests);
+} else if ($method === 'POST') {
+    $data = getJsonInput();
+    $stmt = $conn->prepare("INSERT INTO tests (id, title, duration, questions_json, category, difficulty) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE title=VALUES(title), duration=VALUES(duration), questions_json=VALUES(questions_json)");
+    $stmt->execute([getV($data, 'id'), getV($data, 'title'), getV($data, 'durationMinutes'), json_encode(getV($data, 'questions')), getV($data, 'category'), getV($data, 'difficulty')]);
     echo json_encode(["status" => "success"]);
-} else if($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+} else if ($method === 'DELETE') {
     $conn->prepare("DELETE FROM tests WHERE id = ?")->execute([$_GET['id']]);
     echo json_encode(["status" => "success"]);
 }
-?>

@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v12.43 - Command Central Core
- * 100% Complete 38-File Backend Deployment
+ * IITGEEPrep Engine v13.0 - Ultimate Sync Core
+ * Production Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -14,12 +14,7 @@ function getJsonInput() {
     $raw = file_get_contents('php://input');
     if (!$raw) return null;
     $data = json_decode($raw);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400);
-        echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
-        exit;
-    }
-    return $data;
+    return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
 }
 
 function getV($data, $p) {
@@ -30,10 +25,11 @@ function getV($data, $p) {
     return null;
 }
 
-$d = getJsonInput();
-$id = str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
-$h = password_hash(getV($d, 'password'), PASSWORD_DEFAULT);
-$s = $conn->prepare("INSERT INTO users (id, name, email, password_hash, role, target_exam, target_year, phone) VALUES (?,?,?,?,?,?,?,?)");
-$s->execute([$id, getV($d, 'name'), getV($d, 'email'), $h, getV($d, 'role'), getV($d, 'targetExam') ?? 'JEE Main', getV($d, 'targetYear') ?? 2025, getV($d, 'phone') ?? '']);
-echo json_encode(["status" => "success", "user" => ["id" => $id, "name" => getV($d, 'name')]]);
-?>
+$data = getJsonInput();
+$id = 'std_' . uniqid();
+$hash = password_hash(getV($data, 'password'), PASSWORD_BCRYPT);
+$stmt = $conn->prepare("INSERT INTO users (id, name, email, password_hash, role, institute, target_exam, target_year, dob, gender, security_question, security_answer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+try {
+    $stmt->execute([$id, getV($data, 'name'), getV($data, 'email'), $hash, getV($data, 'role'), getV($data, 'institute'), getV($data, 'targetExam'), getV($data, 'targetYear'), getV($data, 'dob'), getV($data, 'gender'), getV($data, 'securityQuestion'), getV($data, 'securityAnswer')]);
+    echo json_encode(["status" => "success", "user_id" => $id]);
+} catch(Exception $e) { http_response_code(400); echo json_encode(["status" => "error", "message" => $e->getMessage()]); }

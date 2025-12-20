@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v12.43 - Command Central Core
- * 100% Complete 38-File Backend Deployment
+ * IITGEEPrep Engine v13.0 - Ultimate Sync Core
+ * Production Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -14,12 +14,7 @@ function getJsonInput() {
     $raw = file_get_contents('php://input');
     if (!$raw) return null;
     $data = json_decode($raw);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400);
-        echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
-        exit;
-    }
-    return $data;
+    return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
 }
 
 function getV($data, $p) {
@@ -30,10 +25,14 @@ function getV($data, $p) {
     return null;
 }
 
-$d = getJsonInput();
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $s = $conn->prepare("INSERT INTO chapter_notes (topic_id, content_json) VALUES (?, ?) ON DUPLICATE KEY UPDATE content_json=VALUES(content_json)");
-    $s->execute([getV($d, 'topicId'), json_encode(getV($d, 'pages') ?? getV($d, 'content'))]);
+$method = $_SERVER['REQUEST_METHOD'];
+$data = getJsonInput();
+if ($method === 'GET') {
+    $row = $conn->prepare("SELECT pages_json FROM chapter_notes WHERE topic_id = ?");
+    $row->execute([$_GET['topic_id']]);
+    echo json_encode(["pages" => json_decode($row->fetchColumn())]);
+} else if ($method === 'POST') {
+    $stmt = $conn->prepare("INSERT INTO chapter_notes (topic_id, pages_json) VALUES (?, ?) ON DUPLICATE KEY UPDATE pages_json = VALUES(pages_json)");
+    $stmt->execute([getV($data, 'topicId'), json_encode(getV($data, 'pages'))]);
     echo json_encode(["status" => "success"]);
 }
-?>

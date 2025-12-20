@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v12.43 - Command Central Core
- * 100% Complete 38-File Backend Deployment
+ * IITGEEPrep Engine v13.0 - Ultimate Sync Core
+ * Production Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -14,12 +14,7 @@ function getJsonInput() {
     $raw = file_get_contents('php://input');
     if (!$raw) return null;
     $data = json_decode($raw);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400);
-        echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
-        exit;
-    }
-    return $data;
+    return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
 }
 
 function getV($data, $p) {
@@ -30,11 +25,10 @@ function getV($data, $p) {
     return null;
 }
 
-$d = getJsonInput();
-$uid = getV($d, 'userId');
-$sql = "INSERT INTO user_progress (user_id, topic_id, status, last_revised, revision_level, next_revision_date, solved_questions_json) VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE status=VALUES(status), last_revised=VALUES(last_revised), revision_level=VALUES(revision_level), next_revision_date=VALUES(next_revision_date), solved_questions_json=VALUES(solved_questions_json)";
-$s = $conn->prepare($sql);
-$s->execute([$uid, getV($d, 'topicId'), getV($d, 'status'), getV($d, 'lastRevised'), getV($d, 'revisionLevel') ?? 0, getV($d, 'nextRevisionDate'), json_encode(getV($d, 'solvedQuestions') ?? [])]);
-$conn->prepare("INSERT INTO sync_status (user_id, section, is_synced) VALUES (?, 'syllabus', 1) ON DUPLICATE KEY UPDATE is_synced=1, last_sync=CURRENT_TIMESTAMP")->execute([$uid]);
+$data = getJsonInput();
+$userId = getV($data, 'userId');
+$stmt = $conn->prepare("INSERT INTO user_progress (user_id, topic_id, status, last_revised, revision_level, next_revision_date, solved_questions_json) 
+    VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE status=VALUES(status), last_revised=VALUES(last_revised), 
+    revision_level=VALUES(revision_level), next_revision_date=VALUES(next_revision_date), solved_questions_json=VALUES(solved_questions_json)");
+$stmt->execute([$userId, getV($data, 'topicId'), getV($data, 'status'), getV($data, 'lastRevised'), getV($data, 'revisionLevel'), getV($data, 'nextRevisionDate'), json_encode(getV($data, 'solvedQuestions') ?? [])]);
 echo json_encode(["status" => "success"]);
-?>

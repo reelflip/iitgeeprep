@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v12.38 - Master Sync Core
- * 100% Complete 38-File Backend Deployment
+ * IITGEEPrep Engine v13.0 - Ultimate Sync Core
+ * Production Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -14,12 +14,7 @@ function getJsonInput() {
     $raw = file_get_contents('php://input');
     if (!$raw) return null;
     $data = json_decode($raw);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400);
-        echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
-        exit;
-    }
-    return $data;
+    return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
 }
 
 function getV($data, $p) {
@@ -30,9 +25,7 @@ function getV($data, $p) {
     return null;
 }
 
-$d = getJsonInput();
-$sql = "INSERT INTO test_attempts (id, user_id, test_id, title, score, total_marks, accuracy, total_questions, correct_count, incorrect_count, unattempted_count, topic_id, difficulty, detailed_results) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-$s = $conn->prepare($sql);
-$s->execute([getV($d, 'id'), getV($d, 'userId'), getV($d, 'testId'), getV($d, 'title'), getV($d, 'score'), getV($d, 'totalMarks'), getV($d, 'accuracy_percent') ?? getV($d, 'accuracy'), getV($d, 'totalQuestions'), getV($d, 'correctCount'), getV($d, 'incorrectCount'), getV($d, 'unattemptedCount'), getV($d, 'topicId'), getV($d, 'difficulty'), json_encode(getV($d, 'detailedResults') ?? [])]);
+$data = getJsonInput();
+$stmt = $conn->prepare("INSERT INTO test_attempts (id, user_id, test_id, title, score, total_marks, accuracy, total_questions, correct_count, incorrect_count, unattempted_count, topic_id, difficulty, detailed_results) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->execute([getV($data, 'id'), getV($data, 'userId'), getV($data, 'testId'), getV($data, 'title'), getV($data, 'score'), getV($data, 'totalMarks'), getV($data, 'accuracy'), getV($data, 'totalQuestions'), getV($data, 'correctCount'), getV($data, 'incorrectCount'), getV($data, 'unattemptedCount'), getV($data, 'topicId'), getV($data, 'difficulty'), json_encode(getV($data, 'detailedResults') ?? [])]);
 echo json_encode(["status" => "success"]);
-?>

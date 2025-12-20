@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v12.43 - Command Central Core
- * 100% Complete 38-File Backend Deployment
+ * IITGEEPrep Engine v13.0 - Ultimate Sync Core
+ * Production Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -14,12 +14,7 @@ function getJsonInput() {
     $raw = file_get_contents('php://input');
     if (!$raw) return null;
     $data = json_decode($raw);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400);
-        echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
-        exit;
-    }
-    return $data;
+    return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
 }
 
 function getV($data, $p) {
@@ -32,17 +27,10 @@ function getV($data, $p) {
 
 try {
     $tables = [];
-    $stmt = $conn->query("SHOW TABLES");
-    while($row = $stmt->fetch(PDO::FETCH_NUM)) {
-        $tableName = $row[0];
-        $count = $conn->query("SELECT count(*) FROM `$tableName`")->fetchColumn();
-        $colStmt = $conn->query("DESCRIBE `$tableName`");
-        $cols = [];
-        foreach($colStmt->fetchAll() as $c) {
-            $cols[] = ["name" => $c['Field'], "type" => $c['Type'], "null" => $c['Null'], "key" => $c['Key']];
-        }
-        $tables[] = ["name" => $tableName, "rows" => (int)$count, "columns" => $cols];
+    $res = $conn->query("SHOW TABLES");
+    while($row = $res->fetch(PDO::FETCH_NUM)) {
+        $count = $conn->query("SELECT count(*) FROM `$row[0]`")->fetchColumn();
+        $tables[] = ["name" => $row[0], "rows" => (int)$count];
     }
-    echo json_encode(["status" => "CONNECTED", "db_name" => $db_name, "tables" => $tables, "version" => "12.43"]);
-} catch(Exception $e) { echo json_encode(["status" => "error", "message" => $e->getMessage()]); }
-?>
+    echo json_encode(["status" => "CONNECTED", "tables" => $tables]);
+} catch(Exception $e) { echo json_encode(["status" => "ERROR", "message" => $e->getMessage()]); }

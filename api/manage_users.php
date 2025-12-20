@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v12.43 - Command Central Core
- * 100% Complete 38-File Backend Deployment
+ * IITGEEPrep Engine v13.0 - Ultimate Sync Core
+ * Production Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -14,12 +14,7 @@ function getJsonInput() {
     $raw = file_get_contents('php://input');
     if (!$raw) return null;
     $data = json_decode($raw);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400);
-        echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
-        exit;
-    }
-    return $data;
+    return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
 }
 
 function getV($data, $p) {
@@ -30,29 +25,16 @@ function getV($data, $p) {
     return null;
 }
 
-$role_group = $_GET['group'] ?? 'ALL';
-if($_SERVER['REQUEST_METHOD'] === 'GET') {
-    if($role_group === 'ADMINS') {
-        $sql = "SELECT id, name, email, role, is_verified, created_at FROM users WHERE role LIKE 'ADMIN%'";
-    } else if($role_group === 'USERS') {
-        $sql = "SELECT id, name, email, role, is_verified, created_at FROM users WHERE role NOT LIKE 'ADMIN%'";
-    } else {
-        $sql = "SELECT id, name, email, role, is_verified, created_at FROM users";
-    }
+$method = $_SERVER['REQUEST_METHOD'];
+if ($method === 'GET') {
+    $group = $_GET['group'] ?? 'USERS';
+    $sql = $group === 'ADMINS' ? "SELECT * FROM users WHERE role LIKE 'ADMIN%'" : "SELECT * FROM users WHERE role NOT LIKE 'ADMIN%'";
     echo json_encode($conn->query($sql)->fetchAll());
-} else if($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $d = getJsonInput();
-    $s = $conn->prepare("UPDATE users SET is_verified = ? WHERE id = ?");
-    $s->execute([getV($d, 'isVerified') ? 1 : 0, getV($d, 'id')]);
+} else if ($method === 'PUT') {
+    $data = getJsonInput();
+    $conn->prepare("UPDATE users SET is_verified = ? WHERE id = ?")->execute([getV($data, 'isVerified') ? 1 : 0, getV($data, 'id')]);
     echo json_encode(["status" => "success"]);
-} else if($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $id = $_GET['id'];
-    if($id === 'admin_root') {
-        http_response_code(403);
-        echo json_encode(["message" => "PROTECTED_ACCOUNT"]);
-        exit;
-    }
-    $conn->prepare("DELETE FROM users WHERE id = ?")->execute([$id]);
+} else if ($method === 'DELETE') {
+    $conn->prepare("DELETE FROM users WHERE id = ?")->execute([$_GET['id']]);
     echo json_encode(["status" => "success"]);
 }
-?>

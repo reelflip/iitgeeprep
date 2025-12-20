@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, c as BookOpen, ar as Search, ab as CheckCircle2, e as ChevronRight, u as ArrowLeft, ae as Clock, S as Sparkles, L as Loader2, b as Send, bi as StickyNote } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, c as BookOpen, au as Search, ab as CheckCircle2, e as ChevronRight, u as ArrowLeft, ae as Clock, S as Sparkles, L as Loader2, b as Send, bg as StickyNote } from "../vendor.js";
 import { B as BookReader } from "../components/BookReader.js";
 const statusColors = {
   "NOT_STARTED": "bg-slate-100 text-slate-600 border-slate-200",

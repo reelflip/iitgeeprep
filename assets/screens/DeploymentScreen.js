@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, aL as Database, ay as RefreshCw, b3 as ShieldCheck, ax as AlertTriangle, k as Layers, b4 as ChevronUp, C as ChevronDown, q as Activity, b5 as Info, ab as CheckCircle2, b6 as Download, b7 as JSZip } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, aJ as Database, at as RefreshCw, b1 as ShieldCheck, as as AlertTriangle, k as Layers, b2 as ChevronUp, C as ChevronDown, q as Activity, b3 as Info, ab as CheckCircle2, b4 as Download, b5 as JSZip } from "../vendor.js";
 import { g as getBackendFiles, b as generateSQLSchema } from "../shared-core.js";
 const DeploymentScreen = () => {
   const [activeTab, setActiveTab] = reactExports.useState("guide");
@@ -119,7 +119,7 @@ const DeploymentScreen = () => {
     try {
       const res = await fetch("/api/migrate_db.php");
       if (res.ok) {
-        alert("v12.34 Synchronized Schema Verification Successful!");
+        alert("v12.37 Synchronized Schema Verification Successful!");
         scanDatabase();
       } else throw new Error(`HTTP ${res.status}`);
     } catch (e) {
@@ -147,7 +147,7 @@ const DeploymentScreen = () => {
       const url = URL.createObjectURL(content);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "IITGEEPrep_Sync_v12_34.zip";
+      link.download = "IITGEEPrep_Sync_v12_37.zip";
       link.click();
     } catch (error) {
       alert("Zip creation failed.");
@@ -159,7 +159,7 @@ const DeploymentScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold", children: "Deployment Center" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-1 rounded-md bg-blue-600 text-xs font-mono text-white animate-pulse uppercase tracking-widest", children: "v12.34 SYNC STABLE" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-1 rounded-md bg-blue-600 text-xs font-mono text-white animate-pulse uppercase tracking-widest", children: "v12.37 ULTIMATE SYNC" })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-lg", children: "Platform-wide synchronization for 38 endpoints and SQL schema." })
       ] }),
@@ -176,7 +176,7 @@ const DeploymentScreen = () => {
               /* @__PURE__ */ jsxRuntimeExports.jsx(Database, { className: "text-blue-500", size: 20 }),
               " Database Sync Tracker"
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-slate-500", children: "Checking v12.34 schema compliance and record counts." })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-slate-500", children: "Checking v12.37 schema compliance and record counts." })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 w-full md:w-auto", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: runDbRepair, disabled: repairing, className: "flex-1 md:flex-none bg-slate-800 hover:bg-black text-white px-6 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50", children: [
@@ -249,7 +249,7 @@ const DeploymentScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-lg font-bold text-slate-800 flex items-center gap-2", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { className: "text-orange-500", size: 20 }),
-              " Module Integrity Scan (v12.34)"
+              " Module Integrity Scan (v12.37)"
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-slate-500", children: "Checking for syntax stability across the full 38-file set." })
           ] }),
@@ -294,11 +294,11 @@ const DeploymentScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { className: "animate-pulse" }),
           " Unified Synchronization Guide"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-600 text-sm leading-relaxed", children: "System v12.34 ensures complete synchronization between frontend and backend. Follow these steps for a clean install:" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-600 text-sm leading-relaxed", children: "System v12.37 ensures complete synchronization between frontend and backend. Follow these steps for a clean install:" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("ol", { className: "space-y-4 text-slate-600 text-sm list-decimal pl-5", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
             "Download the ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "v12.34 Master Sync Bundle" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "v12.37 Master Sync Bundle" }),
             ". This contains the full, matching set of 38 PHP scripts."
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
@@ -310,7 +310,7 @@ const DeploymentScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
             "Use the ",
             /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: "Full Set Scan" }),
-            " to verify that all 38 endpoints are reachable and correctly reporting v12.34."
+            " to verify that all 38 endpoints are reachable and correctly reporting v12.37."
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
             "Run ",
@@ -322,11 +322,11 @@ const DeploymentScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "lg:col-span-1 space-y-6", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-blue-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden flex flex-col h-full", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-xl font-bold mb-2", children: "Sync Master Bundle" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-200 text-sm mb-6 leading-relaxed", children: "Contains 38 Synchronized PHP APIs and updated v12.34 SQL Schema for full system restoration." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-200 text-sm mb-6 leading-relaxed", children: "Contains 38 Synchronized PHP APIs and updated v12.37 SQL Schema for full system restoration." })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: downloadAllZip, disabled: isZipping, className: "w-full bg-white text-blue-900 font-black py-3 rounded-xl flex items-center justify-center transition-all disabled:opacity-50 shadow-lg active:scale-95 mt-4", children: [
           isZipping ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "animate-spin mr-2" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { className: "mr-2" }),
-          " Download v12.34 (38 Files)"
+          " Download v12.37 (38 Files)"
         ] })
       ] }) })
     ] })

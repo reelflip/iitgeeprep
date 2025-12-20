@@ -2,7 +2,7 @@ const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/screens/AuthScr
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-import { r as reactExports, b9 as React, j as jsxRuntimeExports, bC as createRoot } from "./vendor.js";
+import { r as reactExports, ba as React, j as jsxRuntimeExports, bB as createRoot } from "./vendor.js";
 import { N as Navigation, M as MobileNavigation } from "./components/Navigation.js";
 import { A as AITutorChat } from "./components/AITutorChat.js";
 import { P as PublicLayout } from "./components/PublicLayout.js";

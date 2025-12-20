@@ -7431,6 +7431,13 @@ const ChevronRight = createLucideIcon("ChevronRight", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
+const ChevronUp = createLucideIcon("ChevronUp", [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]]);
+/**
+ * @license lucide-react v0.344.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
 const Clock = createLucideIcon("Clock", [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
@@ -8038,24 +8045,6 @@ const Music = createLucideIcon("Music", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Package = createLucideIcon("Package", [
-  ["path", { d: "m7.5 4.27 9 5.15", key: "1c824w" }],
-  [
-    "path",
-    {
-      d: "M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z",
-      key: "hh9hay"
-    }
-  ],
-  ["path", { d: "m3.3 7 8.7 5 8.7-5", key: "g66t2b" }],
-  ["path", { d: "M12 22V12", key: "d0xqtd" }]
-]);
-/**
- * @license lucide-react v0.344.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
 const Pause = createLucideIcon("Pause", [
   ["rect", { width: "4", height: "16", x: "6", y: "4", key: "iffhe4" }],
   ["rect", { width: "4", height: "16", x: "14", y: "4", key: "sjin7j" }]
@@ -8105,22 +8094,6 @@ const PlayCircle = createLucideIcon("PlayCircle", [
  */
 const Play = createLucideIcon("Play", [
   ["polygon", { points: "5 3 19 12 5 21 5 3", key: "191637" }]
-]);
-/**
- * @license lucide-react v0.344.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const PlugZap = createLucideIcon("PlugZap", [
-  [
-    "path",
-    { d: "M6.3 20.3a2.4 2.4 0 0 0 3.4 0L12 18l-6-6-2.3 2.3a2.4 2.4 0 0 0 0 3.4Z", key: "goz73y" }
-  ],
-  ["path", { d: "m2 22 3-3", key: "19mgm9" }],
-  ["path", { d: "M7.5 13.5 10 11", key: "7xgeeb" }],
-  ["path", { d: "M10.5 16.5 13 14", key: "10btkg" }],
-  ["path", { d: "m18 3-4 4h6l-4 4", key: "16psg9" }]
 ]);
 /**
  * @license lucide-react v0.344.0 - ISC
@@ -34832,42 +34805,41 @@ export {
   MapPin as b0,
   MessageSquare as b1,
   Trophy as b2,
-  PlugZap as b3,
-  Package as b4,
-  Download as b5,
-  JSZip as b6,
-  Beaker as b7,
-  Play as b8,
-  React as b9,
-  Radio as bA,
-  Volume2 as bB,
-  createRoot as bC,
-  Award as ba,
-  Bell as bb,
-  ShieldCheck as bc,
+  ShieldCheck as b3,
+  ChevronUp as b4,
+  Info as b5,
+  Download as b6,
+  JSZip as b7,
+  Beaker as b8,
+  Play as b9,
+  Volume2 as bA,
+  createRoot as bB,
+  React as ba,
+  Award as bb,
+  Bell as bc,
   ThumbsUp as bd,
   Star as be,
   UserPlus as bf,
   Camera as bg,
-  Info as bh,
-  HeartPulse as bi,
-  StickyNote as bj,
-  PlayCircle as bk,
-  RotateCcw as bl,
-  CalendarDays as bm,
-  Map$5 as bn,
-  CheckSquare as bo,
-  Flag as bp,
-  Briefcase as bq,
-  Moon as br,
-  Sun as bs,
-  Coffee as bt,
-  Wind as bu,
-  Music as bv,
-  Pause as bw,
-  CloudRain as bx,
-  Trees as by,
-  Waves as bz,
+  HeartPulse as bh,
+  StickyNote as bi,
+  PlayCircle as bj,
+  RotateCcw as bk,
+  CalendarDays as bl,
+  Map$5 as bm,
+  CheckSquare as bn,
+  Flag as bo,
+  Briefcase as bp,
+  Moon as bq,
+  Sun as br,
+  Coffee as bs,
+  Wind as bt,
+  Music as bu,
+  Pause as bv,
+  CloudRain as bw,
+  Trees as bx,
+  Waves as by,
+  Radio as bz,
   BookOpen as c,
   ChevronLeft as d,
   ChevronRight as e,

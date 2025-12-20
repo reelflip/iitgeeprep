@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, b7 as Beaker, b5 as Download, ay as RefreshCw, b8 as Play, q as Activity, aF as Terminal, b9 as React, ab as CheckCircle2, aP as XCircle } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, b8 as Beaker, b6 as Download, ay as RefreshCw, b9 as Play, q as Activity, aF as Terminal, ba as React, ab as CheckCircle2, aP as XCircle } from "../vendor.js";
 import { E as E2ETestRunner } from "../shared-core.js";
 const DiagnosticsScreen = () => {
   const [isRunning, setIsRunning] = reactExports.useState(false);
@@ -52,7 +52,7 @@ const DiagnosticsScreen = () => {
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Beaker, { className: "w-8 h-8 text-blue-400" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-black tracking-tight uppercase", children: "Integrity Audit v12.28" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-black tracking-tight uppercase", children: "Integrity Audit v12.34" })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-sm max-w-xl", children: "Comprehensive points scan verifying server reliability, 38-endpoint API logic, database schema compliance, and hardened input security." })
         ] }),
@@ -101,7 +101,7 @@ const DiagnosticsScreen = () => {
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center p-3 bg-slate-50 rounded-xl", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-slate-600", children: "Runtime Version" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] font-bold rounded uppercase", children: "12.28" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] font-bold rounded uppercase", children: "12.34" })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center p-3 bg-slate-50 rounded-xl", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-slate-600", children: "Database" }),

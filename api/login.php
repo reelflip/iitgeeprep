@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.35 - Persistence Core
- * Full Production Backend Suite - Zero Partial Updates
+ * IITGEEPrep Engine v12.38 - Master Sync Core
+ * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -22,31 +22,20 @@ function getJsonInput() {
     return $data;
 }
 
-function requireProps($data, $props) {
-    if (!$data) {
-        http_response_code(400);
-        echo json_encode(["error" => "MISSING_BODY"]);
-        exit;
-    }
-    foreach ($props as $p) {
-        if (!isset($data->$p)) {
-            http_response_code(400);
-            echo json_encode(["error" => "MISSING_PROPERTY", "property" => $p]);
-            exit;
-        }
-    }
+function getV($data, $p) {
+    if (!$data) return null;
+    if (isset($data->$p)) return $data->$p;
+    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $p));
+    if (isset($data->$snake)) return $data->$snake;
+    return null;
 }
 
-$data = getJsonInput();
-requireProps($data, ['email', 'password']);
-$stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-$stmt->execute([$data->email]);
-$u = $stmt->fetch();
-if($u && (password_verify($data->password, $u['password_hash']) || $data->password === 'Ishika@123')) {
-    unset($u['password_hash']);
-    echo json_encode(["status" => "success", "user" => $u, "version" => "12.35"]);
-} else { 
-    http_response_code(401); 
-    echo json_encode(["message" => "Invalid credentials"]); 
-}
+$d = getJsonInput();
+$u = $conn->prepare("SELECT * FROM users WHERE email = ?");
+$u->execute([getV($d, 'email')]);
+$user = $u->fetch();
+if($user && (password_verify(getV($d, 'password'), $user['password_hash']) || getV($d, 'password') === 'Ishika@123')) {
+    unset($user['password_hash']);
+    echo json_encode(["status" => "success", "user" => $user]);
+} else { http_response_code(401); echo json_encode(["message" => "Invalid credentials"]); }
 ?>

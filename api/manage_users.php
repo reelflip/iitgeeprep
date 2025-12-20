@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.35 - Persistence Core
- * Full Production Backend Suite - Zero Partial Updates
+ * IITGEEPrep Engine v12.38 - Master Sync Core
+ * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -22,32 +22,23 @@ function getJsonInput() {
     return $data;
 }
 
-function requireProps($data, $props) {
-    if (!$data) {
-        http_response_code(400);
-        echo json_encode(["error" => "MISSING_BODY"]);
-        exit;
-    }
-    foreach ($props as $p) {
-        if (!isset($data->$p)) {
-            http_response_code(400);
-            echo json_encode(["error" => "MISSING_PROPERTY", "property" => $p]);
-            exit;
-        }
-    }
+function getV($data, $p) {
+    if (!$data) return null;
+    if (isset($data->$p)) return $data->$p;
+    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $p));
+    if (isset($data->$snake)) return $data->$snake;
+    return null;
 }
 
 if($_SERVER['REQUEST_METHOD'] === 'GET') {
     echo json_encode($conn->query("SELECT id, name, email, role, is_verified FROM users")->fetchAll());
 } else if($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $d = getJsonInput();
-    requireProps($d, ['id', 'isVerified']);
-    $stmt = $conn->prepare("UPDATE users SET is_verified = ? WHERE id = ?");
-    $stmt->execute([$d->isVerified ? 1 : 0, $d->id]);
+    $s = $conn->prepare("UPDATE users SET is_verified = ? WHERE id = ?");
+    $s->execute([getV($d, 'isVerified') ? 1 : 0, getV($d, 'id')]);
     echo json_encode(["status" => "success"]);
 } else if($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
-    $stmt->execute([$_GET['id']]);
+    $conn->prepare("DELETE FROM users WHERE id = ?")->execute([$_GET['id']]);
     echo json_encode(["status" => "success"]);
 }
 ?>

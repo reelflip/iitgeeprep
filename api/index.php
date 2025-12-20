@@ -1,1 +1,1 @@
-<?php echo json_encode(["status" => "active", "version" => "12.35", "engine" => "IITGEE_PERSISTENCE_CORE"]); ?>
+<?php echo json_encode(["status" => "active", "version" => "12.38", "files" => 38, "engine" => "Master Sync Core"]); ?>

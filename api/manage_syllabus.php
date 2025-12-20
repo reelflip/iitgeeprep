@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.35 - Persistence Core
- * Full Production Backend Suite - Zero Partial Updates
+ * IITGEEPrep Engine v12.38 - Master Sync Core
+ * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -22,27 +22,22 @@ function getJsonInput() {
     return $data;
 }
 
-function requireProps($data, $props) {
-    if (!$data) {
-        http_response_code(400);
-        echo json_encode(["error" => "MISSING_BODY"]);
-        exit;
-    }
-    foreach ($props as $p) {
-        if (!isset($data->$p)) {
-            http_response_code(400);
-            echo json_encode(["error" => "MISSING_PROPERTY", "property" => $p]);
-            exit;
-        }
-    }
+function getV($data, $p) {
+    if (!$data) return null;
+    if (isset($data->$p)) return $data->$p;
+    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $p));
+    if (isset($data->$snake)) return $data->$snake;
+    return null;
 }
 
-if($_SERVER['REQUEST_METHOD'] === 'GET') {
-    echo json_encode($conn->query("SELECT * FROM topics")->fetchAll());
-} else if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $d = getJsonInput();
-    $stmt = $conn->prepare("INSERT INTO topics (id, name, chapter, subject) VALUES (?,?,?,?)");
-    $stmt->execute([$d->id, $d->name, $d->chapter, $d->subject]);
+$d = getJsonInput();
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = getV($d, 'id') ?? 'topic_' . mt_rand(1000,9999);
+    $s = $conn->prepare("INSERT INTO topics (id, name, chapter, subject) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE name=VALUES(name), chapter=VALUES(chapter), subject=VALUES(subject)");
+    $s->execute([$id, getV($d, 'name'), getV($d, 'chapter'), getV($d, 'subject')]);
+    echo json_encode(["status" => "success", "id" => $id]);
+} else if($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $conn->prepare("DELETE FROM topics WHERE id = ?")->execute([$_GET['id']]);
     echo json_encode(["status" => "success"]);
 }
 ?>

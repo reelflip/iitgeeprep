@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.35 - Persistence Core
- * Full Production Backend Suite - Zero Partial Updates
+ * IITGEEPrep Engine v12.38 - Master Sync Core
+ * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -22,30 +22,18 @@ function getJsonInput() {
     return $data;
 }
 
-function requireProps($data, $props) {
-    if (!$data) {
-        http_response_code(400);
-        echo json_encode(["error" => "MISSING_BODY"]);
-        exit;
-    }
-    foreach ($props as $p) {
-        if (!isset($data->$p)) {
-            http_response_code(400);
-            echo json_encode(["error" => "MISSING_PROPERTY", "property" => $p]);
-            exit;
-        }
-    }
+function getV($data, $p) {
+    if (!$data) return null;
+    if (isset($data->$p)) return $data->$p;
+    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $p));
+    if (isset($data->$snake)) return $data->$snake;
+    return null;
 }
 
-if($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $rows = $conn->query("SELECT * FROM chapter_notes")->fetchAll();
-    $map = [];
-    foreach($rows as $r) { $map[$r['topic_id']] = ["topicId" => $r['topic_id'], "pages" => json_decode($r['content_json'])]; }
-    echo json_encode($map);
-} else if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $d = getJsonInput();
-    $stmt = $conn->prepare("INSERT INTO chapter_notes (topic_id, content_json) VALUES (?,?) ON DUPLICATE KEY UPDATE content_json=VALUES(content_json)");
-    $stmt->execute([$d->topicId, json_encode($d->pages)]);
+$d = getJsonInput();
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $s = $conn->prepare("INSERT INTO chapter_notes (topic_id, content_json) VALUES (?, ?) ON DUPLICATE KEY UPDATE content_json=VALUES(content_json)");
+    $s->execute([getV($d, 'topicId'), json_encode(getV($d, 'pages') ?? getV($d, 'content'))]);
     echo json_encode(["status" => "success"]);
 }
 ?>

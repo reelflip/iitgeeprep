@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.35 - Persistence Core
- * Full Production Backend Suite - Zero Partial Updates
+ * IITGEEPrep Engine v12.38 - Master Sync Core
+ * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -22,29 +22,21 @@ function getJsonInput() {
     return $data;
 }
 
-function requireProps($data, $props) {
-    if (!$data) {
-        http_response_code(400);
-        echo json_encode(["error" => "MISSING_BODY"]);
-        exit;
-    }
-    foreach ($props as $p) {
-        if (!isset($data->$p)) {
-            http_response_code(400);
-            echo json_encode(["error" => "MISSING_PROPERTY", "property" => $p]);
-            exit;
-        }
-    }
+function getV($data, $p) {
+    if (!$data) return null;
+    if (isset($data->$p)) return $data->$p;
+    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $p));
+    if (isset($data->$snake)) return $data->$snake;
+    return null;
 }
 
 $d = getJsonInput();
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $stmt = $conn->prepare("INSERT INTO goals (id, user_id, text, completed) VALUES (?,?,?,?)");
-    $stmt->execute([$d->id, $d->user_id, $d->text, 0]);
-    echo json_encode(["status" => "success"]);
+    $conn->prepare("INSERT INTO goals (id, user_id, text) VALUES (?,?,?)")->execute([getV($d, 'id'), getV($d, 'userId'), getV($d, 'text')]);
 } else if($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $stmt = $conn->prepare("UPDATE goals SET completed = ? WHERE id = ?");
-    $stmt->execute([$d->completed ? 1 : 0, $d->id]);
-    echo json_encode(["status" => "success"]);
+    $conn->prepare("UPDATE goals SET completed = ? WHERE id = ?")->execute([getV($d, 'completed') ? 1 : 0, getV($d, 'id')]);
+} else if($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $conn->prepare("DELETE FROM goals WHERE id = ?")->execute([$_GET['id']]);
 }
+echo json_encode(["status" => "success"]);
 ?>

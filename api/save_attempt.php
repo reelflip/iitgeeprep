@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.35 - Persistence Core
- * Full Production Backend Suite - Zero Partial Updates
+ * IITGEEPrep Engine v12.38 - Master Sync Core
+ * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -22,26 +22,17 @@ function getJsonInput() {
     return $data;
 }
 
-function requireProps($data, $props) {
-    if (!$data) {
-        http_response_code(400);
-        echo json_encode(["error" => "MISSING_BODY"]);
-        exit;
-    }
-    foreach ($props as $p) {
-        if (!isset($data->$p)) {
-            http_response_code(400);
-            echo json_encode(["error" => "MISSING_PROPERTY", "property" => $p]);
-            exit;
-        }
-    }
+function getV($data, $p) {
+    if (!$data) return null;
+    if (isset($data->$p)) return $data->$p;
+    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $p));
+    if (isset($data->$snake)) return $data->$snake;
+    return null;
 }
 
 $d = getJsonInput();
-requireProps($d, ['user_id', 'id', 'testId', 'score']);
-$sql = "INSERT INTO test_attempts (id, user_id, test_id, title, score, total_marks, accuracy_percent, total_questions, correct_count, incorrect_count, unattempted_count, topic_id, detailed_results) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-$stmt = $conn->prepare($sql);
-$stmt->execute([$d->id, $d->user_id, $d->testId, $d->title, $d->score, $d->totalMarks, $d->accuracy_percent, $d->totalQuestions, $d->correctCount, $d->incorrectCount, $d->unattemptedCount, $d->topicId ?? null, json_encode($d->detailedResults)]);
-echo json_encode(["status" => "success", "version" => "12.35"]);
+$sql = "INSERT INTO test_attempts (id, user_id, test_id, title, score, total_marks, accuracy, total_questions, correct_count, incorrect_count, unattempted_count, topic_id, difficulty, detailed_results) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+$s = $conn->prepare($sql);
+$s->execute([getV($d, 'id'), getV($d, 'userId'), getV($d, 'testId'), getV($d, 'title'), getV($d, 'score'), getV($d, 'totalMarks'), getV($d, 'accuracy_percent') ?? getV($d, 'accuracy'), getV($d, 'totalQuestions'), getV($d, 'correctCount'), getV($d, 'incorrectCount'), getV($d, 'unattemptedCount'), getV($d, 'topicId'), getV($d, 'difficulty'), json_encode(getV($d, 'detailedResults') ?? [])]);
+echo json_encode(["status" => "success"]);
 ?>

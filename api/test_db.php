@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.35 - Persistence Core
- * Full Production Backend Suite - Zero Partial Updates
+ * IITGEEPrep Engine v12.38 - Master Sync Core
+ * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -22,19 +22,12 @@ function getJsonInput() {
     return $data;
 }
 
-function requireProps($data, $props) {
-    if (!$data) {
-        http_response_code(400);
-        echo json_encode(["error" => "MISSING_BODY"]);
-        exit;
-    }
-    foreach ($props as $p) {
-        if (!isset($data->$p)) {
-            http_response_code(400);
-            echo json_encode(["error" => "MISSING_PROPERTY", "property" => $p]);
-            exit;
-        }
-    }
+function getV($data, $p) {
+    if (!$data) return null;
+    if (isset($data->$p)) return $data->$p;
+    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $p));
+    if (isset($data->$snake)) return $data->$snake;
+    return null;
 }
 
 try {
@@ -44,17 +37,12 @@ try {
         $tableName = $row[0];
         $count = $conn->query("SELECT count(*) FROM `$tableName`")->fetchColumn();
         $colStmt = $conn->query("DESCRIBE `$tableName`");
-        $cols = $colStmt->fetchAll();
-        $tables[] = [
-            "name" => $tableName, 
-            "rows" => $count,
-            "columns" => array_map(function($c) { 
-                return ["name" => $c['Field'], "type" => $c['Type'], "null" => $c['Null'], "key" => $c['Key']]; 
-            }, $cols)
-        ];
+        $cols = [];
+        foreach($colStmt->fetchAll() as $c) {
+            $cols[] = ["name" => $c['Field'], "type" => $c['Type'], "null" => $c['Null'], "key" => $c['Key']];
+        }
+        $tables[] = ["name" => $tableName, "rows" => (int)$count, "columns" => $cols];
     }
-    echo json_encode(["status" => "CONNECTED", "db_name" => $db_name, "tables" => $tables, "version" => "12.35"]);
-} catch(Exception $e) { 
-    echo json_encode(["status" => "error", "message" => $e->getMessage()]); 
-}
+    echo json_encode(["status" => "CONNECTED", "db_name" => $db_name, "tables" => $tables, "version" => "12.38"]);
+} catch(Exception $e) { echo json_encode(["status" => "error", "message" => $e->getMessage()]); }
 ?>

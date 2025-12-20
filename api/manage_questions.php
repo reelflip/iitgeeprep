@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.35 - Persistence Core
- * Full Production Backend Suite - Zero Partial Updates
+ * IITGEEPrep Engine v12.38 - Master Sync Core
+ * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -22,27 +22,21 @@ function getJsonInput() {
     return $data;
 }
 
-function requireProps($data, $props) {
-    if (!$data) {
-        http_response_code(400);
-        echo json_encode(["error" => "MISSING_BODY"]);
-        exit;
-    }
-    foreach ($props as $p) {
-        if (!isset($data->$p)) {
-            http_response_code(400);
-            echo json_encode(["error" => "MISSING_PROPERTY", "property" => $p]);
-            exit;
-        }
-    }
+function getV($data, $p) {
+    if (!$data) return null;
+    if (isset($data->$p)) return $data->$p;
+    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $p));
+    if (isset($data->$snake)) return $data->$snake;
+    return null;
 }
 
-if($_SERVER['REQUEST_METHOD'] === 'GET') {
-    echo json_encode($conn->query("SELECT * FROM questions")->fetchAll());
-} else if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $d = getJsonInput();
-    $stmt = $conn->prepare("INSERT INTO questions (id, subject_id, topic_id, text, options_json, correct_index, source, year, difficulty) VALUES (?,?,?,?,?,?,?,?,?)");
-    $stmt->execute([$d->id, $d->subjectId, $d->topicId, $d->text, json_encode($d->options), $d->correctOptionIndex, $d->source, $d->year, $d->difficulty]);
+$d = getJsonInput();
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $s = $conn->prepare("INSERT INTO questions (id, subject_id, topic_id, text, options_json, correct_idx, source, year, difficulty) VALUES (?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE text=VALUES(text), options_json=VALUES(options_json)");
+    $s->execute([getV($d, 'id'), getV($d, 'subjectId'), getV($d, 'topicId'), getV($d, 'text'), json_encode(getV($d, 'options')), getV($d, 'correctOptionIndex'), getV($d, 'source'), getV($d, 'year'), getV($d, 'difficulty')]);
+    echo json_encode(["status" => "success"]);
+} else if($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $conn->prepare("DELETE FROM questions WHERE id = ?")->execute([$_GET['id']]);
     echo json_encode(["status" => "success"]);
 }
 ?>

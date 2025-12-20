@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.35 - Persistence Core
- * Full Production Backend Suite - Zero Partial Updates
+ * IITGEEPrep Engine v12.38 - Master Sync Core
+ * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -22,34 +22,28 @@ function getJsonInput() {
     return $data;
 }
 
-function requireProps($data, $props) {
-    if (!$data) {
-        http_response_code(400);
-        echo json_encode(["error" => "MISSING_BODY"]);
-        exit;
-    }
-    foreach ($props as $p) {
-        if (!isset($data->$p)) {
-            http_response_code(400);
-            echo json_encode(["error" => "MISSING_PROPERTY", "property" => $p]);
-            exit;
-        }
-    }
+function getV($data, $p) {
+    if (!$data) return null;
+    if (isset($data->$p)) return $data->$p;
+    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $p));
+    if (isset($data->$snake)) return $data->$snake;
+    return null;
 }
 
-$type = $_GET['type'] ?? 'blog';
-if($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $stmt = $conn->prepare("SELECT * FROM content WHERE type = ? ORDER BY created_at DESC");
-    $stmt->execute([$type]);
-    echo json_encode($stmt->fetchAll());
-} else if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $d = getJsonInput();
-    $stmt = $conn->prepare("INSERT INTO content (type, content_json) VALUES (?, ?)");
-    $stmt->execute([$d->type, json_encode($d->content)]);
-    echo json_encode(["status" => "success", "id" => $conn->lastInsertId()]);
+$d = getJsonInput();
+$type = $_GET['type'] ?? 'flashcard';
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if($type === 'flashcard') {
+        $conn->prepare("INSERT INTO flashcards (front, back, subject_id) VALUES (?,?,?)")->execute([getV($d, 'front'), getV($d, 'back'), getV($d, 'subjectId')]);
+    } else if($type === 'hack') {
+        $conn->prepare("INSERT INTO memory_hacks (title, description, trick, tag) VALUES (?,?,?,?)")->execute([getV($d, 'title'), getV($d, 'description'), getV($d, 'trick'), getV($d, 'tag')]);
+    } else if($type === 'blog') {
+        $conn->prepare("INSERT INTO blog_posts (title, excerpt, content, author, image_url, category) VALUES (?,?,?,?,?,?)")->execute([getV($d, 'title'), getV($d, 'excerpt'), getV($d, 'content'), getV($d, 'author'), getV($d, 'imageUrl'), getV($d, 'category')]);
+    }
+    echo json_encode(["status" => "success"]);
 } else if($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $stmt = $conn->prepare("DELETE FROM content WHERE id = ?");
-    $stmt->execute([$_GET['id']]);
+    $table = $type === 'flashcard' ? 'flashcards' : ($type === 'hack' ? 'memory_hacks' : 'blog_posts');
+    $conn->prepare("DELETE FROM $table WHERE id = ?")->execute([$_GET['id']]);
     echo json_encode(["status" => "success"]);
 }
 ?>

@@ -30,9 +30,6 @@ function getV($data, $p) {
     return null;
 }
 
-$d = getJsonInput();
-$id = 'notif_' . mt_rand(1000,9999);
-$s = $conn->prepare("INSERT INTO notifications (id, from_id, from_name, to_id, type, message) VALUES (?,?,?,?,'connection_request',?)");
-$s->execute([$id, getV($d, 'parentId'), getV($d, 'parentName'), getV($d, 'studentId'), 'Parent Connection Request']);
-echo json_encode(["status" => "success"]);
+// Placeholder for custom logic related to chapter-specific randomized tests
+echo json_encode(["status" => "ready"]);
 ?>

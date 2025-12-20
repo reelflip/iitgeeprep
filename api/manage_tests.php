@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.35 - Persistence Core
- * Full Production Backend Suite - Zero Partial Updates
+ * IITGEEPrep Engine v12.38 - Master Sync Core
+ * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -22,31 +22,23 @@ function getJsonInput() {
     return $data;
 }
 
-function requireProps($data, $props) {
-    if (!$data) {
-        http_response_code(400);
-        echo json_encode(["error" => "MISSING_BODY"]);
-        exit;
-    }
-    foreach ($props as $p) {
-        if (!isset($data->$p)) {
-            http_response_code(400);
-            echo json_encode(["error" => "MISSING_PROPERTY", "property" => $p]);
-            exit;
-        }
-    }
+function getV($data, $p) {
+    if (!$data) return null;
+    if (isset($data->$p)) return $data->$p;
+    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $p));
+    if (isset($data->$snake)) return $data->$snake;
+    return null;
 }
 
 if($_SERVER['REQUEST_METHOD'] === 'GET') {
     echo json_encode($conn->query("SELECT * FROM tests")->fetchAll());
 } else if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $d = getJsonInput();
-    $stmt = $conn->prepare("INSERT INTO tests (id, title, duration_minutes, questions_json, category, difficulty) VALUES (?,?,?,?,?,?)");
-    $stmt->execute([$d->id, $d->title, $d->durationMinutes, json_encode($d->questions), $d->category, $d->difficulty]);
+    $s = $conn->prepare("INSERT INTO tests (id, title, duration, questions_json, category, difficulty, exam_type) VALUES (?,?,?,?,?,?,?)");
+    $s->execute([getV($d, 'id'), getV($d, 'title'), getV($d, 'durationMinutes') ?? getV($d, 'duration'), json_encode(getV($d, 'questions')), getV($d, 'category'), getV($d, 'difficulty'), getV($d, 'examType')]);
     echo json_encode(["status" => "success"]);
 } else if($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $stmt = $conn->prepare("DELETE FROM tests WHERE id = ?");
-    $stmt->execute([$_GET['id']]);
+    $conn->prepare("DELETE FROM tests WHERE id = ?")->execute([$_GET['id']]);
     echo json_encode(["status" => "success"]);
 }
 ?>

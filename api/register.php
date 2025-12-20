@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.35 - Persistence Core
- * Full Production Backend Suite - Zero Partial Updates
+ * IITGEEPrep Engine v12.38 - Master Sync Core
+ * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -22,31 +22,18 @@ function getJsonInput() {
     return $data;
 }
 
-function requireProps($data, $props) {
-    if (!$data) {
-        http_response_code(400);
-        echo json_encode(["error" => "MISSING_BODY"]);
-        exit;
-    }
-    foreach ($props as $p) {
-        if (!isset($data->$p)) {
-            http_response_code(400);
-            echo json_encode(["error" => "MISSING_PROPERTY", "property" => $p]);
-            exit;
-        }
-    }
+function getV($data, $p) {
+    if (!$data) return null;
+    if (isset($data->$p)) return $data->$p;
+    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $p));
+    if (isset($data->$snake)) return $data->$snake;
+    return null;
 }
 
-$data = getJsonInput();
-requireProps($data, ['name', 'email', 'password', 'role']);
+$d = getJsonInput();
 $id = str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
-$hash = password_hash($data->password, PASSWORD_DEFAULT);
-try {
-    $stmt = $conn->prepare("INSERT INTO users (id, name, email, password_hash, role) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$id, $data->name, $data->email, $hash, $data->role]);
-    echo json_encode(["status" => "success", "user" => ["id" => $id, "name" => $data->name], "version" => "12.35"]);
-} catch(Exception $e) {
-    http_response_code(400);
-    echo json_encode(["error" => "REGISTRATION_FAILED", "message" => $e->getMessage()]);
-}
+$h = password_hash(getV($d, 'password'), PASSWORD_DEFAULT);
+$s = $conn->prepare("INSERT INTO users (id, name, email, password_hash, role, target_exam, target_year, phone) VALUES (?,?,?,?,?,?,?,?)");
+$s->execute([$id, getV($d, 'name'), getV($d, 'email'), $h, getV($d, 'role'), getV($d, 'targetExam') ?? 'JEE Main', getV($d, 'targetYear') ?? 2025, getV($d, 'phone') ?? '']);
+echo json_encode(["status" => "success", "user" => ["id" => $id, "name" => getV($d, 'name')]]);
 ?>

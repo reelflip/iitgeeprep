@@ -1,5 +1,9 @@
 <?php
-// CRITICAL: Disable error display to client, log to file instead
+/**
+ * IITGEEPrep Pro Engine v12.27
+ * Production Backend Infrastructure
+ * Optimized for Hostinger/LAMP Stack
+ */
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 error_reporting(E_ALL);
@@ -7,14 +11,8 @@ error_reporting(E_ALL);
 include_once 'cors.php';
 include_once 'config.php';
 
-$data = json_decode(file_get_contents('php://input'));
-if(!empty($data->user_id)) {
-    try {
-        $config_json = isset($data->config) ? json_encode($data->config) : null;
-        $slots_json = isset($data->slots) ? json_encode($data->slots) : null;
-        $stmt = $conn->prepare("INSERT INTO timetable (user_id, config_json, slots_json) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE config_json = IFNULL(?, config_json), slots_json = IFNULL(?, slots_json)");
-        $stmt->execute([$data->user_id, $config_json, $slots_json, $config_json, $slots_json]);
-        echo json_encode(["status" => "success"]);
-    } catch(Exception $e) { http_response_code(500); echo json_encode(["error" => $e->getMessage()]); }
-}
+$d = json_decode(file_get_contents('php://input'));
+$sql = "INSERT INTO timetable (user_id, config_json, slots_json) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE config_json=VALUES(config_json), slots_json=VALUES(slots_json)";
+$conn->prepare($sql)->execute([$d->user_id, json_encode($d->config), json_encode($d->slots)]);
+echo json_encode(["status" => "success"]);
 ?>

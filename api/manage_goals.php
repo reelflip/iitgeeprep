@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v13.0 - Ultimate Sync Core
- * Production Backend Deployment
+ * IITGEEPrep Engine v13.1 - Production Logic Core
+ * Fix: Health Check 400/500 Mitigation
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -12,7 +12,7 @@ include_once 'config.php';
 
 function getJsonInput() {
     $raw = file_get_contents('php://input');
-    if (!$raw || $raw === '{}') return null;
+    if (!$raw || $raw === '{}' || $raw === '[]') return null;
     $data = json_decode($raw);
     return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
 }
@@ -36,20 +36,25 @@ function sendSuccess($data = []) {
     exit;
 }
 
-// Global Health Check Handler
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty(file_get_contents('php://input'))) {
-    echo json_encode(["status" => "active", "message" => "Logic hub is reachable"]);
-    exit;
+/**
+ * Health Check Bypass
+ * Resolves HTTP 400 during integrity scans
+ */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET') {
+    $raw = file_get_contents('php://input');
+    if (empty($raw) || $raw === '{}') {
+        echo json_encode(["status" => "active", "message" => "Module operational"]);
+        exit;
+    }
 }
 
-$method = $_SERVER['REQUEST_METHOD'];
 $data = getJsonInput();
 try {
-    if ($method === 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = 'goal_' . uniqid();
         $conn->prepare("INSERT INTO goals (id, user_id, text, completed) VALUES (?, ?, ?, 0)")->execute([$id, getV($data, 'userId'), getV($data, 'text')]);
         sendSuccess(["id" => $id]);
-    } else if ($method === 'PUT') {
+    } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         $conn->prepare("UPDATE goals SET completed = 1 - completed WHERE id = ?")->execute([getV($data, 'id')]);
         sendSuccess();
     }

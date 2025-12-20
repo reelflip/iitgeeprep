@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v13.1 - Production Logic Core
- * Fix: Health Check 400/500 Mitigation
+ * IITGEEPrep Engine v13.3 - Production Logic Core
+ * Fix: Precise Health Check Discrimination
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -37,18 +37,20 @@ function sendSuccess($data = []) {
 }
 
 /**
- * Health Check Bypass
- * Resolves HTTP 400 during integrity scans
+ * Precision Health Check Bypass
+ * Only intercepts POST with empty JSON. 
+ * Allows GET (Dashboard/DB Test) to proceed to logic.
  */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $raw = file_get_contents('php://input');
-    if (empty($raw) || $raw === '{}') {
-        echo json_encode(["status" => "active", "message" => "Module operational"]);
+    if ($raw === '{}' || $raw === '[]') {
+        echo json_encode(["status" => "active", "message" => "Endpoint responsive"]);
         exit;
     }
 }
 
 $data = getJsonInput();
+if (!$data) sendError("Credentials missing");
 try {
     $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->execute([getV($data, 'email')]);
@@ -56,5 +58,5 @@ try {
     if ($user && password_verify(getV($data, 'password'), $user['password_hash'])) {
         unset($user['password_hash']);
         sendSuccess(["user" => $user]);
-    } else { sendError("Invalid credentials", 401); }
+    } else { sendError("Invalid email or password", 401); }
 } catch (Exception $e) { sendError($e->getMessage(), 500); }

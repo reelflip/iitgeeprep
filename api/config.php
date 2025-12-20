@@ -1,15 +1,17 @@
 <?php
 $host = "localhost";
-$db_name = "u131922718_iitgeedb2";
-$user = "u131922718_iitgeedb2_user";
-$pass = "lU5/8@e~fy";
+$db_name = "u123456789_iitjee";
+$user = "u123456789_admin";
+$pass = "";
+$conn = null;
 try {
-    $conn = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8mb4", $user, $pass);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    if (!empty($host) && !empty($db_name)) {
+        $conn = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8mb4", $user, $pass);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    }
 } catch(PDOException $e) {
-    http_response_code(500); 
-    echo json_encode(["status" => "error", "message" => "DATABASE_CONNECTION_ERROR", "details" => $e.getMessage()]);
-    exit;
+    // Return structured error but allow the script to check $conn
+    $db_error = $e->getMessage();
 }
 ?>

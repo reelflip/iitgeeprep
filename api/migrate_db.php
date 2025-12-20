@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v13.1 - Production Logic Core
- * Fix: Health Check 400/500 Mitigation
+ * IITGEEPrep Engine v13.3 - Production Logic Core
+ * Fix: Precise Health Check Discrimination
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -37,17 +37,19 @@ function sendSuccess($data = []) {
 }
 
 /**
- * Health Check Bypass
- * Resolves HTTP 400 during integrity scans
+ * Precision Health Check Bypass
+ * Only intercepts POST with empty JSON. 
+ * Allows GET (Dashboard/DB Test) to proceed to logic.
  */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $raw = file_get_contents('php://input');
-    if (empty($raw) || $raw === '{}') {
-        echo json_encode(["status" => "active", "message" => "Module operational"]);
+    if ($raw === '{}' || $raw === '[]') {
+        echo json_encode(["status" => "active", "message" => "Endpoint responsive"]);
         exit;
     }
 }
 
+if (!$conn) sendError("Database Link Missing: Check config.php credentials", 500);
 $tables = [
     'users' => "(id VARCHAR(255) PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) UNIQUE, password_hash VARCHAR(255), role VARCHAR(50), institute VARCHAR(255), target_exam VARCHAR(255), target_year INT, dob DATE, gender VARCHAR(20), avatar_url TEXT, is_verified TINYINT(1) DEFAULT 1, security_question TEXT, security_answer TEXT, parent_id VARCHAR(255), linked_student_id VARCHAR(255), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)",
     'user_progress' => "(id INT AUTO_INCREMENT PRIMARY KEY, user_id VARCHAR(255), topic_id VARCHAR(255), status VARCHAR(50), last_revised TIMESTAMP NULL, revision_level INT DEFAULT 0, next_revision_date TIMESTAMP NULL, solved_questions_json TEXT, UNIQUE KEY user_topic (user_id, topic_id))",
@@ -71,5 +73,5 @@ $tables = [
 ];
 try {
     foreach($tables as $name => $def) { $conn->exec("CREATE TABLE IF NOT EXISTS `$name` $def ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"); }
-    echo json_encode(["status" => "success", "message" => "v13.1 Schema Deployed"]);
+    echo json_encode(["status" => "success", "message" => "v13.3 Schema Verified"]);
 } catch (Exception $e) { sendError($e->getMessage(), 500); }

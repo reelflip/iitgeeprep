@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, B as Bot, Z as Zap, a as Brain, H as HelpCircle, L as Loader2, S as Send, C as ChevronDown, X } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, B as Bot, Z as Zap, a as Brain, C as CircleHelp, L as LoaderCircle, S as Send, b as ChevronDown, X } from "../vendor.js";
 const AITutorChat = ({ isFullScreen = false }) => {
   const [isOpen, setIsOpen] = reactExports.useState(false);
   const [enabled, setEnabled] = reactExports.useState(true);
@@ -85,7 +85,7 @@ const AITutorChat = ({ isFullScreen = false }) => {
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-500", children: "Go beyond formulas to master the core logic." })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-6 rounded-2xl border border-slate-200 shadow-sm", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(HelpCircle, { className: "text-purple-600 mb-2" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(CircleHelp, { className: "text-purple-600 mb-2" }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-bold", children: "Study Roadmap" }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-500", children: "Custom schedules and revision strategies." })
             ] })
@@ -95,7 +95,7 @@ const AITutorChat = ({ isFullScreen = false }) => {
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-4xl mx-auto space-y-6", children: [
           messages.map((msg) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `flex ${msg.role === "user" ? "justify-end" : "justify-start"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `max-w-[85%] rounded-3xl p-5 text-sm md:text-base shadow-sm ${msg.role === "user" ? "bg-violet-600 text-white rounded-tr-none" : "bg-white text-slate-700 border border-slate-200 rounded-tl-none"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "whitespace-pre-wrap leading-relaxed", children: msg.text }) }) }, msg.id)),
           isLoading && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-start", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-4 rounded-3xl rounded-tl-none border border-slate-200 shadow-sm flex items-center gap-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "w-5 h-5 text-violet-500 animate-spin" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "w-5 h-5 text-violet-500 animate-spin" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-slate-500 font-bold uppercase tracking-widest", children: "Tutor is thinking..." })
           ] }) })
         ] }),
@@ -119,7 +119,7 @@ const AITutorChat = ({ isFullScreen = false }) => {
             onClick: () => handleSend(),
             disabled: !input.trim() || isLoading,
             className: "p-4 bg-violet-600 text-white rounded-2xl hover:bg-violet-700 transition-all disabled:opacity-50 active:scale-95 shadow-lg shadow-violet-200",
-            children: isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "w-6 h-6 animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "w-6 h-6" })
+            children: isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "w-6 h-6 animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "w-6 h-6" })
           }
         )
       ] }) })
@@ -144,7 +144,7 @@ const AITutorChat = ({ isFullScreen = false }) => {
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3 bg-white border-t border-slate-100 shrink-0 relative", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "text", value: input, onChange: (e) => setInput(e.target.value), onKeyDown: (e) => e.key === "Enter" && handleSend(), placeholder: "Ask a question...", className: "w-full pl-4 pr-12 py-3 bg-slate-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-violet-200 outline-none" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => handleSend(), disabled: !input.trim() || isLoading, className: "absolute right-5 top-5 p-1.5 bg-violet-600 text-white rounded-lg hover:bg-violet-700 disabled:opacity-50 transition-all active:scale-95", children: isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "w-4 h-4 animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "w-4 h-4" }) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => handleSend(), disabled: !input.trim() || isLoading, className: "absolute right-5 top-5 p-1.5 bg-violet-600 text-white rounded-lg hover:bg-violet-700 disabled:opacity-50 transition-all active:scale-95", children: isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "w-4 h-4 animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "w-4 h-4" }) })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setIsOpen(!isOpen), className: `w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 z-[9999] ${isOpen ? "bg-slate-700 text-white rotate-90" : "bg-gradient-to-br from-violet-600 to-indigo-600 text-white"}`, children: isOpen ? /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "w-6 h-6" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Bot, { className: "w-7 h-7" }) })

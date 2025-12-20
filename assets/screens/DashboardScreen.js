@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, n as Users, aj as ArrowRight, aZ as Clock, a8 as Target, a_ as Trophy, a as Brain, a$ as Sparkles, A as AlertCircle, m as Heart, Z as Zap, l as Lightbulb } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, o as Users, aj as ArrowRight, aZ as Clock, a8 as Target, a_ as Trophy, a as Brain, a$ as Sparkles, k as CircleAlert, H as Heart, Z as Zap, n as Lightbulb } from "../vendor.js";
 import { S as SYLLABUS_DATA } from "../shared-core.js";
 const DashboardScreen = ({ user, viewingStudentName, progress, testAttempts, goals, toggleGoal, addGoal, setScreen, linkedPsychReport }) => {
   const [newGoalText, setNewGoalText] = reactExports.useState("");
@@ -254,7 +254,7 @@ const DashboardScreen = ({ user, viewingStudentName, progress, testAttempts, goa
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-yellow-50 p-6 rounded-xl border border-yellow-100", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-3", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(AlertCircle, { className: "w-5 h-5 text-orange-500" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "w-5 h-5 text-orange-500" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-bold text-yellow-800 text-sm", children: viewingStudentName ? "System Observations" : "Notice Board" })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm text-yellow-700 italic", children: "No important notifications at the moment." })

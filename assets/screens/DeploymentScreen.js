@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, ax as Database, a7 as RefreshCw, aB as ShieldCheck, a5 as AlertTriangle, i as Layers, b0 as ChevronUp, C as ChevronDown, p as Activity, b1 as Info, a6 as CheckCircle2, b2 as Download, b3 as JSZip } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, ax as Database, a7 as RefreshCw, aB as ShieldCheck, a5 as TriangleAlert, l as Layers, b0 as ChevronUp, b as ChevronDown, A as Activity, b1 as Info, a6 as CircleCheck, b2 as Download, b3 as JSZip } from "../vendor.js";
 import { g as getBackendFiles, b as generateSQLSchema } from "../shared-core.js";
 const DeploymentScreen = () => {
   const [activeTab, setActiveTab] = reactExports.useState("guide");
@@ -193,7 +193,7 @@ const DeploymentScreen = () => {
           ] })
         ] }),
         dbTables.length === 0 && !scanningDb ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "py-12 text-center text-rose-500 bg-rose-50 rounded-2xl border border-dashed border-rose-200 flex flex-col items-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTriangle, { size: 48, className: "mb-4" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { size: 48, className: "mb-4" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-bold uppercase tracking-widest text-xs", children: "No DB Link Detected" }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm mt-2 max-w-sm", children: [
             "Remote MySQL host rejected connection. Sync requires updated ",
@@ -294,7 +294,7 @@ const DeploymentScreen = () => {
     activeTab === "guide" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-3 gap-8", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "lg:col-span-2 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-xl font-bold text-slate-800 flex items-center gap-2 text-blue-600", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { className: "animate-pulse" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "animate-pulse" }),
           " Master Synchronization Guide (v12.41)"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-600 text-sm leading-relaxed", children: "System v12.41 ensures 100% synchronization between frontend and backend. Your database currently reports 26 tables." }),

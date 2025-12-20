@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, R as RotateCw, H as HelpCircle, A as AlertCircle, aZ as Clock, a6 as CheckCircle2, h as Calendar } from "../vendor.js";
+import { j as jsxRuntimeExports, R as RotateCw, C as CircleHelp, k as CircleAlert, aZ as Clock, a6 as CircleCheck, i as Calendar } from "../vendor.js";
 import { S as SYLLABUS_DATA, f as formatDate } from "../shared-core.js";
 const RevisionScreen = ({ progress, handleRevisionComplete }) => {
   const now = /* @__PURE__ */ new Date();
@@ -24,7 +24,7 @@ const RevisionScreen = ({ progress, handleRevisionComplete }) => {
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-6 bg-white/10 p-4 rounded-xl border border-white/20 backdrop-blur-md max-w-3xl", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("h4", { className: "font-bold text-white text-sm mb-3 flex items-center gap-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(HelpCircle, { className: "w-4 h-4 text-yellow-300" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(CircleHelp, { className: "w-4 h-4 text-yellow-300" }),
             " How to use this tab:"
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4 text-xs md:text-sm text-blue-50", children: [
@@ -58,7 +58,7 @@ const RevisionScreen = ({ progress, handleRevisionComplete }) => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-lg font-bold text-slate-800 flex items-center gap-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(AlertCircle, { className: "w-5 h-5 text-red-500" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "w-5 h-5 text-red-500" }),
             "Due Today"
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-full", children: [
@@ -92,7 +92,7 @@ const RevisionScreen = ({ progress, handleRevisionComplete }) => {
               onClick: () => handleRevisionComplete(topic.id),
               className: "w-full sm:w-auto bg-red-50 text-red-600 border border-red-100 px-4 py-2 rounded-lg text-sm font-bold hover:bg-red-100 hover:text-red-700 transition-colors flex items-center justify-center gap-2",
               children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { className: "w-4 h-4" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "w-4 h-4" }),
                 " Mark Done"
               ]
             }

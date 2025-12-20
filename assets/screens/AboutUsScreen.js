@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, s as TrendingUp, b as BookOpen, a8 as Target, a9 as CalendarClock, aa as BarChart, ab as BookX, m as Heart, a6 as CheckCircle2, a as Brain, n as Users, ac as Globe } from "../vendor.js";
+import { j as jsxRuntimeExports, s as TrendingUp, c as BookOpen, a8 as Target, a9 as CalendarClock, aa as ChartNoAxesColumnIncreasing, ab as BookX, H as Heart, a6 as CircleCheck, a as Brain, o as Users, ac as Globe } from "../vendor.js";
 const AboutUsScreen = () => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "animate-in fade-in slide-in-from-bottom-4 pb-10", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-slate-900 text-white pt-20 pb-24 px-4 relative overflow-hidden", children: [
@@ -77,7 +77,7 @@ const AboutUsScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             FeatureCard,
             {
-              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart, { className: "w-6 h-6 text-indigo-600" }),
+              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ChartNoAxesColumnIncreasing, { className: "w-6 h-6 text-indigo-600" }),
               bg: "bg-indigo-50",
               title: "Analytics",
               desc: "Identify weak areas with detailed subject-wise performance reports."
@@ -117,7 +117,7 @@ const AboutUsScreen = () => {
             "Supports JEE Main, Advanced, BITSAT & More",
             "Free Access to Premium Tracking Tools"
           ].map((item, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { className: "flex items-center text-slate-800 font-medium", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { className: "w-5 h-5 text-green-500 mr-3" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "w-5 h-5 text-green-500 mr-3" }),
             " ",
             item
           ] }, i)) })

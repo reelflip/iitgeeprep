@@ -1,5 +1,5 @@
 const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/screens/AuthScreen.js","assets/vendor.js","assets/shared-core.js","assets/screens/DashboardScreen.js","assets/screens/AdminDashboardScreen.js","assets/components/StatCard.js","assets/screens/SyllabusScreen.js","assets/components/BookReader.js","assets/components/SyncStatusBadge.js","assets/screens/RevisionScreen.js","assets/screens/TimetableScreen.js","assets/screens/TestScreen.js","assets/screens/FocusScreen.js","assets/screens/FlashcardScreen.js","assets/screens/MistakesScreen.js","assets/screens/AnalyticsScreen.js","assets/screens/WellnessScreen.js","assets/screens/BacklogScreen.js","assets/screens/HacksScreen.js","assets/screens/PsychometricScreen.js","assets/screens/AdminUserManagementScreen.js","assets/screens/AdminInboxScreen.js","assets/screens/AdminSyllabusScreen.js","assets/components/RichTextEditor.js","assets/screens/AdminTestManagerScreen.js","assets/components/Button.js","assets/screens/AdminSystemScreen.js","assets/screens/DeploymentScreen.js","assets/screens/DiagnosticsScreen.js","assets/screens/ProfileScreen.js","assets/screens/AboutUsScreen.js","assets/screens/ExamGuideScreen.js","assets/screens/PrivacyPolicyScreen.js","assets/screens/ContactUsScreen.js","assets/screens/FeaturesScreen.js","assets/screens/ContentManagerScreen.js","assets/screens/AdminBlogScreen.js"])))=>i.map(i=>d[i]);
-import { r as reactExports, j as jsxRuntimeExports, bw as createRoot, bx as React } from "./vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, bv as clientExports, bw as React } from "./vendor.js";
 import { N as Navigation, M as MobileNavigation } from "./components/Navigation.js";
 import { A as AITutorChat } from "./components/AITutorChat.js";
 import { P as PublicLayout } from "./components/PublicLayout.js";
@@ -348,7 +348,7 @@ const App = () => {
 };
 const container = document.getElementById("root");
 if (container) {
-  const root = createRoot(container);
+  const root = clientExports.createRoot(container);
   root.render(
     /* @__PURE__ */ jsxRuntimeExports.jsx(React.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) })
   );

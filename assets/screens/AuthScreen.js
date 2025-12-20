@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, s as TrendingUp, aS as WifiOff, a6 as CheckCircle2, aT as GraduationCap, n as Users, aU as Building, C as ChevronDown, a8 as Target, h as Calendar, U as User, al as Mail, as as Lock, aC as Shield, av as Key, L as Loader2, aj as ArrowRight } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, s as TrendingUp, aS as WifiOff, a6 as CircleCheck, aT as GraduationCap, o as Users, aU as Building, b as ChevronDown, a8 as Target, i as Calendar, U as User, al as Mail, as as Lock, aC as Shield, av as Key, L as LoaderCircle, aj as ArrowRight } from "../vendor.js";
 import { C as COACHING_INSTITUTES, T as TARGET_EXAMS, a as TARGET_YEARS } from "../shared-core.js";
 const SECURITY_QUESTIONS = [
   "What is the name of your first pet?",
@@ -172,7 +172,7 @@ const AuthScreen = ({ onLogin, onNavigate }) => {
           error
         ] }),
         successMessage && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-6 p-4 bg-green-50 text-green-700 text-xs font-bold rounded-xl flex items-center gap-3 border border-green-100", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { size: 16 }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 16 }),
           " ",
           successMessage
         ] }),
@@ -407,7 +407,7 @@ const AuthScreen = ({ onLogin, onNavigate }) => {
               type: "submit",
               disabled: isLoading,
               className: "w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-2xl shadow-xl shadow-blue-200 transition-all flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50",
-              children: isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "w-5 h-5 animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+              children: isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "w-5 h-5 animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
                 view === "REGISTER" ? "Create Account" : "Sign In",
                 /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 18 })
               ] })

@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, b as BookOpen, af as Search, a6 as CheckCircle2, d as ChevronRight, t as ArrowLeft, aZ as Clock, ae as Save, a$ as Sparkles, L as Loader2, S as Send, be as StickyNote } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, c as BookOpen, af as Search, a6 as CircleCheck, e as ChevronRight, t as ArrowLeft, aZ as Clock, ae as Save, a$ as Sparkles, L as LoaderCircle, S as Send, bd as StickyNote } from "../vendor.js";
 import { B as BookReader } from "../components/BookReader.js";
 import { S as SyncStatusBadge } from "../components/SyncStatusBadge.js";
 const statusColors = {
@@ -210,7 +210,7 @@ Results are now saved to your dashboard analytics.`);
                 disabled: isSubmitting,
                 className: "bg-slate-900 text-white px-16 py-5 rounded-2xl font-black text-xl hover:bg-blue-600 transition-all shadow-2xl flex items-center gap-4 active:scale-95 disabled:opacity-50",
                 children: [
-                  isSubmitting ? /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { size: 24 }),
+                  isSubmitting ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { size: 24 }),
                   "Save & Submit Test"
                 ]
               }
@@ -414,7 +414,7 @@ const SyllabusScreen = ({
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-between items-start mb-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-1", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-[10px] font-bold px-2 py-0.5 rounded ${subject.id === "phys" ? "bg-purple-100 text-purple-700" : subject.id === "chem" ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700"}`, children: subject.name }),
-              topicData.status === "COMPLETED" && /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { className: "w-4 h-4 text-green-500" })
+              topicData.status === "COMPLETED" && /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "w-4 h-4 text-green-500" })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-base font-bold text-slate-800", children: topic.name })
           ] }) }),

@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, bc as Camera, a8 as Target, ae as Save, U as User, b8 as Bell, al as Mail, aC as Shield, a6 as CheckCircle2 } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, bb as Camera, a8 as Target, ae as Save, U as User, b7 as Bell, al as Mail, aC as Shield, a6 as CircleCheck } from "../vendor.js";
 import { T as TARGET_EXAMS } from "../shared-core.js";
 const ProfileScreen = ({ user, onAcceptRequest, onUpdateUser, linkedStudentName }) => {
   var _a;
@@ -219,7 +219,7 @@ const ProfileScreen = ({ user, onAcceptRequest, onUpdateUser, linkedStudentName 
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "md:col-span-1 space-y-6", children: [
         (user.parentId || user.linkedStudentId) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-green-50 rounded-xl border border-green-200 p-6 shadow-sm", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-1.5 bg-green-200 rounded-full text-green-700", children: /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { size: 16 }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-1.5 bg-green-200 rounded-full text-green-700", children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 16 }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-bold text-green-900 text-sm uppercase tracking-wide", children: user.role === "STUDENT" ? "Parent Linked" : "Student Linked" })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-green-800 font-bold text-lg mt-2", children: user.role === "STUDENT" ? `Parent ID: ${user.parentId}` : linkedStudentName || `ID: ${user.linkedStudentId}` }),

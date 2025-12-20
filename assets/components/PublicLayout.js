@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, s as TrendingUp, t as ArrowLeft, u as LogIn, X, v as Menu, w as Instagram, x as Facebook, y as Twitter, Y as Youtube, z as Linkedin } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, s as TrendingUp, t as ArrowLeft, u as LogIn, X, M as Menu, v as Instagram, w as Facebook, x as Twitter, Y as Youtube, y as Linkedin } from "../vendor.js";
 const PublicLayout = ({ children, onNavigate, currentScreen, socialConfig }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = reactExports.useState(false);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-screen bg-slate-50 font-inter flex flex-col", children: [

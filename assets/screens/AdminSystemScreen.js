@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, p as Activity, ar as Terminal, L as Loader2, as as Lock, at as ToggleRight, au as ToggleLeft, av as Key, a7 as RefreshCw, aw as BarChart3, ac as Globe, ae as Save, ax as Database, ay as FileCode, a6 as CheckCircle2 } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, A as Activity, ar as Terminal, L as LoaderCircle, as as Lock, at as ToggleRight, au as ToggleLeft, av as Key, a7 as RefreshCw, aw as ChartColumn, ac as Globe, ae as Save, ax as Database, ay as FileCode, a6 as CircleCheck } from "../vendor.js";
 const AI_MODELS = [
   { id: "gemini-3-flash-preview", name: "Gemini 3 Flash", provider: "Google", description: "Ultra-fast, optimized for quick doubts and scheduling.", strength: "Speed", color: "blue" },
   { id: "gemini-3-pro-preview", name: "Gemini 3 Pro", provider: "Google", description: "Deep reasoning and complex Physics problem solving.", strength: "Reasoning", color: "indigo" },
@@ -211,7 +211,7 @@ const AdminSystemScreen = () => {
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-6 flex justify-between items-center", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: handleTestAI, disabled: verifying, className: "bg-slate-900 text-white px-6 py-2.5 rounded-lg font-bold flex items-center gap-2", children: [
-            verifying && /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "animate-spin", size: 16 }),
+            verifying && /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "animate-spin", size: 16 }),
             " Test Model"
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleSaveAI, disabled: !verified, className: "bg-blue-600 text-white px-8 py-2.5 rounded-lg font-bold shadow-lg", children: "Save AI Config" })
@@ -258,7 +258,7 @@ const AdminSystemScreen = () => {
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-6 border-b border-slate-100 bg-slate-50/50", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-2 bg-emerald-100 text-emerald-600 rounded-lg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart3, { size: 20 }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-2 bg-emerald-100 text-emerald-600 rounded-lg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ChartColumn, { size: 20 }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-bold text-slate-800", children: "Analytics & Tracking" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-500", children: "Monitor visitor behavior and platform engagement." })
@@ -287,7 +287,7 @@ const AdminSystemScreen = () => {
           disabled: saving,
           className: "bg-slate-900 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-slate-800 transition-all disabled:opacity-50",
           children: [
-            saving ? /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "animate-spin", size: 18 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Save, { size: 18 }),
+            saving ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "animate-spin", size: 18 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Save, { size: 18 }),
             saving ? "Saving..." : "Save Configuration"
           ]
         }
@@ -323,7 +323,7 @@ const AdminSystemScreen = () => {
       ] })
     ] }),
     saveSuccess && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed bottom-24 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4 z-50", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { size: 20 }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 20 }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold", children: "System Settings Updated Successfully" })
     ] })
   ] });

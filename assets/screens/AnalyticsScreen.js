@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, aw as BarChart3, a8 as Target, a6 as CheckCircle2, aF as ResponsiveContainer, aG as RadialBarChart, aH as RadialBar, aI as Legend, aJ as Tooltip, s as TrendingUp, aK as LineChart, aL as CartesianGrid, aM as XAxis, aN as YAxis, aO as Line, aP as BarChart, aQ as Bar, a5 as AlertTriangle, aR as ListChecks } from "../vendor.js";
+import { j as jsxRuntimeExports, aw as ChartColumn, a8 as Target, a6 as CircleCheck, aF as ResponsiveContainer, aG as RadialBarChart, aH as RadialBar, aI as Legend, aJ as Tooltip, s as TrendingUp, aK as LineChart, aL as CartesianGrid, aM as XAxis, aN as YAxis, aO as Line, aP as BarChart, aQ as Bar, a5 as TriangleAlert, aR as ListChecks } from "../vendor.js";
 import { S as SYLLABUS_DATA } from "../shared-core.js";
 const AnalyticsScreen = ({ user, viewingStudentName, progress = {}, testAttempts = [] }) => {
   const subjectStats = ["Physics", "Chemistry", "Maths"].map((subject) => {
@@ -88,7 +88,7 @@ const AnalyticsScreen = ({ user, viewingStudentName, progress = {}, testAttempts
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-gradient-to-r from-slate-700 to-slate-800 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center space-x-3 mb-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart3, { className: "w-8 h-8 text-white" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ChartColumn, { className: "w-8 h-8 text-white" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-3xl font-bold", children: "Performance Analytics" })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-200 text-lg opacity-90 max-w-2xl", children: "Deep dive into study metrics, question volume, and test score trends." })
@@ -106,7 +106,7 @@ const AnalyticsScreen = ({ user, viewingStudentName, progress = {}, testAttempts
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-6", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-80 flex flex-col", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-bold text-slate-800 mb-4 flex items-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { className: "w-5 h-5 mr-2 text-green-500" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "w-5 h-5 mr-2 text-green-500" }),
           " Syllabus Coverage"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 w-full -ml-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ResponsiveContainer, { width: "100%", height: "100%", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(RadialBarChart, { cx: "50%", cy: "50%", innerRadius: "10%", outerRadius: "80%", barSize: 20, data: subjectStats, children: [
@@ -139,7 +139,7 @@ const AnalyticsScreen = ({ user, viewingStudentName, progress = {}, testAttempts
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-6 rounded-xl border border-slate-200 shadow-sm h-96", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-bold text-slate-800 mb-2 flex items-center", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart3, { className: "w-5 h-5 mr-2 text-purple-500" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ChartColumn, { className: "w-5 h-5 mr-2 text-purple-500" }),
         " Chapter-wise Question Volume"
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-500 mb-6", children: "Total problems solved per subject (Exercises 1-4 combined)." }),
@@ -154,7 +154,7 @@ const AnalyticsScreen = ({ user, viewingStudentName, progress = {}, testAttempts
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-6", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "md:col-span-1 bg-red-50 border border-red-100 rounded-xl p-6", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-bold text-red-800 mb-4 flex items-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTriangle, { className: "w-5 h-5 mr-2" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { className: "w-5 h-5 mr-2" }),
           " Weak Areas"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-600 mb-4", children: "Top chapters needing revision based on test errors." }),

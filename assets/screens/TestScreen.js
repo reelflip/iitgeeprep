@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, A as AlertCircle, X, aZ as Clock, L as Loader2, S as Send, c as ChevronLeft, d as ChevronRight, F as FileText, a8 as Target, bf as PlayCircle, a_ as Trophy, bg as RotateCcw } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, k as CircleAlert, X, aZ as Clock, L as LoaderCircle, S as Send, d as ChevronLeft, e as ChevronRight, F as FileText, a8 as Target, be as CirclePlay, a_ as Trophy, bf as RotateCcw } from "../vendor.js";
 const TestScreen = ({ user, addTestAttempt, history, availableTests = [] }) => {
   const isParent = user.role === "PARENT";
   const [activeTab, setActiveTab] = reactExports.useState(isParent ? "history" : "practice");
@@ -107,7 +107,7 @@ Accuracy: ${accuracy}%`);
     const questions = runningTest.questions;
     if (!questions || questions.length === 0) {
       return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed inset-0 z-50 bg-white flex flex-col items-center justify-center p-8", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(AlertCircle, { className: "w-16 h-16 text-red-500 mb-4" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "w-16 h-16 text-red-500 mb-4" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-2xl font-bold text-slate-800", children: "Engine Initialization Error" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-500 mt-2", children: "No valid questions found for this test." }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleExit, className: "mt-8 px-8 py-3 bg-slate-900 text-white rounded-xl font-bold", children: "Back to Menu" })
@@ -201,7 +201,7 @@ Accuracy: ${accuracy}%`);
                 disabled: isSubmitting,
                 className: "w-full bg-slate-900 text-white py-4 rounded-xl font-black shadow-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50",
                 children: [
-                  isSubmitting ? /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { size: 18 }),
+                  isSubmitting ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { size: 18 }),
                   " Finish Test"
                 ]
               }
@@ -226,7 +226,7 @@ Accuracy: ${accuracy}%`);
             onClick: () => handleSubmit(),
             disabled: isSubmitting,
             className: "flex-[2] bg-slate-900 text-white rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl flex items-center justify-center gap-2",
-            children: isSubmitting ? /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "animate-spin w-4 h-4" }) : "Submit"
+            children: isSubmitting ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "animate-spin w-4 h-4" }) : "Submit"
           }
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -284,7 +284,7 @@ Accuracy: ${accuracy}%`);
             onClick: () => startTest(test),
             className: "w-full py-4 bg-slate-900 text-white rounded-2xl font-black shadow-lg hover:bg-blue-600 hover:shadow-blue-200 transition-all flex items-center justify-center gap-2 group-hover:scale-[1.02]",
             children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(PlayCircle, { size: 20 }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(CirclePlay, { size: 20 }),
               " Start Mock Test"
             ]
           }

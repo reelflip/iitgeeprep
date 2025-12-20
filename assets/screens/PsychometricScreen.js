@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, a as Brain, a7 as RefreshCw, a$ as Sparkles, g as BarChart2, F as FileText, n as Users, s as TrendingUp, aE as CheckCircle, a5 as AlertTriangle, b1 as Info, bd as HeartPulse, aj as ArrowRight, d as ChevronRight, m as Heart, Z as Zap, l as Lightbulb } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, a as Brain, a7 as RefreshCw, a$ as Sparkles, h as ChartNoAxesColumn, F as FileText, o as Users, s as TrendingUp, aE as CircleCheckBig, a5 as TriangleAlert, b1 as Info, bc as HeartPulse, aj as ArrowRight, e as ChevronRight, H as Heart, Z as Zap, n as Lightbulb } from "../vendor.js";
 import { P as PSYCHOMETRIC_QUESTIONS, c as generatePsychometricReport } from "../shared-core.js";
 const PsychometricScreen = ({ user, reportData: initialReport }) => {
   var _a;
@@ -151,7 +151,7 @@ const PsychometricScreen = ({ user, reportData: initialReport }) => {
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "lg:col-span-8 space-y-8", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-8 rounded-3xl border border-slate-200 shadow-sm", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-black text-slate-800 text-lg mb-8 uppercase tracking-tight flex items-center gap-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart2, { className: "w-5 h-5 text-violet-600" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(ChartNoAxesColumn, { className: "w-5 h-5 text-violet-600" }),
               " Dimensional Deep Dive"
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8", children: Object.entries(report.scores).map(([dim, score]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
@@ -206,7 +206,7 @@ const PsychometricScreen = ({ user, reportData: initialReport }) => {
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-black text-slate-500 text-xs uppercase tracking-widest ml-1", children: "Critical Markers" }),
             report.insights.map((insight, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `p-4 rounded-2xl border flex gap-3 ${insight.status === "GOOD" ? "bg-emerald-50 border-emerald-100" : insight.status === "POOR" ? "bg-rose-50 border-rose-100" : "bg-slate-50 border-slate-200"}`, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `mt-0.5 shrink-0 ${insight.status === "GOOD" ? "text-emerald-600" : insight.status === "POOR" ? "text-rose-600" : "text-slate-500"}`, children: insight.status === "GOOD" ? /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle, { size: 16 }) : insight.status === "POOR" ? /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTriangle, { size: 16 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Info, { size: 16 }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `mt-0.5 shrink-0 ${insight.status === "GOOD" ? "text-emerald-600" : insight.status === "POOR" ? "text-rose-600" : "text-slate-500"}`, children: insight.status === "GOOD" ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 16 }) : insight.status === "POOR" ? /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { size: 16 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Info, { size: 16 }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[11px] font-bold leading-tight ${insight.status === "GOOD" ? "text-emerald-900" : insight.status === "POOR" ? "text-rose-900" : "text-slate-900"}`, children: insight.text })
             ] }, idx))
           ] })

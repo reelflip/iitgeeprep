@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, e as LogOut, r as reactExports, M as MoreHorizontal, X, f as LayoutDashboard, b as BookOpen, B as Bot, F as FileText, a as Brain, T as Timer, g as BarChart2, h as Calendar, R as RotateCw, A as AlertCircle, i as Layers, k as ListTodo, l as Lightbulb, m as Heart, U as User, n as Users, o as Settings, I as Inbox, P as PenTool, p as Activity, q as UploadCloud } from "../vendor.js";
+import { j as jsxRuntimeExports, f as LogOut, r as reactExports, E as Ellipsis, X, g as LayoutDashboard, c as BookOpen, B as Bot, F as FileText, a as Brain, T as Timer, h as ChartNoAxesColumn, i as Calendar, R as RotateCw, k as CircleAlert, l as Layers, m as ListTodo, n as Lightbulb, H as Heart, U as User, o as Users, p as Settings, I as Inbox, P as PenTool, A as Activity, q as CloudUpload } from "../vendor.js";
 const STUDENT_MENU = [
   { id: "dashboard", icon: LayoutDashboard, label: "Home" },
   { id: "syllabus", icon: BookOpen, label: "Syllabus" },
@@ -6,10 +6,10 @@ const STUDENT_MENU = [
   { id: "tests", icon: FileText, label: "Tests" },
   { id: "psychometric", icon: Brain, label: "Psychometric Test" },
   { id: "focus", icon: Timer, label: "Focus" },
-  { id: "analytics", icon: BarChart2, label: "Analytics" },
+  { id: "analytics", icon: ChartNoAxesColumn, label: "Analytics" },
   { id: "timetable", icon: Calendar, label: "Timetable" },
   { id: "revision", icon: RotateCw, label: "Revision" },
-  { id: "mistakes", icon: AlertCircle, label: "Mistakes" },
+  { id: "mistakes", icon: CircleAlert, label: "Mistakes" },
   { id: "flashcards", icon: Layers, label: "Cards" },
   { id: "backlogs", icon: ListTodo, label: "Backlogs" },
   { id: "hacks", icon: Lightbulb, label: "Hacks" },
@@ -24,10 +24,10 @@ const ADMIN_MENU = [
   { id: "tests", icon: FileText, label: "Tests" },
   { id: "content", icon: Layers, label: "Content" },
   { id: "blog_admin", icon: PenTool, label: "Blog" },
-  { id: "analytics", icon: BarChart2, label: "Analytics" },
+  { id: "analytics", icon: ChartNoAxesColumn, label: "Analytics" },
   { id: "diagnostics", icon: Activity, label: "Diagnostics" },
   { id: "system", icon: Settings, label: "System" },
-  { id: "deployment", icon: UploadCloud, label: "Deploy" }
+  { id: "deployment", icon: CloudUpload, label: "Deploy" }
 ];
 const ADMIN_EXECUTIVE_MENU = [
   { id: "overview", icon: LayoutDashboard, label: "Overview" },
@@ -36,14 +36,14 @@ const ADMIN_EXECUTIVE_MENU = [
   { id: "tests", icon: FileText, label: "Tests" },
   { id: "content", icon: Layers, label: "Content" },
   { id: "blog_admin", icon: PenTool, label: "Blog" },
-  { id: "analytics", icon: BarChart2, label: "Analytics" },
+  { id: "analytics", icon: ChartNoAxesColumn, label: "Analytics" },
   { id: "diagnostics", icon: Activity, label: "Diagnostics" },
   { id: "profile", icon: User, label: "Profile" }
 ];
 const PARENT_MENU = [
   { id: "dashboard", icon: LayoutDashboard, label: "Overview" },
   { id: "family", icon: Users, label: "Family" },
-  { id: "analytics", icon: BarChart2, label: "Performance" },
+  { id: "analytics", icon: ChartNoAxesColumn, label: "Performance" },
   { id: "tests", icon: FileText, label: "Results" },
   { id: "profile", icon: Settings, label: "Settings" }
 ];
@@ -148,7 +148,7 @@ const MobileNavigation = ({ currentScreen, setScreen, logout, user }) => {
           onClick: () => setIsDrawerOpen(true),
           className: `flex-1 flex flex-col items-center justify-center pt-3 pb-2 transition-all active:scale-95 touch-manipulation ${isDrawerOpen || secondaryItems.some((i) => i.id === currentScreen) ? "text-blue-600" : "text-slate-400"}`,
           children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `relative p-1.5 rounded-2xl ${isDrawerOpen ? "bg-blue-50 -translate-y-1" : ""}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(MoreHorizontal, { className: "w-6 h-6 stroke-[1.5]" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `relative p-1.5 rounded-2xl ${isDrawerOpen ? "bg-blue-50 -translate-y-1" : ""}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Ellipsis, { className: "w-6 h-6 stroke-[1.5]" }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold mt-0.5", children: "More" })
           ]
         }

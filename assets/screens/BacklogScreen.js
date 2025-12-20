@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, k as ListTodo, a6 as CheckCircle2, aV as Flame, a9 as CalendarClock, ah as Trash2 } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, m as ListTodo, a6 as CircleCheck, aV as Flame, a9 as CalendarClock, ah as Trash2 } from "../vendor.js";
 const BacklogScreen = ({ backlogs, onAddBacklog, onToggleBacklog, onDeleteBacklog }) => {
   const [topic, setTopic] = reactExports.useState("");
   const [subject, setSubject] = reactExports.useState("Physics");
@@ -110,7 +110,7 @@ const BacklogScreen = ({ backlogs, onAddBacklog, onToggleBacklog, onDeleteBacklo
         ] })
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "lg:col-span-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-white rounded-xl border border-slate-200 shadow-sm min-h-[400px] flex flex-col", children: backlogs.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 flex flex-col items-center justify-center p-12 text-center", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { className: "w-10 h-10 text-slate-300" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "w-10 h-10 text-slate-300" }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-slate-600 font-medium text-lg", children: "No backlogs! Great job." }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-sm mt-1", children: "Add tasks on the left to start tracking." })
       ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "divide-y divide-slate-100", children: backlogs.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `p-5 flex items-center justify-between group transition-colors ${item.status === "COMPLETED" ? "bg-slate-50" : "hover:bg-blue-50/30"}`, children: [
@@ -120,7 +120,7 @@ const BacklogScreen = ({ backlogs, onAddBacklog, onToggleBacklog, onDeleteBacklo
             {
               onClick: () => onToggleBacklog(item.id),
               className: `mt-1 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${item.status === "COMPLETED" ? "bg-green-500 border-green-500 text-white" : "border-slate-300 text-transparent hover:border-green-400"}`,
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { className: "w-4 h-4" })
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "w-4 h-4" })
             }
           ),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [

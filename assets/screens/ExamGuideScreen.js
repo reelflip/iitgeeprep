@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, aw as BarChart3, aV as Flame, a8 as Target, aU as Building, h as Calendar, i as Layers, b as BookOpen, Z as Zap, b7 as Award, aT as GraduationCap } from "../vendor.js";
+import { j as jsxRuntimeExports, aw as ChartColumn, aV as Flame, a8 as Target, aU as Building, i as Calendar, l as Layers, c as BookOpen, Z as Zap, b6 as Award, aT as GraduationCap } from "../vendor.js";
 const ExamGuideScreen = () => {
   const exams = [
     {
@@ -65,7 +65,7 @@ const ExamGuideScreen = () => {
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-5xl mx-auto px-4 py-12 space-y-12", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-slate-900 text-white p-6 flex items-center space-x-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart3, { className: "w-6 h-6 text-yellow-400" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ChartColumn, { className: "w-6 h-6 text-yellow-400" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-bold", children: "Exam Comparison Matrix" })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "divide-y divide-slate-100", children: exams.map((exam, idx) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `p-6 transition-all hover:bg-slate-50 ${exam.color} border-l-4`, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col md:flex-row gap-6", children: [

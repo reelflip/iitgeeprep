@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, I as Inbox, ak as FileWarning, a5 as AlertTriangle, a7 as RefreshCw, af as Search, L as Loader2, al as Mail, ah as Trash2, d as ChevronRight } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, I as Inbox, ak as FileWarning, a5 as TriangleAlert, a7 as RefreshCw, af as Search, L as LoaderCircle, al as Mail, ah as Trash2, e as ChevronRight } from "../vendor.js";
 const AdminInboxScreen = () => {
   const [messages, setMessages] = reactExports.useState([]);
   const [loading, setLoading] = reactExports.useState(true);
@@ -56,7 +56,7 @@ const AdminInboxScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white opacity-10" })
     ] }),
     error && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `p-5 rounded-2xl flex items-start gap-4 animate-in slide-in-from-top-2 border ${error.type === "api" ? "bg-orange-50 border-orange-200 text-orange-800" : "bg-red-50 border-red-200 text-red-700"}`, children: [
-      error.type === "api" ? /* @__PURE__ */ jsxRuntimeExports.jsx(FileWarning, { className: "w-6 h-6 shrink-0" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTriangle, { className: "w-6 h-6 shrink-0" }),
+      error.type === "api" ? /* @__PURE__ */ jsxRuntimeExports.jsx(FileWarning, { className: "w-6 h-6 shrink-0" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { className: "w-6 h-6 shrink-0" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-black uppercase text-xs tracking-widest mb-1", children: error.type === "api" ? "Configuration Alert" : "System Error" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-bold", children: error.msg })
@@ -87,7 +87,7 @@ const AdminInboxScreen = () => {
         ] })
       ] }),
       loading ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center justify-center h-64 text-slate-400", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "w-8 h-8 animate-spin mb-3 text-purple-600" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "w-8 h-8 animate-spin mb-3 text-purple-600" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-black uppercase tracking-widest", children: "Retrieving Inbound Streams..." })
       ] }) : filteredMessages.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center justify-center h-64 text-slate-300", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, { className: "w-16 h-16 mb-4 opacity-10" }),

@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, n as Users, aB as ShieldCheck, af as Search, L as Loader2, al as Mail, h as Calendar, aC as Shield, aD as XCircle, aE as CheckCircle, ah as Trash2 } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, o as Users, aB as ShieldCheck, af as Search, L as LoaderCircle, al as Mail, i as Calendar, aC as Shield, aD as CircleX, aE as CircleCheckBig, ah as Trash2 } from "../vendor.js";
 const AdminUserManagementScreen = () => {
   const [users, setUsers] = reactExports.useState([]);
   const [loading, setLoading] = reactExports.useState(true);
@@ -123,7 +123,7 @@ const AdminUserManagementScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "p-5 text-right", children: "Management" })
         ] }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { className: "divide-y divide-slate-100 text-sm", children: loading ? /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("td", { colSpan: 5, className: "p-20 text-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center gap-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Loader2, { className: "w-8 h-8 animate-spin text-blue-500" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "w-8 h-8 animate-spin text-blue-500" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-slate-400", children: "Synchronizing database entries..." })
         ] }) }) }) : filteredUsers.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { colSpan: 5, className: "p-20 text-center text-slate-400 italic", children: [
           "No matches found in the ",
@@ -160,7 +160,7 @@ const AdminUserManagementScreen = () => {
                 onClick: () => handleUpdateStatus(user.id, !!user.isVerified),
                 className: `p-2 rounded-xl transition-all ${user.isVerified ? "text-slate-400 hover:text-rose-600 hover:bg-rose-50" : "text-slate-400 hover:text-emerald-600 hover:bg-emerald-50"}`,
                 title: user.isVerified ? "Restrict Access" : "Restore Access",
-                children: user.isVerified ? /* @__PURE__ */ jsxRuntimeExports.jsx(XCircle, { size: 18 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle, { size: 18 })
+                children: user.isVerified ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleX, { size: 18 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 18 })
               }
             ),
             /* @__PURE__ */ jsxRuntimeExports.jsx(

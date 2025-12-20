@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, bh as CalendarDays, aZ as Clock, bi as Map, a7 as RefreshCw, a6 as CheckCircle2, ae as Save, bj as CheckSquare, bk as Flag, b as BookOpen, bl as Briefcase, bm as Moon, Z as Zap, h as Calendar, bn as Sun, bo as Coffee, R as RotateCw, i as Layers, P as PenTool, a as Brain } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, bg as CalendarDays, aZ as Clock, bh as Map, a7 as RefreshCw, a6 as CircleCheck, ae as Save, bi as SquareCheckBig, bj as Flag, c as BookOpen, bk as Briefcase, bl as Moon, Z as Zap, i as Calendar, bm as Sun, bn as Coffee, R as RotateCw, l as Layers, P as PenTool, a as Brain } from "../vendor.js";
 import { S as SYLLABUS_DATA } from "../shared-core.js";
 const TimetableScreen = ({ user, savedConfig, savedSlots, onSave, progress }) => {
   const [viewMode, setViewMode] = reactExports.useState("DAILY");
@@ -374,7 +374,7 @@ const TimetableScreen = ({ user, savedConfig, savedSlots, onSave, progress }) =>
           onClick: () => saveAllData(),
           className: `flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-sm ${saveStatus === "SAVED" ? "bg-green-100 text-green-700" : saveStatus === "SAVING" ? "bg-blue-50 text-blue-600" : "bg-white text-slate-700 hover:bg-slate-50 border border-slate-200"}`,
           children: [
-            saveStatus === "SAVING" ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "w-4 h-4 animate-spin" }) : saveStatus === "SAVED" ? /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { className: "w-4 h-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Save, { className: "w-4 h-4" }),
+            saveStatus === "SAVING" ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "w-4 h-4 animate-spin" }) : saveStatus === "SAVED" ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "w-4 h-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Save, { className: "w-4 h-4" }),
             saveStatus === "SAVING" ? "Saving..." : saveStatus === "SAVED" ? "Saved" : "Save Changes"
           ]
         }
@@ -460,7 +460,7 @@ const TimetableScreen = ({ user, savedConfig, savedSlots, onSave, progress }) =>
                 onClick: () => toggleWeekComplete(week.weekNumber),
                 className: `flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-colors ${week.completed ? "bg-green-600 text-white" : "bg-slate-100 text-slate-500 hover:bg-slate-200"}`,
                 children: [
-                  week.completed ? /* @__PURE__ */ jsxRuntimeExports.jsx(CheckSquare, { className: "w-4 h-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "w-4 h-4" }),
+                  week.completed ? /* @__PURE__ */ jsxRuntimeExports.jsx(SquareCheckBig, { className: "w-4 h-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "w-4 h-4" }),
                   week.completed ? "Completed" : "Mark Done"
                 ]
               }

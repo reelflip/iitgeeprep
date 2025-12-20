@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, A as AlertCircle } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, k as CircleAlert } from "../vendor.js";
 const MistakesScreen = ({ mistakes, addMistake }) => {
   const [isOpen, setIsOpen] = reactExports.useState(false);
   const [form, setForm] = reactExports.useState({ question: "", subject: "Physics", note: "" });
@@ -12,7 +12,7 @@ const MistakesScreen = ({ mistakes, addMistake }) => {
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-gradient-to-r from-red-600 to-rose-600 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "text-3xl font-bold flex items-center gap-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-2 bg-white/20 rounded-lg backdrop-blur-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AlertCircle, { className: "w-6 h-6 text-white" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-2 bg-white/20 rounded-lg backdrop-blur-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "w-6 h-6 text-white" }) }),
           "Mistake Analysis Log"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-red-100 mt-2 opacity-90 max-w-xl text-sm md:text-base", children: "The smartest way to improve is to analyze why you got it wrong. Track your conceptual gaps and silly errors here to ensure they aren't repeated." })

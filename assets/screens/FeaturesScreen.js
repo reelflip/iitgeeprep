@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, b as BookOpen, a8 as Target, g as BarChart2, a as Brain, R as RotateCw, n as Users, s as TrendingUp, F as FileText, p as Activity, b8 as Bell, aB as ShieldCheck, aZ as Clock, i as Layers, m as Heart } from "../vendor.js";
+import { j as jsxRuntimeExports, c as BookOpen, a8 as Target, h as ChartNoAxesColumn, a as Brain, R as RotateCw, o as Users, s as TrendingUp, F as FileText, A as Activity, b7 as Bell, aB as ShieldCheck, aZ as Clock, l as Layers, H as Heart } from "../vendor.js";
 const FeaturesScreen = () => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "animate-in fade-in slide-in-from-bottom-4 pb-12 font-inter", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-slate-900 text-white pt-20 pb-24 px-4 relative overflow-hidden", children: [
@@ -26,7 +26,7 @@ const FeaturesScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-600 leading-relaxed text-sm", children: "Attempt full-length mock tests or create custom practice sessions by chapter and difficulty (Easy, Medium, Hard). Includes NTA-style interface and negative marking logic." })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-8 rounded-2xl shadow-xl border border-slate-200 hover:-translate-y-1 transition-transform duration-300", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center mb-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart2, { className: "w-8 h-8 text-indigo-600" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center mb-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ChartNoAxesColumn, { className: "w-8 h-8 text-indigo-600" }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-xl font-bold text-slate-900 mb-3", children: "Deep Performance Analytics" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-600 leading-relaxed text-sm", children: "Go beyond scores. Analyze your accuracy, question-wise time management, and identify weak chapters. Our radar charts show exactly where you need to focus." })
         ] }),

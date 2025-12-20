@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, o as Activity, aC as Terminal, L as Loader2, aD as Lock, aE as ToggleRight, aF as ToggleLeft, aG as Key, aH as BarChart3, a9 as Globe, an as Save, aI as Database, aJ as FileCode, a8 as CheckCircle2 } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, q as Activity, aF as Terminal, L as Loader2, aG as Lock, aH as ToggleRight, aI as ToggleLeft, aJ as Key, aK as BarChart3, ac as Globe, aq as Save, aL as Database, aM as FileCode, ab as CheckCircle2 } from "../vendor.js";
 const AI_MODELS = [
   { id: "gemini-3-flash-preview", name: "Gemini 3 Flash", provider: "Google", description: "Ultra-fast, optimized for quick doubts and scheduling.", strength: "Speed", color: "blue" },
   { id: "gemini-3-pro-preview", name: "Gemini 3 Pro", provider: "Google", description: "Deep reasoning and complex Physics problem solving.", strength: "Reasoning", color: "indigo" },
@@ -168,7 +168,7 @@ const AdminSystemScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { className: "text-blue-400" }),
           " Admin System"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 mt-2", children: "v12.25 Maintenance Panel" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 mt-2", children: "v12.27 Production Maintenance Panel" })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex bg-slate-800 p-1 rounded-xl border border-slate-700", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setActiveTab("ai"), className: `px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "ai" ? "bg-blue-600 text-white" : "text-slate-400"}`, children: "AI" }),
@@ -274,7 +274,7 @@ const AdminSystemScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-2xl border border-slate-200 p-6", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-black uppercase tracking-wider text-xs mb-6 flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Database, { className: "text-blue-500" }),
-          " Database Schema (v12.25)"
+          " Database Schema (v12.27)"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-3 max-h-[400px] overflow-y-auto", children: dbTables.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between p-3 bg-slate-50 rounded-lg border", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-bold text-slate-700", children: t.name }),
@@ -287,7 +287,7 @@ const AdminSystemScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-2xl border border-slate-200 p-6", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-black uppercase tracking-wider text-xs mb-6 flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(FileCode, { className: "text-orange-500" }),
-          " API File Map"
+          " API File Map (38 Enpoints)"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 gap-2 max-h-[400px] overflow-y-auto", children: API_FILE_LIST.map((file) => {
           var _a, _b;

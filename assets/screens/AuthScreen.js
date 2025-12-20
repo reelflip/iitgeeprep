@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, q as TrendingUp, aU as WifiOff, a8 as CheckCircle2, G as GraduationCap, m as Users, aV as Building, C as ChevronDown, a4 as Target, h as Calendar, U as User, aw as Mail, aD as Lock, aW as Shield, aG as Key, L as Loader2, as as ArrowRight } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, t as TrendingUp, aX as WifiOff, ab as CheckCircle2, G as GraduationCap, o as Users, aY as Building, C as ChevronDown, a7 as Target, i as Calendar, U as User, az as Mail, aG as Lock, aZ as Shield, aJ as Key, L as Loader2, av as ArrowRight } from "../vendor.js";
 import { C as COACHING_INSTITUTES, T as TARGET_EXAMS, a as TARGET_YEARS } from "../shared-core.js";
 const SECURITY_QUESTIONS = [
   "What is the name of your first pet?",
@@ -453,7 +453,7 @@ const AuthScreen = ({ onLogin, onNavigate }) => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-center mt-6 text-[9px] font-medium text-slate-300 uppercase tracking-[0.3em]", children: [
         "© ",
         (/* @__PURE__ */ new Date()).getFullYear(),
-        " IITGEEPrep • STABLE v12.25"
+        " IITGEEPrep • STABLE v12.27"
       ] })
     ] })
   ] });

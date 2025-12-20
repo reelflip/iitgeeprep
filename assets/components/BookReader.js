@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, a as BookOpen, X, b as ChevronLeft, c as ChevronRight } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, c as BookOpen, X, d as ChevronLeft, e as ChevronRight } from "../vendor.js";
 const BookReader = ({ title, pages, onClose }) => {
   const [currentPage, setCurrentPage] = reactExports.useState(0);
   const [isFlipping, setIsFlipping] = reactExports.useState(false);

@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, a as BookOpen, a4 as Target, g as BarChart2, f as Brain, R as RotateCw, m as Users, q as TrendingUp, F as FileText, o as Activity, ba as Bell, bb as ShieldCheck, ab as Clock, i as Layers, H as Heart } from "../vendor.js";
+import { j as jsxRuntimeExports, c as BookOpen, a7 as Target, h as BarChart2, a as Brain, R as RotateCw, o as Users, t as TrendingUp, F as FileText, q as Activity, bb as Bell, bc as ShieldCheck, ae as Clock, k as Layers, n as Heart } from "../vendor.js";
 const FeaturesScreen = () => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "animate-in fade-in slide-in-from-bottom-4 pb-12 font-inter", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-slate-900 text-white pt-20 pb-24 px-4 relative overflow-hidden", children: [
@@ -10,7 +10,7 @@ const FeaturesScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400", children: "Engineering Excellence" })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed", children: "IITGEEPrep integrates syllabus tracking, AI-driven testing, and performance analytics into one cohesive ecosystem designed for JEE Main & Advanced aspirants." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed", children: "IITGEEPrep integrates syllabus tracking, AI-driven testing, and performance analytics into one cohesive ecosystem designed for JEE Main, Advanced, BITSAT, VITEEE, and all other major engineering entrance exams." })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-7xl mx-auto px-4 -mt-12 relative z-20", children: [

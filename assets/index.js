@@ -2,7 +2,7 @@ const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/screens/AuthScr
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-import { r as reactExports, b8 as React, j as jsxRuntimeExports, bC as createRoot } from "./vendor.js";
+import { r as reactExports, b9 as React, j as jsxRuntimeExports, bC as createRoot } from "./vendor.js";
 import { N as Navigation, M as MobileNavigation } from "./components/Navigation.js";
 import { A as AITutorChat } from "./components/AITutorChat.js";
 import { P as PublicLayout } from "./components/PublicLayout.js";
@@ -425,7 +425,7 @@ const App = () => {
   if (!user) {
     const publicScreens = ["about", "blog", "exams", "privacy", "contact", "features"];
     if (publicScreens.includes(currentScreen)) {
-      return /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.Suspense, { fallback: /* @__PURE__ */ jsxRuntimeExports.jsx(LoadingView, {}), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(PublicLayout, { onNavigate: setScreen, currentScreen, children: [
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.Suspense, { fallback: /* @__PURE__ */ jsxRuntimeExports.jsx(LoadingView, {}), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(PublicLayout, { onNavigate: (p) => setScreen(p), currentScreen, children: [
         currentScreen === "about" && /* @__PURE__ */ jsxRuntimeExports.jsx(AboutUsScreen, {}),
         currentScreen === "blog" && /* @__PURE__ */ jsxRuntimeExports.jsx(PublicBlogScreen, { blogs, onBack: () => setScreen("dashboard") }),
         currentScreen === "exams" && /* @__PURE__ */ jsxRuntimeExports.jsx(ExamGuideScreen, {}),
@@ -434,7 +434,7 @@ const App = () => {
         currentScreen === "features" && /* @__PURE__ */ jsxRuntimeExports.jsx(FeaturesScreen, {})
       ] }) });
     }
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.Suspense, { fallback: /* @__PURE__ */ jsxRuntimeExports.jsx(LoadingView, {}), children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthScreen, { onLogin: handleLogin, onNavigate: setScreen }) });
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.Suspense, { fallback: /* @__PURE__ */ jsxRuntimeExports.jsx(LoadingView, {}), children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthScreen, { onLogin: handleLogin, onNavigate: (p) => setScreen(p) }) });
   }
   const isAdminRole = user.role === "ADMIN" || user.role === "ADMIN_EXECUTIVE";
   const renderContent = () => {

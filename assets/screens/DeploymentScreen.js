@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, av as RefreshCw, aI as Database, o as Activity, b2 as PlugZap, b3 as Package, b4 as Download, b5 as JSZip } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, ay as RefreshCw, aL as Database, q as Activity, b3 as PlugZap, b4 as Package, b5 as Download, b6 as JSZip } from "../vendor.js";
 import { g as getBackendFiles, b as generateSQLSchema } from "../shared-core.js";
 const DeploymentScreen = () => {
   const [activeTab, setActiveTab] = reactExports.useState("guide");
@@ -74,7 +74,7 @@ const DeploymentScreen = () => {
     setRepairing(true);
     try {
       const res = await fetch("/api/migrate_db.php");
-      if (res.ok) alert("v12.25 Schema Repair Successful!");
+      if (res.ok) alert("v12.27 Schema Repair Successful!");
       else throw new Error(`HTTP ${res.status}`);
     } catch (e) {
       alert("Repair Failed: " + e.message);
@@ -97,7 +97,7 @@ const DeploymentScreen = () => {
       const url = URL.createObjectURL(content);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "IITGEEPrep_Bundle_v12_25.zip";
+      link.download = "IITGEEPrep_Bundle_v12_27.zip";
       link.click();
     } catch (error) {
       console.error(error);
@@ -110,9 +110,9 @@ const DeploymentScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold", children: "Deployment Center" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-1 rounded-md bg-slate-700 border border-slate-600 text-xs font-mono text-cyan-400", children: "v12.25 (Latest)" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-1 rounded-md bg-slate-700 border border-slate-600 text-xs font-mono text-cyan-400", children: "v12.27 (Latest)" })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-lg", children: "Download the complete backend kit for production rollout." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-lg", children: "Download the complete 38-endpoint backend kit for production rollout." })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex bg-slate-700/50 p-1 rounded-xl border border-slate-600/50", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setActiveTab("guide"), className: `px-6 py-2 rounded-lg text-sm font-bold ${activeTab === "guide" ? "bg-blue-600 text-white" : "text-slate-400"}`, children: "Guide" }),
@@ -157,7 +157,7 @@ const DeploymentScreen = () => {
         /* @__PURE__ */ jsxRuntimeExports.jsxs("ol", { className: "space-y-4 text-slate-600 text-sm list-decimal pl-5", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
             "Download the ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "v12.25" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "v12.27" }),
             " Bundle using the sidebar action."
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
@@ -177,10 +177,10 @@ const DeploymentScreen = () => {
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "lg:col-span-1 space-y-6", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-slate-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-xl font-bold mb-2", children: "Get Bundle" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-sm mb-6", children: "Complete v12.25 backend kit including PHP APIs and SQL." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: downloadAllZip, disabled: isZipping, className: "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl flex items-center justify-center transition-all disabled:opacity-50", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-sm mb-6", children: "Complete v12.27 backend kit including all 38 PHP APIs and SQL." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: downloadAllZip, disabled: isZipping, className: "w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl flex items-center justify-center transition-all disabled:opacity-50", children: [
           isZipping ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "animate-spin mr-2" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { className: "mr-2" }),
-          " Download v12.25 .zip"
+          " Download v12.27 .zip"
         ] })
       ] }) })
     ] })

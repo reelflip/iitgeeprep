@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, d as LogOut, r as reactExports, M as MoreHorizontal, X, e as LayoutDashboard, a as BookOpen, B as Bot, F as FileText, f as Brain, T as Timer, g as BarChart2, h as Calendar, R as RotateCw, G as GraduationCap, A as AlertCircle, i as Layers, k as ListTodo, l as Lightbulb, H as Heart, U as User, m as Users, n as Settings, I as Inbox, P as PenTool, o as Activity, p as UploadCloud } from "../vendor.js";
+import { j as jsxRuntimeExports, f as LogOut, r as reactExports, M as MoreHorizontal, X, g as LayoutDashboard, c as BookOpen, B as Bot, F as FileText, a as Brain, T as Timer, h as BarChart2, i as Calendar, R as RotateCw, G as GraduationCap, A as AlertCircle, k as Layers, l as ListTodo, m as Lightbulb, n as Heart, U as User, o as Users, p as Settings, I as Inbox, P as PenTool, q as Activity, s as UploadCloud } from "../vendor.js";
 const STUDENT_MENU = [
   { id: "dashboard", icon: LayoutDashboard, label: "Home" },
   { id: "syllabus", icon: BookOpen, label: "Syllabus" },
@@ -10,7 +10,6 @@ const STUDENT_MENU = [
   { id: "timetable", icon: Calendar, label: "Timetable" },
   { id: "revision", icon: RotateCw, label: "Revision" },
   { id: "exams", icon: GraduationCap, label: "Exam Guide" },
-  // Added Exam Guide
   { id: "mistakes", icon: AlertCircle, label: "Mistakes" },
   { id: "flashcards", icon: Layers, label: "Cards" },
   { id: "backlogs", icon: ListTodo, label: "Backlogs" },
@@ -85,7 +84,7 @@ const Navigation = ({ currentScreen, setScreen, logout, user }) => {
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mt-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1.5 py-0.5 bg-slate-800 rounded", children: (user == null ? void 0 : user.role) || "STUDENT" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-slate-600", children: "• v12.25" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-slate-600", children: "• v12.27" })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { className: "flex-1 space-y-1 pb-4", children: menuItems.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(

@@ -12,27 +12,46 @@ include_once 'config.php';
 
 function getJsonInput() {
     $raw = file_get_contents('php://input');
-    if (!$raw) return null;
+    if (!$raw || $raw === '{}') return null;
     $data = json_decode($raw);
     return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
 }
 
-function getV($data, $p) {
-    if (!$data) return null;
+function getV($data, $p, $default = null) {
+    if (!$data) return $default;
     if (isset($data->$p)) return $data->$p;
     $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $p));
     if (isset($data->$snake)) return $data->$snake;
-    return null;
+    return $default;
+}
+
+function sendError($msg, $code = 400) {
+    http_response_code($code);
+    echo json_encode(["status" => "error", "message" => $msg]);
+    exit;
+}
+
+function sendSuccess($data = []) {
+    echo json_encode(array_merge(["status" => "success"], $data));
+    exit;
+}
+
+// Global Health Check Handler
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty(file_get_contents('php://input'))) {
+    echo json_encode(["status" => "active", "message" => "Logic hub is reachable"]);
+    exit;
 }
 
 $method = $_SERVER['REQUEST_METHOD'];
-if ($method === 'GET') {
-    $stmt = $conn->prepare("SELECT value FROM settings WHERE setting_key = ?");
-    $stmt->execute([$_GET['key']]);
-    echo json_encode(["value" => $stmt->fetchColumn()]);
-} else if ($method === 'POST') {
-    $data = getJsonInput();
-    $stmt = $conn->prepare("INSERT INTO settings (setting_key, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value = VALUES(value)");
-    $stmt->execute([getV($data, 'key'), getV($data, 'value')]);
-    echo json_encode(["status" => "success"]);
-}
+try {
+    if ($method === 'GET') {
+        $stmt = $conn->prepare("SELECT value FROM settings WHERE setting_key = ?");
+        $stmt->execute([$_GET['key']]);
+        echo json_encode(["value" => $stmt->fetchColumn()]);
+    } else if ($method === 'POST') {
+        $data = getJsonInput();
+        $stmt = $conn->prepare("INSERT INTO settings (setting_key, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value = VALUES(value)");
+        $stmt->execute([getV($data, 'key'), getV($data, 'value')]);
+        sendSuccess();
+    }
+} catch (Exception $e) { sendError($e->getMessage(), 500); }

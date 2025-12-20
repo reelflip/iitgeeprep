@@ -1,5 +1,5 @@
-import { r as reactExports, j as jsxRuntimeExports, bb as Camera, a8 as Target, ae as Save, U as User, b7 as Bell, al as Mail, aC as Shield, a6 as CircleCheck } from "../vendor.js";
-import { T as TARGET_EXAMS } from "../shared-core.js";
+import { r as reactExports, j as jsxRuntimeExports, bd as Camera, a8 as Target, ae as Save, U as User, b9 as Bell, al as Mail, aC as Shield, a6 as CircleCheck } from "../vendor.js";
+import { a as TARGET_EXAMS } from "../shared-core.js";
 const ProfileScreen = ({ user, onAcceptRequest, onUpdateUser, linkedStudentName }) => {
   var _a;
   const requests = ((_a = user.notifications) == null ? void 0 : _a.filter((n) => n.type === "connection_request")) || [];

@@ -1,5 +1,5 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/screens/AuthScreen.js","assets/vendor.js","assets/shared-core.js","assets/screens/DashboardScreen.js","assets/screens/AdminDashboardScreen.js","assets/components/StatCard.js","assets/screens/SyllabusScreen.js","assets/components/BookReader.js","assets/components/SyncStatusBadge.js","assets/screens/RevisionScreen.js","assets/screens/TimetableScreen.js","assets/screens/TestScreen.js","assets/screens/FocusScreen.js","assets/screens/FlashcardScreen.js","assets/screens/MistakesScreen.js","assets/screens/AnalyticsScreen.js","assets/screens/WellnessScreen.js","assets/screens/BacklogScreen.js","assets/screens/HacksScreen.js","assets/screens/PsychometricScreen.js","assets/screens/AdminUserManagementScreen.js","assets/screens/AdminInboxScreen.js","assets/screens/AdminSyllabusScreen.js","assets/components/RichTextEditor.js","assets/screens/AdminTestManagerScreen.js","assets/components/Button.js","assets/screens/AdminSystemScreen.js","assets/screens/DeploymentScreen.js","assets/screens/DiagnosticsScreen.js","assets/screens/ProfileScreen.js","assets/screens/AboutUsScreen.js","assets/screens/ExamGuideScreen.js","assets/screens/PrivacyPolicyScreen.js","assets/screens/ContactUsScreen.js","assets/screens/FeaturesScreen.js","assets/screens/ContentManagerScreen.js","assets/screens/AdminBlogScreen.js"])))=>i.map(i=>d[i]);
-import { r as reactExports, j as jsxRuntimeExports, bv as clientExports, bw as React } from "./vendor.js";
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/screens/AuthScreen.js","assets/vendor.js","assets/shared-core.js","assets/screens/DashboardScreen.js","assets/screens/AdminDashboardScreen.js","assets/components/StatCard.js","assets/screens/SyllabusScreen.js","assets/components/BookReader.js","assets/components/SyncStatusBadge.js","assets/screens/RevisionScreen.js","assets/screens/TimetableScreen.js","assets/screens/TestScreen.js","assets/screens/FocusScreen.js","assets/screens/FlashcardScreen.js","assets/screens/MistakesScreen.js","assets/screens/AnalyticsScreen.js","assets/screens/WellnessScreen.js","assets/screens/BacklogScreen.js","assets/screens/HacksScreen.js","assets/screens/PsychometricScreen.js","assets/screens/AdminUserManagementScreen.js","assets/screens/AdminInboxScreen.js","assets/screens/AdminSyllabusScreen.js","assets/components/RichTextEditor.js","assets/screens/AdminTestManagerScreen.js","assets/components/Button.js","assets/screens/AdminSystemScreen.js","assets/screens/DeploymentScreen.js","assets/screens/DiagnosticsScreen.js","assets/screens/ProfileScreen.js","assets/screens/AboutUsScreen.js","assets/screens/ExamGuideScreen.js","assets/screens/PrivacyPolicyScreen.js","assets/screens/ContactUsScreen.js","assets/screens/FeaturesScreen.js","assets/screens/ContentManagerScreen.js","assets/screens/AdminBlogScreen.js","assets/screens/PublicBlogScreen.js"])))=>i.map(i=>d[i]);
+import { r as reactExports, j as jsxRuntimeExports, bx as clientExports, by as React } from "./vendor.js";
 import { N as Navigation, M as MobileNavigation } from "./components/Navigation.js";
 import { A as AITutorChat } from "./components/AITutorChat.js";
 import { P as PublicLayout } from "./components/PublicLayout.js";
@@ -136,9 +136,10 @@ const ContactUsScreen = reactExports.lazy(() => __vitePreload(() => import("./sc
 const FeaturesScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/FeaturesScreen.js"), true ? __vite__mapDeps([34,1]) : void 0).then((m) => ({ default: m.FeaturesScreen })));
 const ContentManagerScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/ContentManagerScreen.js"), true ? __vite__mapDeps([35,1]) : void 0).then((m) => ({ default: m.ContentManagerScreen })));
 const AdminBlogScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminBlogScreen.js"), true ? __vite__mapDeps([36,1,23]) : void 0).then((m) => ({ default: m.AdminBlogScreen })));
+const PublicBlogScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/PublicBlogScreen.js"), true ? __vite__mapDeps([37,1]) : void 0).then((m) => ({ default: m.PublicBlogScreen })));
 const LoadingView = () => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center justify-center min-h-[60vh] text-slate-400", children: [
   /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-10 h-10 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin mb-4" }),
-  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-bold uppercase tracking-widest text-slate-500", children: "Synchronizing v12.45 Core..." })
+  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-bold uppercase tracking-widest text-slate-500", children: "Synchronizing v13.0 Core..." })
 ] });
 const App = () => {
   const [user, setUser] = reactExports.useState(() => {
@@ -313,14 +314,15 @@ const App = () => {
     }
   };
   if (!user) {
-    const publicScreens = ["about", "exams", "privacy", "contact", "features"];
+    const publicScreens = ["about", "exams", "privacy", "contact", "features", "blog", "public-blog"];
     if (publicScreens.includes(currentScreen)) {
       return /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.Suspense, { fallback: /* @__PURE__ */ jsxRuntimeExports.jsx(LoadingView, {}), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(PublicLayout, { onNavigate: (p) => setScreen(p), currentScreen, children: [
         currentScreen === "about" && /* @__PURE__ */ jsxRuntimeExports.jsx(AboutUsScreen, {}),
         currentScreen === "exams" && /* @__PURE__ */ jsxRuntimeExports.jsx(ExamGuideScreen, {}),
         currentScreen === "privacy" && /* @__PURE__ */ jsxRuntimeExports.jsx(PrivacyPolicyScreen, {}),
         currentScreen === "contact" && /* @__PURE__ */ jsxRuntimeExports.jsx(ContactUsScreen, {}),
-        currentScreen === "features" && /* @__PURE__ */ jsxRuntimeExports.jsx(FeaturesScreen, {})
+        currentScreen === "features" && /* @__PURE__ */ jsxRuntimeExports.jsx(FeaturesScreen, {}),
+        (currentScreen === "blog" || currentScreen === "public-blog") && /* @__PURE__ */ jsxRuntimeExports.jsx(PublicBlogScreen, { blogs, onBack: () => setScreen("dashboard") })
       ] }) });
     }
     return /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.Suspense, { fallback: /* @__PURE__ */ jsxRuntimeExports.jsx(LoadingView, {}), children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthScreen, { onLogin: (u) => {

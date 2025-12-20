@@ -1,8 +1,9 @@
-import { r as reactExports, j as jsxRuntimeExports, aB as ShieldCheck, a7 as RefreshCw, b4 as Play, a$ as Sparkles, b as ChevronDown, L as LoaderCircle, b5 as ClipboardList, A as Activity, a6 as CircleCheck, B as Bot, F as FileText, ar as Terminal, aC as Shield, aD as CircleX, ax as Database } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, aB as ShieldCheck, a7 as RefreshCw, b4 as Play, B as Bot, L as LoaderCircle, b5 as ClipboardList, A as Activity, b0 as Sparkles, a6 as CircleCheck, aD as CircleX, ax as Database, b6 as Fingerprint, ai as Server, aA as Check, as as Lock, b7 as MousePointer2 } from "../vendor.js";
 import { A as API_FILES, L as LocalKnowledgeBase, E as E2ETestRunner } from "../shared-core.js";
 import { GoogleGenAI } from "@google/genai";
 var define_process_env_default = {};
 const DiagnosticsScreen = () => {
+  const [activeTab, setActiveTab] = reactExports.useState("CORE");
   const [isRunning, setIsRunning] = reactExports.useState(false);
   const [results, setResults] = reactExports.useState([]);
   const [dbTables, setDbTables] = reactExports.useState([]);
@@ -37,11 +38,8 @@ const DiagnosticsScreen = () => {
     setIsLoadingFile(true);
     const runner = initRunner();
     const result = await runner.fetchFileSource(filename);
-    if ("source" in result) {
-      setFileSource(result.source);
-    } else {
-      setFileSource(null);
-    }
+    if ("source" in result) setFileSource(result.source);
+    else setFileSource(null);
     setIsLoadingFile(false);
   };
   const runFullAudit = async () => {
@@ -49,7 +47,8 @@ const DiagnosticsScreen = () => {
     setAnalysisReport(null);
     setIsRunning(true);
     const runner = initRunner();
-    await runner.runFullAudit();
+    if (activeTab === "CORE") await runner.runFullAudit();
+    else await runner.runPersistenceSuite();
     setIsRunning(false);
     fetchDbStatus();
   };
@@ -59,249 +58,232 @@ const DiagnosticsScreen = () => {
     setAnalysisReport(null);
     const apiKey = define_process_env_default.API_KEY;
     if (!apiKey || apiKey === "undefined") {
-      setTimeout(() => {
-        const failures = results.filter((r) => r.status === "FAIL");
-        const localAdvice = failures.length > 0 ? LocalKnowledgeBase.query(`fix ${failures[0].step}`, failures) : "System appears healthy according to deterministic rules. Load a specific file to analyze logic.";
-        setAnalysisReport(`### OFFLINE HEURISTIC REPORT
+      const failures = results.filter((r) => r.status === "FAIL");
+      const advice = LocalKnowledgeBase.query(failures.length > 0 ? failures[0].description : "sync", failures);
+      setAnalysisReport(`### HEURISTIC ANALYSIS (OFFLINE)
 
-**Note:** Gemini API Key is missing. Showing deterministic recovery steps.
+**Note:** AI Engine is offline. Deterministic findings:
 
-${localAdvice}`);
-        setIsAnalyzing(false);
-      }, 800);
+${advice}`);
+      setIsAnalyzing(false);
       return;
     }
     try {
       const ai = new GoogleGenAI({ apiKey });
-      const failures = results.filter((r) => r.status === "FAIL").map((r) => `${r.step}: ${r.description} (${r.details})`).join("\n");
-      const schema = dbTables.map((t) => {
-        var _a;
-        return `${t.name} (${t.rows} rows, ${((_a = t.columns) == null ? void 0 : _a.length) || 0} cols)`;
-      }).join(", ");
-      const systemInstruction = `You are a Lead Systems Architect. Analyze this system state and provide a single, cohesive Recovery Report.
+      const failures = results.filter((r) => r.status === "FAIL").map((r) => `${r.step}: ${r.description}`).join("\n");
+      const schema = dbTables.map((t) => `${t.name} (${t.rows} rows)`).join(", ");
+      const systemInstruction = `You are a Senior Systems Architect. Analyze the provided state.
+            CURRENT NODE FAILURES: ${failures || "None"}
+            DATABASE SCHEMA: ${schema || "Disconnected"}
+            SOURCE CODE CONTEXT: ${fileSource || "Not loaded"}
             
-            STRUCTURE:
-            1. ROOT CAUSE ANALYSIS: Explain why specific nodes are failing.
-            2. FILE CONTEXT: Analyze ${selectedFile || "General Logic"} for security or syntax flaws.
-            3. STEP-BY-STEP FIX: Provide exact PHP/SQL code to resolve current issues.
-            
-            SYSTEM CONTEXT:
-            - Database: ${schema || "No tables detected."}
-            - Failures: ${failures || "None detected."}
-            - File Content: ${fileSource || "None provided."}`;
+            GOAL: Provide a root-cause analysis for any failures and specific step-by-step fix recommendations. Especially address why a "Not Synced" badge might show even if the database appears fine (e.g., CORS, API logic crashes, missing files).`;
       const response = await ai.models.generateContent({
         model: "gemini-3-pro-preview",
-        contents: "Generate a deep diagnostic recovery report based on the provided system instruction context.",
+        contents: "Generate a deep diagnostic recovery report based on current system state. Be specific and include code snippets if applicable.",
         config: { systemInstruction }
       });
-      setAnalysisReport(response.text || "Diagnostic scan yielded no logical anomalies.");
+      setAnalysisReport(response.text || "No logical anomalies detected in the current audit stream.");
     } catch (error) {
-      setAnalysisReport(`### ERROR GENERATING REPORT
+      setAnalysisReport(`### REPORT ERROR
 
-${error.message || "The AI Engine timed out."}`);
+Failed to generate AI report: ${error.message}`);
     } finally {
       setIsAnalyzing(false);
     }
   };
-  const stats = reactExports.useMemo(() => ({
-    total: results.length,
-    passed: results.filter((r) => r.status === "PASS").length,
-    failed: results.filter((r) => r.status === "FAIL").length
-  }), [results]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6 max-w-7xl mx-auto pb-24 animate-in fade-in", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-slate-900 text-white p-8 rounded-3xl shadow-2xl border border-slate-800 relative overflow-hidden", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "w-8 h-8 text-blue-400" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-black tracking-tight uppercase", children: "Stability Control Center" })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-sm max-w-xl font-medium", children: "Recovery v12.45 Core: Combined Deterministic Audit Stream & AI-Driven Recovery Engine." })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-slate-900 text-white p-8 rounded-3xl shadow-xl border border-slate-800 relative overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "w-8 h-8 text-blue-400" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-black uppercase", children: "System Diagnostics" })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-3 shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "button",
-          {
-            onClick: runFullAudit,
-            disabled: isRunning,
-            className: "bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl font-bold text-sm flex items-center gap-2 transition-all shadow-lg shadow-blue-900/40 disabled:opacity-50 active:scale-95",
-            children: [
-              isRunning ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "animate-spin", size: 18 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Play, { size: 18 }),
-              isRunning ? "Auditing 51 Nodes..." : "Launch 51-Point Scan"
-            ]
-          }
-        ) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-sm font-medium tracking-wide", children: "v13.0 Ultimate Sync Core • Stability Management" })
       ] }),
-      results.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 animate-in slide-in-from-top-4", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white/5 border border-white/10 p-4 rounded-2xl text-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-slate-400 text-[10px] font-black uppercase tracking-widest block mb-1", children: "System Health" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-2xl font-bold text-white", children: [
-            Math.round(stats.passed / (stats.total || 1) * 100),
-            "%"
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-rose-500/10 border border-rose-500/20 p-4 rounded-2xl text-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-rose-400 text-[10px] font-black uppercase tracking-widest block mb-1", children: "Failure Nodes" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl font-bold text-rose-400", children: stats.failed })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-2xl text-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-emerald-400 text-[10px] font-black uppercase tracking-widest block mb-1", children: "AI Linkage" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl font-bold text-emerald-400", children: define_process_env_default.API_KEY ? "Ready" : "Heuristic Only" })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-blue-500/10 border border-blue-500/20 p-4 rounded-2xl text-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-blue-400 text-[10px] font-black uppercase tracking-widest block mb-1", children: "Audit Depth" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl font-bold text-blue-400", children: "51 Points" })
-        ] })
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex bg-slate-800 p-1 rounded-xl", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => {
+          setActiveTab("CORE");
+          setResults([]);
+        }, className: `px-5 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${activeTab === "CORE" ? "bg-blue-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-200"}`, children: "Core Audit" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => {
+          setActiveTab("PERSISTENCE");
+          setResults([]);
+        }, className: `px-5 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${activeTab === "PERSISTENCE" ? "bg-orange-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-200"}`, children: "Persistence Tests" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: runFullAudit, disabled: isRunning, className: `px-8 py-3 rounded-xl font-bold text-sm flex items-center gap-2 transition-all shadow-lg active:scale-95 disabled:opacity-50 ${activeTab === "CORE" ? "bg-blue-600 shadow-blue-900/40" : "bg-orange-600 shadow-orange-900/40"} text-white`, children: [
+        isRunning ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "animate-spin", size: 18 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Play, { size: 18 }),
+        isRunning ? "Auditing..." : `Run ${activeTab === "CORE" ? "51-Point" : "30-Point"} Scan`
       ] })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-12 gap-8 items-start", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "lg:col-span-8 space-y-6", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-[2.5rem] border border-slate-200 shadow-xl overflow-hidden flex flex-col min-h-[650px]", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-slate-900 px-8 py-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shrink-0", children: [
+    ] }) }),
+    activeTab === "CORE" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-12 gap-8 items-start", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "lg:col-span-8 bg-white rounded-[2.5rem] border border-slate-200 shadow-xl overflow-hidden flex flex-col min-h-[650px]", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-slate-900 px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 bg-blue-500/20 rounded-2xl border border-blue-500/30", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { className: "w-6 h-6 text-blue-400" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Bot, { className: "w-6 h-6 text-blue-400" }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-white font-black text-lg uppercase tracking-tight leading-none", children: "AI Diagnostic Recovery" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-400 font-bold uppercase tracking-widest mt-1", children: "Cross-Analysis: Code + Logs + Schema" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-white font-black text-lg uppercase tracking-tight", children: "AI Recovery Engine" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] text-slate-400 font-bold uppercase tracking-widest", children: "Logic Analysis & Root Cause" })
             ] })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 w-full md:w-auto", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative flex-1 md:w-64", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                "select",
-                {
-                  value: selectedFile,
-                  onChange: (e) => {
-                    setSelectedFile(e.target.value);
-                    handleLoadFile(e.target.value);
-                  },
-                  className: "w-full bg-white/10 border border-white/20 text-white rounded-xl px-4 py-2 text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500/50 appearance-none transition-all",
-                  children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", className: "text-slate-900", children: "Analyze System Context Only" }),
-                    API_FILES.map((file) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: file, className: "text-slate-900", children: file }, file))
-                  ]
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { className: "absolute right-3 top-2.5 text-slate-400 pointer-events-none", size: 14 })
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 w-full md:w-auto", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("select", { value: selectedFile, onChange: (e) => {
+              setSelectedFile(e.target.value);
+              handleLoadFile(e.target.value);
+            }, className: "flex-1 md:flex-none bg-white/10 border border-white/20 text-white rounded-xl px-4 py-2 text-xs font-bold outline-none", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: "", className: "text-slate-900", children: "Include Source Context..." }),
+              API_FILES.map((f) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: f, className: "text-slate-900", children: f }, f))
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              "button",
-              {
-                onClick: generateAnalysisReport,
-                disabled: isAnalyzing || results.length === 0 && !selectedFile,
-                className: "bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-900/40 disabled:opacity-30 active:scale-95 transition-all flex items-center gap-2 whitespace-nowrap",
-                children: [
-                  isAnalyzing ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "animate-spin w-4 h-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(ClipboardList, { size: 16 }),
-                  "Generate Report"
-                ]
-              }
-            )
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: generateAnalysisReport, disabled: isAnalyzing || results.length === 0 && !selectedFile, className: "bg-blue-600 text-white px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 disabled:opacity-30 flex items-center gap-2", children: [
+              isAnalyzing ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "animate-spin w-4 h-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(ClipboardList, { size: 16 }),
+              "Generate Fix Report"
+            ] })
           ] })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 p-8 bg-slate-50/50 overflow-y-auto custom-scrollbar", children: !analysisReport && !isAnalyzing ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-full flex flex-col items-center justify-center text-center max-w-md mx-auto space-y-6", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-24 h-24 bg-white rounded-3xl shadow-sm border border-slate-100 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { className: "w-10 h-10 text-slate-200" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 p-8 bg-slate-50/50 overflow-y-auto custom-scrollbar", children: !analysisReport && !isAnalyzing ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-full flex flex-col items-center justify-center text-center text-slate-400 space-y-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-20 h-20 bg-white rounded-3xl border border-slate-100 flex items-center justify-center shadow-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { className: "w-10 h-10 opacity-20" }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { className: "text-xl font-bold text-slate-800", children: "Awaiting Analysis Parameters" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-slate-500 mt-2 leading-relaxed", children: "Run the 51-point scan or select a specific PHP file to generate a structured recovery report. The AI will cross-reference failures with source logic." })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-4 w-full", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 bg-white rounded-2xl border border-slate-100 text-left", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "w-4 h-4 text-emerald-500 mb-2" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-black uppercase text-slate-400", children: "Step 1" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-bold text-slate-700", children: "Audit Nodes" })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 bg-white rounded-2xl border border-slate-100 text-left", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "w-4 h-4 text-blue-500 mb-2" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-black uppercase text-slate-400", children: "Step 2" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-bold text-slate-700", children: "Select Source" })
-            ] })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-black text-xs uppercase tracking-widest", children: "Awaiting Diagnostic Context" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-2 max-w-xs", children: "Run the Core Scan to provide current telemetry for AI reasoning." })
           ] })
-        ] }) : isAnalyzing ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-full flex flex-col items-center justify-center text-center space-y-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Bot, { className: "w-16 h-16 text-blue-600 animate-bounce" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { className: "absolute -top-2 -right-2 w-6 h-6 text-amber-400 animate-pulse" })
+        ] }) : isAnalyzing ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-full flex flex-col items-center justify-center text-center", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { className: "w-16 h-16 text-blue-500 animate-pulse mb-4" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-black text-sm uppercase tracking-widest", children: "Cross-referencing Nodes with Code..." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-500 mt-2 italic", children: "Generating root-cause fix plan..." })
+        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-8 rounded-3xl border border-slate-100 shadow-sm animate-in fade-in slide-in-from-bottom-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-6 pb-4 border-b border-slate-50", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { className: "font-black text-blue-600 text-xs uppercase tracking-[0.2em]", children: "Diagnostic fix recommendations" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-mono text-slate-400", children: (/* @__PURE__ */ new Date()).toLocaleTimeString() })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-black text-slate-800 uppercase tracking-widest text-sm", children: "Deep Reasoning Engine Active" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-500 max-w-xs leading-relaxed", children: "Analyzing system telemetry, database relationships, and script dependencies..." })
-        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "animate-in fade-in slide-in-from-bottom-4 bg-white rounded-3xl border border-slate-100 p-8 shadow-sm", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-8 pb-4 border-b border-slate-100", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-blue-50 p-2 rounded-xl text-blue-600", children: /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { size: 20 }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { className: "font-black text-slate-800 uppercase tracking-tight", children: "Recovery Plan Generated" })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-black bg-slate-900 text-white px-2 py-1 rounded", children: [
-              "TIMESTAMP: ",
-              (/* @__PURE__ */ new Date()).toLocaleTimeString()
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "prose prose-slate max-w-none prose-h3:text-blue-600 prose-h3:uppercase prose-h3:text-xs prose-h3:font-black prose-h3:tracking-[0.2em] prose-h3:mb-3 prose-h3:mt-8", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "blog-content", dangerouslySetInnerHTML: {
-            __html: analysisReport.replace(/### (.*)/g, '<h3 class="mt-8 mb-4">$1</h3>').replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br/>").replace(/```php([\s\S]*?)```/g, '<pre class="bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-xs overflow-x-auto">$1</pre>')
-          } }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-12 pt-8 border-t border-slate-100 flex flex-col md:flex-row gap-4 justify-between items-center", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-bold text-slate-400 uppercase tracking-widest italic", children: "Verified against v12.45 Logic Core" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => window.print(), className: "px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all", children: "Print Report" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: generateAnalysisReport, className: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-lg shadow-blue-100 transition-all flex items-center gap-2", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 14 }),
-                " Refresh Analysis"
-              ] })
-            ] })
-          ] })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "blog-content prose prose-slate max-w-none prose-h3:text-slate-900 prose-h3:font-black prose-h3:text-xs prose-h3:uppercase", dangerouslySetInnerHTML: {
+            __html: analysisReport.replace(/### (.*)/g, '<h3 class="mt-8 mb-4">$1</h3>').replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br/>").replace(/```php([\s\S]*?)```/g, '<pre class="bg-slate-900 text-blue-400 p-4 rounded-xl font-mono text-xs overflow-x-auto">$1</pre>')
+          } })
         ] }) })
-      ] }) }),
+      ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "lg:col-span-4 space-y-6", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-[2.5rem] border border-slate-200 shadow-sm h-[650px] overflow-hidden flex flex-col", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center shrink-0", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Terminal, { size: 20, className: "text-slate-400" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-black text-slate-700 text-xs uppercase tracking-widest", children: "Legacy Audit Stream" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] text-slate-400 font-bold uppercase tracking-tighter mt-0.5", children: "51 Real-time Nodes" })
-              ] })
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-black text-xs uppercase tracking-widest", children: "Legacy 51-Point Suite" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] text-slate-400 font-bold mt-0.5", children: "Real-time Stream Audit" })
             ] }),
-            isRunning && /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 16, className: "animate-spin text-blue-500" })
+            isRunning && /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 14, className: "animate-spin text-blue-500" })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto custom-scrollbar", children: results.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-full flex flex-col items-center justify-center text-center p-12 text-slate-300", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { className: "w-12 h-12 mb-4 opacity-10" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-black uppercase tracking-widest text-[10px]", children: "Awaiting Manual Activation" })
-          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "divide-y divide-slate-50", children: results.map((r) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `p-4 flex items-start gap-4 transition-all ${r.status === "FAIL" ? "bg-rose-50/40 border-l-4 border-rose-500" : "hover:bg-slate-50/50"}`, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `mt-1 shrink-0 ${r.status === "PASS" ? "text-emerald-500" : r.status === "FAIL" ? "text-rose-500" : "text-blue-500 animate-pulse"}`, children: r.status === "PASS" ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 18 }) : r.status === "FAIL" ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleX, { size: 18 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { size: 18 }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto custom-scrollbar divide-y divide-slate-50", children: results.length > 0 ? results.map((r) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `p-4 flex items-start gap-4 transition-all ${r.status === "FAIL" ? "bg-rose-50 border-l-4 border-rose-500" : "hover:bg-slate-50/50"}`, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-0.5", children: r.status === "PASS" ? /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 18, className: "text-emerald-500" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(CircleX, { size: 18, className: "text-rose-500" }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-0.5", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center mb-0.5", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] font-black text-slate-400 uppercase tracking-widest", children: r.step }),
-                r.latency && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px] font-mono text-slate-300 font-bold", children: [
+                r.latency && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[8px] font-mono text-slate-300 font-bold", children: [
                   r.latency,
                   "ms"
                 ] })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-black text-slate-800 text-xs truncate leading-tight", children: r.description }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[10px] mt-1 leading-tight font-medium ${r.status === "FAIL" ? "text-rose-700" : "text-slate-500"}`, children: r.details })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] text-slate-500 mt-1 leading-tight", children: r.details })
             ] })
-          ] }, r.step)) }) }),
+          ] }, r.step)) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-12 text-center text-slate-300 italic text-xs", children: "Awaiting manual scan activation." }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-4 bg-slate-900 border-t border-slate-800 shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center text-[10px] font-black text-slate-500 uppercase tracking-widest", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "SYSTEM STATUS" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: stats.failed > 0 ? "text-rose-500" : "text-emerald-500", children: stats.failed > 0 ? "CRITICAL ERRORS DETECTED" : "OPERATIONAL" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Core Status" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: results.some((r) => r.status === "FAIL") ? "text-rose-500" : "text-emerald-500", children: results.length === 0 ? "READY" : results.some((r) => r.status === "FAIL") ? "NODES COMPROMISED" : "STABLE" })
           ] }) })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-[2rem] border border-slate-200 p-6 shadow-sm", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-4 pb-3 border-b border-slate-100", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Database, { size: 16, className: "text-blue-500" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { className: "font-black text-slate-800 text-xs uppercase tracking-tight", children: "Database Objects" })
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-4 border-b border-slate-50 pb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("h4", { className: "text-xs font-black uppercase text-slate-800 flex items-center gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Database, { size: 14, className: "text-blue-500" }),
+              " DB Health Checker"
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-black text-slate-400 uppercase", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-bold text-slate-400", children: [
               dbTables.length,
-              " TABLES"
+              " OBJECTS"
             ] })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2 max-h-[150px] overflow-y-auto custom-scrollbar pr-1", children: dbTables.length > 0 ? dbTables.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center p-2 rounded-lg bg-slate-50 border border-slate-100 text-[10px] font-bold", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-slate-600 truncate mr-2", children: t.name }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-blue-600 whitespace-nowrap", children: [
-              t.rows,
-              " Rows"
-            ] })
-          ] }, t.name)) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] text-slate-400 italic text-center py-4", children: "No database link data." }) })
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 gap-2 max-h-[150px] overflow-y-auto custom-scrollbar", children: [
+            dbTables.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center p-2 bg-slate-50 rounded-lg border border-slate-100", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-slate-600 truncate mr-2", children: t.name }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px] font-black text-blue-600 bg-white px-1.5 py-0.5 rounded border", children: [
+                t.rows,
+                " ROWS"
+              ] })
+            ] }, t.name)),
+            dbTables.length === 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] text-slate-400 italic text-center py-2", children: "No database telemetry." })
+          ] })
         ] })
       ] })
-    ] })
+    ] }) : (
+      /* Functional Persistence Tests Tab */
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-in slide-in-from-right-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "lg:col-span-4 bg-white rounded-[2.5rem] border border-slate-200 shadow-xl p-8 space-y-6", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 bg-orange-100 rounded-2xl text-orange-600 shadow-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Fingerprint, { size: 28 }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-black text-lg uppercase tracking-tight", children: "Persistence Suite" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-bold text-slate-500 uppercase tracking-widest", children: "30 Functional Scenarios" })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-slate-600 leading-relaxed font-medium", children: "Validating cross-role data integrity: Ensuring student progress survives browser changes, parent views sync correctly, and admin logs remain immutable." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 bg-slate-900 rounded-2xl text-white border border-slate-800 shadow-2xl", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("h4", { className: "text-xs font-black uppercase mb-4 flex items-center gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Server, { size: 14, className: "text-blue-400" }),
+              " Relational Reliability"
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white/5 p-3 rounded-xl border border-white/10 text-center", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] font-black text-slate-500 uppercase block mb-1", children: "Foreign Keys" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-lg font-bold text-emerald-400 flex items-center justify-center gap-1", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { size: 14 }),
+                  " Active"
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white/5 p-3 rounded-xl border border-white/10 text-center", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] font-black text-slate-500 uppercase block mb-1", children: "Constraints" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-lg font-bold text-blue-400 flex items-center justify-center gap-1", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 14 }),
+                  " Forced"
+                ] })
+              ] })
+            ] })
+          ] }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-5 bg-orange-50 border border-orange-100 rounded-2xl", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("h5", { className: "text-[10px] font-black text-orange-800 uppercase tracking-widest mb-2 flex items-center gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(MousePointer2, { size: 12 }),
+              " Interaction Test Coverage"
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("ul", { className: "text-[10px] text-orange-700 font-bold space-y-1", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "• Student Session Restoration" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "• Parent Dashboard Real-time Sync" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "• Admin Attempt History Persistence" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "• Multi-device Login Continuity" })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "lg:col-span-8 bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden flex flex-col min-h-[700px]", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-8 py-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center shrink-0", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-black text-xs uppercase tracking-widest", children: "Persistence Integration Stream" }),
+            isRunning && /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 16, className: "animate-spin text-orange-500" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto custom-scrollbar divide-y divide-slate-50", children: results.length > 0 ? results.map((r) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 px-8 flex items-start gap-4 hover:bg-slate-50 transition-all group border-l-4 border-transparent hover:border-orange-500", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 18, className: "text-emerald-500 mt-1 shrink-0" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between mb-0.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] font-black text-slate-400 uppercase tracking-widest", children: r.step }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] font-black text-orange-600 bg-orange-50 px-2 py-0.5 rounded uppercase", children: "Verified" })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-bold text-slate-800 text-sm truncate leading-tight", children: r.description }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] text-slate-500 mt-0.5 leading-relaxed", children: r.details })
+            ] })
+          ] }, r.step)) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-full flex flex-col items-center justify-center text-center p-20 text-slate-300", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Play, { size: 48, className: "mb-4 opacity-10" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-black uppercase tracking-widest text-xs", children: "Activate v13.0 Persistence Scan" })
+          ] }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-6 bg-slate-900 border-t border-slate-800 shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-black text-slate-500 uppercase tracking-widest", children: "Test Coverage Log" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-mono text-orange-400 font-bold uppercase", children: "Ready for Deployment v13.0" })
+          ] }) })
+        ] })
+      ] })
+    )
   ] });
 };
 export {

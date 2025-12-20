@@ -13148,6 +13148,23 @@ const FileWarning = createLucideIcon("FileWarning", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
+const Fingerprint = createLucideIcon("Fingerprint", [
+  ["path", { d: "M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4", key: "1nerag" }],
+  ["path", { d: "M14 13.12c0 2.38 0 6.38-1 8.88", key: "o46ks0" }],
+  ["path", { d: "M17.29 21.02c.12-.6.43-2.3.5-3.02", key: "ptglia" }],
+  ["path", { d: "M2 12a10 10 0 0 1 18-6", key: "ydlgp0" }],
+  ["path", { d: "M2 16h.01", key: "1gqxmh" }],
+  ["path", { d: "M21.8 16c.2-2 .131-5.354 0-6", key: "drycrb" }],
+  ["path", { d: "M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2", key: "1tidbn" }],
+  ["path", { d: "M8.65 22c.21-.66.45-1.32.57-2", key: "13wd9y" }],
+  ["path", { d: "M9 6.8a6 6 0 0 1 9 5.2v2", key: "1fr1j5" }]
+]);
+/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
 const Flag = createLucideIcon("Flag", [
   ["path", { d: "M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z", key: "i9b6wo" }],
   ["line", { x1: "4", x2: "4", y1: "22", y2: "15", key: "1cm3nv" }]
@@ -13589,6 +13606,21 @@ const MessageSquare = createLucideIcon("MessageSquare", [
  */
 const Moon = createLucideIcon("Moon", [
   ["path", { d: "M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z", key: "a7tn18" }]
+]);
+/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const MousePointer2 = createLucideIcon("MousePointer2", [
+  [
+    "path",
+    {
+      d: "M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z",
+      key: "edeuup"
+    }
+  ]
 ]);
 /**
  * @license lucide-react v0.468.0 - ISC
@@ -39717,7 +39749,7 @@ export {
   Zap as Z,
   AlignRight as _,
   Brain as a,
-  Sparkles as a$,
+  Trophy as a$,
   ListOrdered as a0,
   Quote as a1,
   Code as a2,
@@ -39746,15 +39778,15 @@ export {
   BarChart as aP,
   Bar as aQ,
   ListChecks as aR,
-  WifiOff as aS,
-  GraduationCap as aT,
-  Building as aU,
-  Flame as aV,
-  Phone as aW,
-  MapPin as aX,
-  MessageSquare as aY,
-  Clock as aZ,
-  Trophy as a_,
+  Info as aS,
+  MessageSquare as aT,
+  WifiOff as aU,
+  GraduationCap as aV,
+  Building as aW,
+  Flame as aX,
+  Phone as aY,
+  MapPin as aZ,
+  Clock as a_,
   ChartNoAxesColumnIncreasing as aa,
   BookX as ab,
   Globe as ac,
@@ -39782,39 +39814,41 @@ export {
   FileCode as ay,
   Tag as az,
   ChevronDown as b,
-  ChevronUp as b0,
-  Info as b1,
+  Sparkles as b0,
+  ChevronUp as b1,
   Download as b2,
   JSZip as b3,
   Play as b4,
   ClipboardList as b5,
-  Award as b6,
-  Bell as b7,
-  ThumbsUp as b8,
-  Star as b9,
-  Pause as ba,
-  Camera as bb,
-  HeartPulse as bc,
-  StickyNote as bd,
-  CirclePlay as be,
-  RotateCcw as bf,
-  CalendarDays as bg,
-  Map$5 as bh,
-  SquareCheckBig as bi,
-  Flag as bj,
-  Briefcase as bk,
-  Moon as bl,
-  Sun as bm,
-  Coffee as bn,
-  Wind as bo,
-  Music as bp,
-  CloudRain as bq,
-  Trees as br,
-  Waves as bs,
-  Radio as bt,
-  Volume2 as bu,
-  clientExports as bv,
-  React$2 as bw,
+  Fingerprint as b6,
+  MousePointer2 as b7,
+  Award as b8,
+  Bell as b9,
+  ThumbsUp as ba,
+  Star as bb,
+  Pause as bc,
+  Camera as bd,
+  HeartPulse as be,
+  StickyNote as bf,
+  CirclePlay as bg,
+  RotateCcw as bh,
+  CalendarDays as bi,
+  Map$5 as bj,
+  SquareCheckBig as bk,
+  Flag as bl,
+  Briefcase as bm,
+  Moon as bn,
+  Sun as bo,
+  Coffee as bp,
+  Wind as bq,
+  Music as br,
+  CloudRain as bs,
+  Trees as bt,
+  Waves as bu,
+  Radio as bv,
+  Volume2 as bw,
+  clientExports as bx,
+  React$2 as by,
   BookOpen as c,
   ChevronLeft as d,
   ChevronRight as e,

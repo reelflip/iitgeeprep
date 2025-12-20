@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, q as Activity, aD as Terminal, L as Loader2, aE as Lock, aF as ToggleRight, aG as ToggleLeft, aH as Key, aI as BarChart3, ac as Globe, ay as Save, aJ as Database, aK as FileCode, ab as CheckCircle2 } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, q as Activity, aF as Terminal, L as Loader2, aG as Lock, aH as ToggleRight, aI as ToggleLeft, aJ as Key, a9 as RefreshCw, aK as BarChart3, ae as Globe, as as Save, aL as Database, aM as FileCode, a8 as CheckCircle2 } from "../vendor.js";
 const AI_MODELS = [
   { id: "gemini-3-flash-preview", name: "Gemini 3 Flash", provider: "Google", description: "Ultra-fast, optimized for quick doubts and scheduling.", strength: "Speed", color: "blue" },
   { id: "gemini-3-pro-preview", name: "Gemini 3 Pro", provider: "Google", description: "Deep reasoning and complex Physics problem solving.", strength: "Reasoning", color: "indigo" },
@@ -43,12 +43,16 @@ const API_FILE_LIST = [
   "get_psychometric.php",
   "save_psychometric.php",
   "delete_account.php",
-  "upload_avatar.php"
+  "upload_avatar.php",
+  "get_topics.php",
+  "get_attempt_details.php",
+  "manage_chapter_test.php"
 ];
 const AdminSystemScreen = () => {
   const [activeTab, setActiveTab] = reactExports.useState("ai");
   const [aiConfig, setAiConfig] = reactExports.useState({ enabled: true, model: "gemini-3-flash-preview" });
   const [googleAuthEnabled, setGoogleAuthEnabled] = reactExports.useState(false);
+  const [showSyncStatus, setShowSyncStatus] = reactExports.useState(false);
   const [googleClientId, setGoogleClientId] = reactExports.useState("");
   const [gaId, setGaId] = reactExports.useState("");
   const [saving, setSaving] = reactExports.useState(false);
@@ -85,6 +89,11 @@ const AdminSystemScreen = () => {
       if (oEnableRes.ok) {
         const data = await oEnableRes.json();
         if (data == null ? void 0 : data.value) setGoogleAuthEnabled(data.value === "1");
+      }
+      const syncRes = await fetch("/api/manage_settings.php?key=show_sync_status");
+      if (syncRes.ok) {
+        const data = await syncRes.json();
+        if (data == null ? void 0 : data.value) setShowSyncStatus(data.value === "1");
       }
     } catch (e) {
     }
@@ -152,6 +161,11 @@ const AdminSystemScreen = () => {
         fetch("/api/manage_settings.php", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key: "show_sync_status", value: showSyncStatus ? "1" : "0" })
+        }),
+        fetch("/api/manage_settings.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ key: "google_analytics_id", value: gaId })
         })
       ]);
@@ -168,7 +182,7 @@ const AdminSystemScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { className: "text-blue-400" }),
           " Admin System"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 mt-2", children: "v12.29 Master Restore Panel" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 mt-2", children: "v12.39 Sync Status Control" })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex bg-slate-800/50 p-1 rounded-xl border border-slate-700/50", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setActiveTab("ai"), className: `px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "ai" ? "bg-blue-600 text-white" : "text-slate-400"}`, children: "AI" }),
@@ -229,10 +243,19 @@ const AdminSystemScreen = () => {
                 className: "w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-100 outline-none"
               }
             )
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] text-slate-400 mt-2", children: "Obtain this from Google Cloud Console (APIs & Services > Credentials)." })
+          ] })
         ] }) })
       ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 border-b border-slate-100 bg-slate-50/50", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-2 bg-orange-100 text-orange-600 rounded-lg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 20 }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-bold text-slate-800", children: "Visual Sync Indicators" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-slate-500", children: "Display 'Synced' / 'Not Synced' badges in the app headers." })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setShowSyncStatus(!showSyncStatus), className: `flex items-center gap-2 transition-colors ${showSyncStatus ? "text-orange-600" : "text-slate-400"}`, children: showSyncStatus ? /* @__PURE__ */ jsxRuntimeExports.jsx(ToggleRight, { size: 32 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(ToggleLeft, { size: 32 }) })
+      ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-6 border-b border-slate-100 bg-slate-50/50", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-2 bg-emerald-100 text-emerald-600 rounded-lg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart3, { size: 20 }) }),
@@ -274,7 +297,7 @@ const AdminSystemScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-2xl border border-slate-200 p-6", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-black uppercase tracking-wider text-xs mb-6 flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Database, { className: "text-blue-500" }),
-          " Database Schema (v12.29)"
+          " Database Schema (v12.39)"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-3 max-h-[400px] overflow-y-auto", children: dbTables.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between p-3 bg-slate-50 rounded-lg border", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-bold text-slate-700", children: t.name }),

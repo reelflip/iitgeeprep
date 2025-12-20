@@ -1,5 +1,6 @@
-import { r as reactExports, j as jsxRuntimeExports, c as BookOpen, au as Search, ab as CheckCircle2, e as ChevronRight, u as ArrowLeft, ae as Clock, S as Sparkles, L as Loader2, b as Send, bg as StickyNote } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, c as BookOpen, at as Search, a8 as CheckCircle2, e as ChevronRight, u as ArrowLeft, ag as Clock, as as Save, S as Sparkles, L as Loader2, b as Send, bh as StickyNote } from "../vendor.js";
 import { B as BookReader } from "../components/BookReader.js";
+import { S as SyncStatusBadge } from "../components/SyncStatusBadge.js";
 const statusColors = {
   "NOT_STARTED": "bg-slate-100 text-slate-600 border-slate-200",
   "PENDING": "bg-slate-100 text-slate-600 border-slate-200",
@@ -31,10 +32,17 @@ const TopicDetailView = ({
   currentTime,
   onAnswerQuestion,
   onUpdateTestAnswer,
-  onOpenNoteReader
+  onOpenNoteReader,
+  syncStatus,
+  showIndicators
 }) => {
   const [activeTab, setActiveTab] = reactExports.useState("PRACTICE");
   const [isSubmitting, setIsSubmitting] = reactExports.useState(false);
+  const [localStatus, setLocalStatus] = reactExports.useState(topicData.status);
+  const isDirty = localStatus !== topicData.status;
+  const handleManualSave = async () => {
+    onUpdateProgress(topic.id, { status: localStatus });
+  };
   const handleSubmitChapterTest = async () => {
     const answeredCount = Object.keys(currentAnswers).length;
     if (answeredCount === 0) {
@@ -95,7 +103,11 @@ Results are now saved to your dashboard analytics.`);
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest gap-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: topic.subject }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronRight, { className: "w-3 h-3" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: topic.chapter })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: topic.chapter }),
+            showIndicators && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mx-1 text-slate-200", children: "|" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(SyncStatusBadge, { status: isDirty ? "ERROR" : syncStatus, show: true })
+            ] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-black text-slate-900 leading-tight", children: topic.name })
         ] })
@@ -109,14 +121,25 @@ Results are now saved to your dashboard analytics.`);
         ] })
       ] }),
       !readOnly && activeTab !== "TEST" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-slate-400 uppercase tracking-wider hidden md:block", children: "Update Status" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-slate-400 uppercase tracking-wider hidden md:block", children: "Preparation Status" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "select",
           {
-            value: topicData.status,
-            onChange: (e) => onUpdateProgress(topic.id, { status: e.target.value }),
-            className: `px-4 py-2 rounded-xl text-xs font-bold border outline-none transition-all ${statusColors[topicData.status || "NOT_STARTED"]}`,
+            value: localStatus,
+            onChange: (e) => setLocalStatus(e.target.value),
+            className: `px-4 py-2 rounded-xl text-xs font-bold border outline-none transition-all ${statusColors[localStatus || "NOT_STARTED"]}`,
             children: Object.entries(statusLabels).map(([val, label]) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: val, className: "bg-white text-slate-800", children: label }, val))
+          }
+        ),
+        isDirty && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            onClick: handleManualSave,
+            className: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-200 animate-in zoom-in-95 flex items-center gap-2",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Save, { size: 14 }),
+              " Save Chapter Progress"
+            ]
           }
         )
       ] })
@@ -238,7 +261,9 @@ const SyllabusScreen = ({
   chapterNotes = {},
   questionBank = [],
   addTestAttempt,
-  testAttempts = []
+  testAttempts = [],
+  showIndicators = false,
+  syncStatus = "IDLE"
 }) => {
   const [searchQuery, setSearchQuery] = reactExports.useState("");
   const [activeSubjectFilter, setActiveSubjectFilter] = reactExports.useState("ALL");
@@ -344,17 +369,22 @@ const SyllabusScreen = ({
         currentTime: testTimers[activeTopic.id] || 0,
         onAnswerQuestion: (qId, opt, corr) => handleAnswerQuestion(activeTopic.id, qId, opt, corr),
         onUpdateTestAnswer: (qId, opt) => handleUpdateTestAnswer(activeTopic.id, qId, opt),
-        onOpenNoteReader: (title, pages) => setActiveNote({ title, pages })
+        onOpenNoteReader: (title, pages) => setActiveNote({ title, pages }),
+        syncStatus,
+        showIndicators
       }
     ),
     activeNote && /* @__PURE__ */ jsxRuntimeExports.jsx(BookReader, { title: activeNote.title, pages: activeNote.pages, onClose: () => setActiveNote(null) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center space-x-3 mb-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "w-8 h-8 text-white" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-3xl font-bold", children: summaryOnly ? "Syllabus Summary" : "Detailed Syllabus Tracker" })
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center space-x-3 mb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "w-8 h-8 text-white" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-3xl font-bold", children: summaryOnly ? "Syllabus Summary" : "Detailed Syllabus Tracker" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-100 text-lg opacity-90 max-w-2xl", children: summaryOnly ? `Reviewing current preparation depth for ${viewingStudentName || user.name}.` : "Track completion, watch lectures, and solve chapter-wise problems." })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-100 text-lg opacity-90 max-w-2xl", children: summaryOnly ? `Reviewing current preparation depth for ${viewingStudentName || user.name}.` : "Track completion, watch lectures, and solve chapter-wise problems." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SyncStatusBadge, { status: syncStatus, show: showIndicators })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white opacity-10" })
     ] }),

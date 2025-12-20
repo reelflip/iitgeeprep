@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, t as TrendingUp, c as BookOpen, a7 as Target, a8 as CalendarClock, a9 as BarChart, aa as BookX, n as Heart, ab as CheckCircle2, a as Brain, o as Users, ac as Globe } from "../vendor.js";
+import { j as jsxRuntimeExports, t as TrendingUp, c as BookOpen, aa as Target, ab as CalendarClock, ac as BarChart, ad as BookX, n as Heart, a8 as CheckCircle2, a as Brain, o as Users, ae as Globe } from "../vendor.js";
 const AboutUsScreen = () => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "animate-in fade-in slide-in-from-bottom-4 pb-10", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-slate-900 text-white pt-20 pb-24 px-4 relative overflow-hidden", children: [

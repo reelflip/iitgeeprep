@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, i as Calendar, q as Activity, o as Users, ad as MousePointerClick, ae as Clock, af as ResponsiveContainer, ag as AreaChart, ah as CartesianGrid, ai as XAxis, aj as YAxis, ak as Tooltip, al as Area, am as BarChart, an as Bar, ao as ArrowUp } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, i as Calendar, q as Activity, o as Users, af as MousePointerClick, ag as Clock, ah as ResponsiveContainer, ai as AreaChart, aj as CartesianGrid, ak as XAxis, al as YAxis, am as Tooltip, an as Area, ao as BarChart, ap as Bar, aq as ArrowUp } from "../vendor.js";
 const AdminAnalyticsScreen = () => {
   const [stats, setStats] = reactExports.useState({
     totalVisits: 12450,

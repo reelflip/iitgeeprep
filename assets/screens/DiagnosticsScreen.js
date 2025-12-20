@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, b6 as Beaker, b4 as Download, at as RefreshCw, b7 as Play, q as Activity, aD as Terminal, b8 as React, ab as CheckCircle2, aN as XCircle } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, b8 as Beaker, b6 as Download, a9 as RefreshCw, b9 as Play, q as Activity, aF as Terminal, ba as React, a8 as CheckCircle2, aR as XCircle } from "../vendor.js";
 import { E as E2ETestRunner } from "../shared-core.js";
 const DiagnosticsScreen = () => {
   const [isRunning, setIsRunning] = reactExports.useState(false);
@@ -32,15 +32,15 @@ const DiagnosticsScreen = () => {
     const groups = {
       "System Health": [],
       "Functional E2E": [],
-      "Advanced Prep Tools": [],
-      "Security & Roles": []
+      "Identity & Roles": [],
+      "Security Architecture": []
     };
     results.forEach((r) => {
       const stepNum = parseInt(r.step.split(".")[1]);
       if (r.step.startsWith("H.")) groups["System Health"].push(r);
       else if (r.step.startsWith("E.")) {
-        if (stepNum >= 40 && stepNum <= 43) groups["Advanced Prep Tools"].push(r);
-        else if (stepNum === 51) groups["Security & Roles"].push(r);
+        if (stepNum >= 40 && stepNum <= 43) groups["Identity & Roles"].push(r);
+        else if (stepNum === 51) groups["Security Architecture"].push(r);
         else groups["Functional E2E"].push(r);
       }
     });
@@ -52,18 +52,18 @@ const DiagnosticsScreen = () => {
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Beaker, { className: "w-8 h-8 text-blue-400" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-black tracking-tight uppercase", children: "Integrity Audit v12.37" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-black tracking-tight uppercase", children: "Integrity Audit v12.42" })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-sm max-w-xl", children: "Comprehensive points scan verifying server reliability, 38-endpoint API logic, database schema compliance, and hardened input security." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-sm max-w-xl font-medium", children: "Role Isolation Suite enabled. Verifying logical separation between Aspirant data and System Administration privileges." })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-3 shrink-0", children: [
           results.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: downloadReport, className: "bg-slate-800 hover:bg-slate-700 text-slate-200 px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 transition-all border border-slate-700 active:scale-95", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { size: 18 }),
-            " Export JSON"
+            " Export Log"
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: runFullAudit, disabled: isRunning, className: "bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl font-bold text-sm flex items-center gap-2 transition-all shadow-lg shadow-blue-900/40 disabled:opacity-50 active:scale-95", children: [
             isRunning ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "animate-spin", size: 18 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Play, { size: 18 }),
-            isRunning ? "Auditing Platform..." : "Execute Full Audit"
+            isRunning ? "Auditing Identity Core..." : "Execute v12.42 Audit"
           ] })
         ] })
       ] }),
@@ -84,7 +84,7 @@ const DiagnosticsScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl font-bold text-red-400", children: stats.failed })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-blue-500/10 border border-blue-500/20 p-4 rounded-2xl text-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-blue-400 text-[10px] font-black uppercase tracking-widest block", children: "Score" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-blue-400 text-[10px] font-black uppercase tracking-widest block", children: "Health" }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-2xl font-bold text-blue-400", children: [
             stats.total > 0 ? Math.round(stats.passed / stats.total * 100) : 0,
             "%"
@@ -96,37 +96,37 @@ const DiagnosticsScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "lg:col-span-1 space-y-6", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white p-6 rounded-3xl border border-slate-200 shadow-sm", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-bold text-slate-800 mb-4 flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { className: "w-5 h-5 text-blue-600" }),
-          " Platform Status"
+          " System Engine"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center p-3 bg-slate-50 rounded-xl", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-slate-600", children: "Runtime Version" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] font-bold rounded uppercase", children: "12.37" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-slate-600", children: "Revision Code" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] font-bold rounded uppercase tracking-tighter", children: "12.42-CORE" })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center p-3 bg-slate-50 rounded-xl", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-slate-600", children: "Database" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded uppercase", children: "Live" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-slate-600", children: "Identity Layer" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded uppercase", children: "Isolated" })
           ] })
         ] })
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "lg:col-span-2 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col min-h-[600px]", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center sticky top-0 z-10 backdrop-blur-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-bold text-slate-700 flex items-center gap-2 text-sm uppercase tracking-wider", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Terminal, { className: "w-4 h-4 text-slate-400" }),
-          " Execution Trace"
+          " Diagnostic Stream"
         ] }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto custom-scrollbar", children: results.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-full flex flex-col items-center justify-center text-center p-20 text-slate-400", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { className: "w-16 h-16 mb-4 opacity-5" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-bold text-slate-500", children: "System idle" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs mt-2", children: "Initialize the audit sequence to verify platform integrity." })
-        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "divide-y divide-slate-50 pb-8", children: Object.entries(groupedResults).map(([group, groupLogs]) => groupLogs.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-slate-100/50 px-4 py-2 text-[10px] font-black text-slate-500 uppercase tracking-widest", children: group }),
-          groupLogs.map((r) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 flex items-center justify-between hover:bg-slate-50/50 transition-colors", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-bold text-slate-500", children: "Suite Ready" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs mt-2 font-medium", children: "Verify role isolation and permission tiers now." })
+        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "divide-y divide-slate-100 pb-8", children: Object.entries(groupedResults).map(([group, groupLogs]) => groupLogs.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-slate-50 px-5 py-2.5 text-[10px] font-black text-slate-400 uppercase tracking-widest border-y border-slate-100", children: group }),
+          groupLogs.map((r) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-5 flex items-center justify-between hover:bg-slate-50/50 transition-colors", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-4 items-start", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `mt-1 p-1 rounded-full ${r.status === "PASS" ? "bg-emerald-50 text-emerald-600" : r.status === "FAIL" ? "bg-red-50 text-red-600" : r.status === "RUNNING" ? "bg-blue-50 text-blue-600 animate-pulse" : "bg-slate-50 text-slate-300"}`, children: r.status === "PASS" ? /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { size: 16 }) : r.status === "FAIL" ? /* @__PURE__ */ jsxRuntimeExports.jsx(XCircle, { size: 16 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { size: 16 }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `mt-1 p-1 rounded-lg ${r.status === "PASS" ? "bg-emerald-50 text-emerald-600" : r.status === "FAIL" ? "bg-red-50 text-red-600" : r.status === "RUNNING" ? "bg-blue-50 text-blue-600 animate-pulse" : "bg-slate-50 text-slate-300"}`, children: r.status === "PASS" ? /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { size: 16 }) : r.status === "FAIL" ? /* @__PURE__ */ jsxRuntimeExports.jsx(XCircle, { size: 16 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { size: 16 }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[9px] font-black text-slate-400 uppercase tracking-widest", children: r.step }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-bold text-slate-800 text-sm", children: r.description }),
-                r.details && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] mt-0.5 text-slate-500", children: r.details })
+                r.details && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs mt-0.5 text-slate-500 font-medium", children: r.details })
               ] })
             ] }),
             r.latency && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-[9px] font-mono text-slate-300", children: [

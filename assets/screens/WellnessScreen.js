@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, br as Wind, bp as Sun, bs as Music, bt as Pause, bu as CloudRain, bv as Trees, bw as Waves, bx as Radio, by as Volume2, bo as Moon } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, bs as Wind, bq as Sun, bt as Music, bu as Pause, bv as CloudRain, bw as Trees, bx as Waves, by as Radio, bz as Volume2, bp as Moon } from "../vendor.js";
 const WellnessScreen = () => {
   const [breathingActive, setBreathingActive] = reactExports.useState(false);
   const [breathPhase, setBreathPhase] = reactExports.useState("IDLE");

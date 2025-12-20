@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, t as TrendingUp, aV as WifiOff, ab as CheckCircle2, G as GraduationCap, o as Users, aW as Building, C as ChevronDown, a7 as Target, i as Calendar, U as User, av as Mail, aE as Lock, aX as Shield, aH as Key, L as Loader2, aq as ArrowRight } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, t as TrendingUp, aZ as WifiOff, a8 as CheckCircle2, G as GraduationCap, o as Users, a_ as Building, C as ChevronDown, aa as Target, i as Calendar, U as User, az as Mail, aG as Lock, aQ as Shield, aJ as Key, L as Loader2, ax as ArrowRight } from "../vendor.js";
 import { C as COACHING_INSTITUTES, T as TARGET_EXAMS, a as TARGET_YEARS } from "../shared-core.js";
 const SECURITY_QUESTIONS = [
   "What is the name of your first pet?",
@@ -239,7 +239,7 @@ const AuthScreen = ({ onLogin, onNavigate }) => {
                         children: TARGET_EXAMS.map((exam) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: exam, children: exam }, exam))
                       }
                     ),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { className: "absolute right-3 top-3.5 text-slate-400 pointer-events-none", size: 14 })
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { className: "absolute right-3 top-3 text-slate-400 pointer-events-none", size: 14 })
                   ] })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -255,7 +255,7 @@ const AuthScreen = ({ onLogin, onNavigate }) => {
                         children: TARGET_YEARS.map((year) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { value: year, children: year }, year))
                       }
                     ),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { className: "absolute right-3 top-3.5 text-slate-400 pointer-events-none", size: 14 })
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { className: "absolute right-3 top-3 text-slate-400 pointer-events-none", size: 14 })
                   ] })
                 ] })
               ] }),
@@ -453,7 +453,7 @@ const AuthScreen = ({ onLogin, onNavigate }) => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-center mt-6 text-[9px] font-medium text-slate-300 uppercase tracking-[0.3em]", children: [
         "© ",
         (/* @__PURE__ */ new Date()).getFullYear(),
-        " IITGEEPrep • ULTIMATE v12.37"
+        " IITGEEPrep • ULTIMATE v12.41"
       ] })
     ] })
   ] });

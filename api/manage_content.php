@@ -1,6 +1,6 @@
 <?php
 /**
- * IITGEEPrep Engine v12.38 - Master Sync Core
+ * IITGEEPrep Engine v12.43 - Command Central Core
  * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
@@ -34,13 +34,22 @@ $d = getJsonInput();
 $type = $_GET['type'] ?? 'flashcard';
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
     if($type === 'flashcard') {
-        $conn->prepare("INSERT INTO flashcards (front, back, subject_id) VALUES (?,?,?)")->execute([getV($d, 'front'), getV($d, 'back'), getV($d, 'subjectId')]);
+        $s = $conn->prepare("INSERT INTO flashcards (front, back, subject_id) VALUES (?,?,?)");
+        $s->execute([getV($d, 'front'), getV($d, 'back'), getV($d, 'subjectId')]);
     } else if($type === 'hack') {
-        $conn->prepare("INSERT INTO memory_hacks (title, description, trick, tag) VALUES (?,?,?,?)")->execute([getV($d, 'title'), getV($d, 'description'), getV($d, 'trick'), getV($d, 'tag')]);
+        $s = $conn->prepare("INSERT INTO memory_hacks (title, description, trick, tag) VALUES (?,?,?,?)");
+        $s->execute([getV($d, 'title'), getV($d, 'description'), getV($d, 'trick'), getV($d, 'tag')]);
     } else if($type === 'blog') {
-        $conn->prepare("INSERT INTO blog_posts (title, excerpt, content, author, image_url, category) VALUES (?,?,?,?,?,?)")->execute([getV($d, 'title'), getV($d, 'excerpt'), getV($d, 'content'), getV($d, 'author'), getV($d, 'imageUrl'), getV($d, 'category')]);
+        $id = getV($d, 'id');
+        if($id && is_numeric($id) && $id > 100000000) { // New post check
+             $s = $conn->prepare("INSERT INTO blog_posts (title, excerpt, content, author, image_url, category) VALUES (?,?,?,?,?,?)");
+             $s->execute([getV($d, 'title'), getV($d, 'excerpt'), getV($d, 'content'), getV($d, 'author'), getV($d, 'imageUrl'), getV($d, 'category')]);
+        } else {
+             $s = $conn->prepare("UPDATE blog_posts SET title=?, excerpt=?, content=?, author=?, image_url=?, category=? WHERE id=?");
+             $s->execute([getV($d, 'title'), getV($d, 'excerpt'), getV($d, 'content'), getV($d, 'author'), getV($d, 'imageUrl'), getV($d, 'category'), $id]);
+        }
     }
-    echo json_encode(["status" => "success"]);
+    echo json_encode(["status" => "success", "id" => $conn->lastInsertId()]);
 } else if($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $table = $type === 'flashcard' ? 'flashcards' : ($type === 'hack' ? 'memory_hacks' : 'blog_posts');
     $conn->prepare("DELETE FROM $table WHERE id = ?")->execute([$_GET['id']]);

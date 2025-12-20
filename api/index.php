@@ -1,1 +1,1 @@
-<?php echo json_encode(["status" => "active", "version" => "12.38", "files" => 38, "engine" => "Master Sync Core"]); ?>
+<?php echo json_encode(["status" => "active", "version" => "12.43", "files" => 38, "engine" => "Command Central Core"]); ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * IITGEEPrep Engine v12.38 - Master Sync Core
+ * IITGEEPrep Engine v12.43 - Command Central Core
  * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
@@ -30,15 +30,29 @@ function getV($data, $p) {
     return null;
 }
 
+$role_group = $_GET['group'] ?? 'ALL';
 if($_SERVER['REQUEST_METHOD'] === 'GET') {
-    echo json_encode($conn->query("SELECT id, name, email, role, is_verified FROM users")->fetchAll());
+    if($role_group === 'ADMINS') {
+        $sql = "SELECT id, name, email, role, is_verified, created_at FROM users WHERE role LIKE 'ADMIN%'";
+    } else if($role_group === 'USERS') {
+        $sql = "SELECT id, name, email, role, is_verified, created_at FROM users WHERE role NOT LIKE 'ADMIN%'";
+    } else {
+        $sql = "SELECT id, name, email, role, is_verified, created_at FROM users";
+    }
+    echo json_encode($conn->query($sql)->fetchAll());
 } else if($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $d = getJsonInput();
     $s = $conn->prepare("UPDATE users SET is_verified = ? WHERE id = ?");
     $s->execute([getV($d, 'isVerified') ? 1 : 0, getV($d, 'id')]);
     echo json_encode(["status" => "success"]);
 } else if($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $conn->prepare("DELETE FROM users WHERE id = ?")->execute([$_GET['id']]);
+    $id = $_GET['id'];
+    if($id === 'admin_root') {
+        http_response_code(403);
+        echo json_encode(["message" => "PROTECTED_ACCOUNT"]);
+        exit;
+    }
+    $conn->prepare("DELETE FROM users WHERE id = ?")->execute([$id]);
     echo json_encode(["status" => "success"]);
 }
 ?>

@@ -30,19 +30,10 @@ function getV($data, $p) {
     return null;
 }
 
-try {
-    $tables = [];
-    $stmt = $conn->query("SHOW TABLES");
-    while($row = $stmt->fetch(PDO::FETCH_NUM)) {
-        $tableName = $row[0];
-        $count = $conn->query("SELECT count(*) FROM `$tableName`")->fetchColumn();
-        $colStmt = $conn->query("DESCRIBE `$tableName`");
-        $cols = [];
-        foreach($colStmt->fetchAll() as $c) {
-            $cols[] = ["name" => $c['Field'], "type" => $c['Type'], "null" => $c['Null'], "key" => $c['Key']];
-        }
-        $tables[] = ["name" => $tableName, "rows" => (int)$count, "columns" => $cols];
-    }
-    echo json_encode(["status" => "CONNECTED", "db_name" => $db_name, "tables" => $tables, "version" => "12.43"]);
-} catch(Exception $e) { echo json_encode(["status" => "error", "message" => $e->getMessage()]); }
+$d = getJsonInput();
+$uid = getV($d, 'userId');
+$section = getV($d, 'section');
+$s = $conn->prepare("INSERT INTO sync_status (user_id, section, is_synced) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE is_synced=1, last_sync=CURRENT_TIMESTAMP");
+$s->execute([$uid, $section]);
+echo json_encode(["status" => "success"]);
 ?>

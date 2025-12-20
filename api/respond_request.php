@@ -1,6 +1,6 @@
 <?php
 /**
- * IITGEEPrep Engine v12.38 - Master Sync Core
+ * IITGEEPrep Engine v12.43 - Command Central Core
  * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
@@ -32,8 +32,10 @@ function getV($data, $p) {
 
 $d = getJsonInput();
 if(getV($d, 'action') === 'accept') {
-    $conn->prepare("UPDATE users SET linked_student_id = ? WHERE id = ?")->execute([getV($d, 'studentId'), getV($d, 'parentId')]);
-    $conn->prepare("UPDATE users SET parent_id = ? WHERE id = ?")->execute([getV($d, 'parentId'), getV($d, 'studentId')]);
+    $sId = getV($d, 'studentId');
+    $pId = getV($d, 'parentId');
+    $conn->prepare("UPDATE users SET linked_student_id = ? WHERE id = ?")->execute([$sId, $pId]);
+    $conn->prepare("UPDATE users SET parent_id = ? WHERE id = ?")->execute([$pId, $sId]);
 }
 $conn->prepare("DELETE FROM notifications WHERE id = ?")->execute([getV($d, 'notifId')]);
 echo json_encode(["status" => "success"]);

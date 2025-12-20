@@ -1,6 +1,6 @@
 <?php
 /**
- * IITGEEPrep Engine v12.38 - Master Sync Core
+ * IITGEEPrep Engine v12.43 - Command Central Core
  * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
@@ -32,6 +32,11 @@ function getV($data, $p) {
 
 if($_SERVER['REQUEST_METHOD'] === 'GET') {
     echo json_encode($conn->query("SELECT * FROM contact_messages ORDER BY created_at DESC")->fetchAll());
+} else if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $d = getJsonInput();
+    $s = $conn->prepare("INSERT INTO contact_messages (name, email, subject, message) VALUES (?,?,?,?)");
+    $s->execute([getV($d, 'name'), getV($d, 'email'), getV($d, 'subject'), getV($d, 'message')]);
+    echo json_encode(["status" => "success"]);
 } else if($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $conn->prepare("DELETE FROM contact_messages WHERE id = ?")->execute([$_GET['id']]);
     echo json_encode(["status" => "success"]);

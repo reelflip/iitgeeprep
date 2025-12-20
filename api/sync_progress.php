@@ -1,6 +1,6 @@
 <?php
 /**
- * IITGEEPrep Engine v12.38 - Master Sync Core
+ * IITGEEPrep Engine v12.43 - Command Central Core
  * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
@@ -31,8 +31,10 @@ function getV($data, $p) {
 }
 
 $d = getJsonInput();
+$uid = getV($d, 'userId');
 $sql = "INSERT INTO user_progress (user_id, topic_id, status, last_revised, revision_level, next_revision_date, solved_questions_json) VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE status=VALUES(status), last_revised=VALUES(last_revised), revision_level=VALUES(revision_level), next_revision_date=VALUES(next_revision_date), solved_questions_json=VALUES(solved_questions_json)";
 $s = $conn->prepare($sql);
-$s->execute([getV($d, 'userId'), getV($d, 'topicId'), getV($d, 'status'), getV($d, 'lastRevised'), getV($d, 'revisionLevel') ?? 0, getV($d, 'nextRevisionDate'), json_encode(getV($d, 'solvedQuestions') ?? [])]);
+$s->execute([$uid, getV($d, 'topicId'), getV($d, 'status'), getV($d, 'lastRevised'), getV($d, 'revisionLevel') ?? 0, getV($d, 'nextRevisionDate'), json_encode(getV($d, 'solvedQuestions') ?? [])]);
+$conn->prepare("INSERT INTO sync_status (user_id, section, is_synced) VALUES (?, 'syllabus', 1) ON DUPLICATE KEY UPDATE is_synced=1, last_sync=CURRENT_TIMESTAMP")->execute([$uid]);
 echo json_encode(["status" => "success"]);
 ?>

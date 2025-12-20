@@ -1,6 +1,6 @@
 <?php
 /**
- * IITGEEPrep Engine v12.38 - Master Sync Core
+ * IITGEEPrep Engine v12.43 - Command Central Core
  * 100% Complete 38-File Backend Deployment
  */
 error_reporting(E_ALL);
@@ -35,12 +35,19 @@ if(!$uid) { echo json_encode(["error" => "Missing user_id"]); exit; }
 $res = [];
 $u = $conn->prepare("SELECT * FROM users WHERE id = ?"); $u->execute([$uid]); $res['userProfileSync'] = $u->fetch();
 $p = $conn->prepare("SELECT * FROM user_progress WHERE user_id = ?"); $p->execute([$uid]); $res['progress'] = $p->fetchAll();
-$a = $conn->prepare("SELECT * FROM test_attempts WHERE user_id = ? ORDER BY date DESC"); $a->execute([$uid]); $res['attempts'] = $a->fetchAll();
+$a = $conn->prepare("SELECT id, date, title, score, total_marks, accuracy as accuracy_percent, total_questions, correct_count, incorrect_count, unattempted_count, topic_id, difficulty, detailed_results FROM test_attempts WHERE user_id = ? ORDER BY date DESC"); 
+$a->execute([$uid]); 
+$res['attempts'] = $a->fetchAll();
 $g = $conn->prepare("SELECT * FROM goals WHERE user_id = ?"); $g->execute([$uid]); $res['goals'] = $g->fetchAll();
 $b = $conn->prepare("SELECT * FROM backlogs WHERE user_id = ?"); $b->execute([$uid]); $res['backlogs'] = $b->fetchAll();
 $m = $conn->prepare("SELECT * FROM mistake_logs WHERE user_id = ?"); $m->execute([$uid]); $res['mistakes'] = $m->fetchAll();
 $t = $conn->prepare("SELECT * FROM timetable WHERE user_id = ?"); $t->execute([$uid]); $res['timetable'] = $t->fetch();
 $ps = $conn->prepare("SELECT * FROM psychometric_results WHERE user_id = ?"); $ps->execute([$uid]); $res['psychometric'] = $ps->fetch();
 $n = $conn->prepare("SELECT * FROM notifications WHERE to_id = ? ORDER BY date DESC"); $n->execute([$uid]); $res['notifications'] = $n->fetchAll();
+$st = $conn->prepare("SELECT section, is_synced FROM sync_status WHERE user_id = ?"); $st->execute([$uid]); $res['syncStatus'] = $st->fetchAll();
+// Content for App Load
+$res['blogs'] = $conn->query("SELECT * FROM blog_posts ORDER BY date DESC")->fetchAll();
+$res['flashcards'] = $conn->query("SELECT * FROM flashcards")->fetchAll();
+$res['hacks'] = $conn->query("SELECT * FROM memory_hacks")->fetchAll();
 echo json_encode($res);
 ?>

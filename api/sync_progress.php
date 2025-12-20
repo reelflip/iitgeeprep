@@ -1,22 +1,48 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.27
- * Production Backend Infrastructure
- * Optimized for Hostinger/LAMP Stack
+ * IITGEEPrep Pro Engine v12.29 - Full Restore
+ * Production Backend Infrastructure - Hardened & Stable
  */
+error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
-error_reporting(E_ALL);
 
 include_once 'cors.php';
 include_once 'config.php';
 
-$d = json_decode(file_get_contents('php://input'));
+function getJsonInput() {
+    $raw = file_get_contents('php://input');
+    $data = json_decode($raw);
+    if ($raw && json_last_error() !== JSON_ERROR_NONE) {
+        http_response_code(400);
+        echo json_encode(["error" => "INVALID_JSON", "details" => json_last_error_msg()]);
+        exit;
+    }
+    return $data;
+}
+
+function requireProps($data, $props) {
+    if (!$data) {
+        http_response_code(400);
+        echo json_encode(["error" => "MISSING_BODY"]);
+        exit;
+    }
+    foreach ($props as $p) {
+        if (!isset($data->$p)) {
+            http_response_code(400);
+            echo json_encode(["error" => "MISSING_PROPERTY", "property" => $p]);
+            exit;
+        }
+    }
+}
+
+$d = getJsonInput();
+requireProps($d, ['user_id', 'topicId', 'status']);
+$solved = isset($d->solvedQuestions) ? json_encode($d->solvedQuestions) : '[]';
 $sql = "INSERT INTO user_progress (user_id, topic_id, status, last_revised, revision_level, next_revision_date, solved_questions_json) 
         VALUES (?, ?, ?, ?, ?, ?, ?) 
-        ON DUPLICATE KEY UPDATE status=VALUES(status), last_revised=VALUES(last_revised), 
-        revision_level=VALUES(revision_level), next_revision_date=VALUES(next_revision_date), 
-        solved_questions_json=VALUES(solved_questions_json)";
-$conn->prepare($sql)->execute([$d->user_id, $d->topicId, $d->status, $d->lastRevised, $d->revisionLevel, $d->nextRevisionDate, json_encode($d->solvedQuestions)]);
+        ON DUPLICATE KEY UPDATE status=VALUES(status), last_revised=VALUES(last_revised), revision_level=VALUES(revision_level), next_revision_date=VALUES(next_revision_date), solved_questions_json=VALUES(solved_questions_json)";
+$stmt = $conn->prepare($sql);
+$stmt->execute([$d->user_id, $d->topicId, $d->status, $d->lastRevised ?? null, $d->revisionLevel ?? 0, $d->nextRevisionDate ?? null, $solved]);
 echo json_encode(["status" => "success"]);
 ?>

@@ -74,7 +74,7 @@ const DeploymentScreen = () => {
     setRepairing(true);
     try {
       const res = await fetch("/api/migrate_db.php");
-      if (res.ok) alert("v12.28 Hardened Schema Repair Successful!");
+      if (res.ok) alert("v12.29 Schema Repair Successful!");
       else throw new Error(`HTTP ${res.status}`);
     } catch (e) {
       alert("Repair Failed: " + e.message);
@@ -97,7 +97,7 @@ const DeploymentScreen = () => {
       const url = URL.createObjectURL(content);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "IITGEEPrep_Bundle_v12_28.zip";
+      link.download = "IITGEEPrep_Bundle_v12_29.zip";
       link.click();
     } catch (error) {
       console.error(error);
@@ -110,9 +110,9 @@ const DeploymentScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold", children: "Deployment Center" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-1 rounded-md bg-slate-700 border border-slate-600 text-xs font-mono text-cyan-400", children: "v12.28 (Latest)" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-1 rounded-md bg-slate-700 border border-slate-600 text-xs font-mono text-cyan-400", children: "v12.29 (Stable)" })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-lg", children: "Download the complete 38-endpoint hardened backend kit." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-lg", children: "Download the complete 38-endpoint master backend kit." })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex bg-slate-700/50 p-1 rounded-xl border border-slate-600/50", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setActiveTab("guide"), className: `px-6 py-2 rounded-lg text-sm font-bold ${activeTab === "guide" ? "bg-blue-600 text-white" : "text-slate-400"}`, children: "Guide" }),
@@ -152,35 +152,39 @@ const DeploymentScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "lg:col-span-2 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-xl font-bold text-slate-800 flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Package, { className: "text-blue-600" }),
-          " Update Instructions"
+          " Master Update Instructions"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("ol", { className: "space-y-4 text-slate-600 text-sm list-decimal pl-5", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
             "Download the ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "v12.28" }),
-            " Bundle using the sidebar action."
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "v12.29" }),
+            " Bundle using the sidebar action. This contains the full set of 38+ PHP files."
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
             "Extract and upload ",
             /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "deployment/api/*" }),
             " to your server's ",
             /* @__PURE__ */ jsxRuntimeExports.jsx("code", { children: "/api" }),
-            " folder."
+            " folder, replacing all existing files."
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
             "Use the ",
             /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Repair DB" }),
-            " tool above to synchronize any new schema changes."
+            " tool above to synchronize all necessary database columns and tables."
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: "Clear browser cache to see the latest frontend updates." })
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+            "Perform a ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "File Scan" }),
+            " to ensure every endpoint is reachable (OK status)."
+          ] })
         ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "lg:col-span-1 space-y-6", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-slate-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-xl font-bold mb-2", children: "Get Bundle" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-sm mb-6", children: "Complete v12.28 hardened backend kit including all 38 PHP APIs and SQL." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-xl font-bold mb-2", children: "Get Master Bundle" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-sm mb-6", children: "Complete v12.29 production kit including 38 PHP APIs and SQL schema." }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: downloadAllZip, disabled: isZipping, className: "w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl flex items-center justify-center transition-all disabled:opacity-50", children: [
           isZipping ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "animate-spin mr-2" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { className: "mr-2" }),
-          " Download v12.28 .zip"
+          " Download v12.29 .zip"
         ] })
       ] }) })
     ] })

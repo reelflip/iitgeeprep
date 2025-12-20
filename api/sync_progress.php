@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.34 - Sync Release
- * Complete Backend Suite - Synchronized & Hardened
+ * IITGEEPrep Pro Engine v12.35 - Persistence Core
+ * Full Production Backend Suite - Zero Partial Updates
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -45,5 +45,5 @@ $sql = "INSERT INTO user_progress (user_id, topic_id, status, last_revised, revi
         ON DUPLICATE KEY UPDATE status=VALUES(status), last_revised=VALUES(last_revised), revision_level=VALUES(revision_level), next_revision_date=VALUES(next_revision_date), solved_questions_json=VALUES(solved_questions_json)";
 $stmt = $conn->prepare($sql);
 $stmt->execute([$d->user_id, $d->topicId, $d->status, $d->lastRevised ?? null, $d->revisionLevel ?? 0, $d->nextRevisionDate ?? null, $solved]);
-echo json_encode(["status" => "success", "version" => "12.34"]);
+echo json_encode(["status" => "success", "version" => "12.35"]);
 ?>

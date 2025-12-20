@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.34 - Sync Release
- * Complete Backend Suite - Synchronized & Hardened
+ * IITGEEPrep Pro Engine v12.35 - Persistence Core
+ * Full Production Backend Suite - Zero Partial Updates
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -42,5 +42,5 @@ requireProps($d, ['user_id', 'new_password']);
 $hash = password_hash($d->new_password, PASSWORD_DEFAULT);
 $stmt = $conn->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
 $stmt->execute([$hash, $d->user_id]);
-echo json_encode(["status" => "success", "version" => "12.34"]);
+echo json_encode(["status" => "success", "version" => "12.35"]);
 ?>

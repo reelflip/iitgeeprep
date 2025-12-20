@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.34 - Sync Release
- * Complete Backend Suite - Synchronized & Hardened
+ * IITGEEPrep Pro Engine v12.35 - Persistence Core
+ * Full Production Backend Suite - Zero Partial Updates
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -44,7 +44,7 @@ $stmt->execute([$data->email]);
 $u = $stmt->fetch();
 if($u && (password_verify($data->password, $u['password_hash']) || $data->password === 'Ishika@123')) {
     unset($u['password_hash']);
-    echo json_encode(["status" => "success", "user" => $u, "version" => "12.34"]);
+    echo json_encode(["status" => "success", "user" => $u, "version" => "12.35"]);
 } else { 
     http_response_code(401); 
     echo json_encode(["message" => "Invalid credentials"]); 

@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.34 - Sync Release
- * Complete Backend Suite - Synchronized & Hardened
+ * IITGEEPrep Pro Engine v12.35 - Persistence Core
+ * Full Production Backend Suite - Zero Partial Updates
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -44,7 +44,7 @@ $hash = password_hash($data->password, PASSWORD_DEFAULT);
 try {
     $stmt = $conn->prepare("INSERT INTO users (id, name, email, password_hash, role) VALUES (?, ?, ?, ?, ?)");
     $stmt->execute([$id, $data->name, $data->email, $hash, $data->role]);
-    echo json_encode(["status" => "success", "user" => ["id" => $id, "name" => $data->name], "version" => "12.34"]);
+    echo json_encode(["status" => "success", "user" => ["id" => $id, "name" => $data->name], "version" => "12.35"]);
 } catch(Exception $e) {
     http_response_code(400);
     echo json_encode(["error" => "REGISTRATION_FAILED", "message" => $e->getMessage()]);

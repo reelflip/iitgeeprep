@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Pro Engine v12.34 - Sync Release
- * Complete Backend Suite - Synchronized & Hardened
+ * IITGEEPrep Pro Engine v12.35 - Persistence Core
+ * Full Production Backend Suite - Zero Partial Updates
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -43,5 +43,5 @@ $sql = "INSERT INTO test_attempts (id, user_id, test_id, title, score, total_mar
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
 $stmt->execute([$d->id, $d->user_id, $d->testId, $d->title, $d->score, $d->totalMarks, $d->accuracy_percent, $d->totalQuestions, $d->correctCount, $d->incorrectCount, $d->unattemptedCount, $d->topicId ?? null, json_encode($d->detailedResults)]);
-echo json_encode(["status" => "success", "version" => "12.34"]);
+echo json_encode(["status" => "success", "version" => "12.35"]);
 ?>

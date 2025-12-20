@@ -1,8 +1,18 @@
+# IITGEEPrep v13.2 Production Config
+# 1. Prioritize index.html for React Frontend
+DirectoryIndex index.html index.php
 
+# 2. Correct SPA Routing
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  RewriteRule ^index\.html$ - [L]
+  
+  # Allow /api/ to process PHP normally
+  RewriteCond %{REQUEST_URI} ^/api/.*$
+  RewriteRule ^(.*)$ - [L]
+
+  # Redirect all other non-file requests to index.html
+  RewriteRule ^index.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.html [L]

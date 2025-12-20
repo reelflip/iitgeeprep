@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, aB as ShieldCheck, a7 as RefreshCw, b4 as Play, B as Bot, L as LoaderCircle, b5 as ClipboardList, A as Activity, b0 as Sparkles, a6 as CircleCheck, aD as CircleX, ax as Database, b6 as Fingerprint, ai as Server, aA as Check, as as Lock, b7 as MousePointer2 } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, aB as ShieldCheck, a7 as RefreshCw, b5 as Play, B as Bot, L as LoaderCircle, b6 as ClipboardList, A as Activity, b0 as Sparkles, a6 as CircleCheck, aD as CircleX, ax as Database, b7 as Fingerprint, ai as Server, aA as Check, as as Lock, b8 as MousePointer2 } from "../vendor.js";
 import { A as API_FILES, L as LocalKnowledgeBase, E as E2ETestRunner } from "../shared-core.js";
 import { GoogleGenAI } from "@google/genai";
 var define_process_env_default = {};

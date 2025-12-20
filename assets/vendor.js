@@ -13112,6 +13112,24 @@ const FileCode = createLucideIcon("FileCode", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
+const FileJson = createLucideIcon("FileJson", [
+  ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
+  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
+  [
+    "path",
+    { d: "M10 12a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1 1 1 0 0 1 1 1v1a1 1 0 0 0 1 1", key: "1oajmo" }
+  ],
+  [
+    "path",
+    { d: "M14 18a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-1a1 1 0 0 0-1-1", key: "mpwhp6" }
+  ]
+]);
+/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
 const FilePlus = createLucideIcon("FilePlus", [
   ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
   ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
@@ -39816,39 +39834,40 @@ export {
   ChevronDown as b,
   Sparkles as b0,
   ChevronUp as b1,
-  Download as b2,
-  JSZip as b3,
-  Play as b4,
-  ClipboardList as b5,
-  Fingerprint as b6,
-  MousePointer2 as b7,
-  Award as b8,
-  Bell as b9,
-  ThumbsUp as ba,
-  Star as bb,
-  Pause as bc,
-  Camera as bd,
-  HeartPulse as be,
-  StickyNote as bf,
-  CirclePlay as bg,
-  RotateCcw as bh,
-  CalendarDays as bi,
-  Map$5 as bj,
-  SquareCheckBig as bk,
-  Flag as bl,
-  Briefcase as bm,
-  Moon as bn,
-  Sun as bo,
-  Coffee as bp,
-  Wind as bq,
-  Music as br,
-  CloudRain as bs,
-  Trees as bt,
-  Waves as bu,
-  Radio as bv,
-  Volume2 as bw,
-  clientExports as bx,
-  React$2 as by,
+  FileJson as b2,
+  Download as b3,
+  JSZip as b4,
+  Play as b5,
+  ClipboardList as b6,
+  Fingerprint as b7,
+  MousePointer2 as b8,
+  Award as b9,
+  Bell as ba,
+  ThumbsUp as bb,
+  Star as bc,
+  Pause as bd,
+  Camera as be,
+  HeartPulse as bf,
+  StickyNote as bg,
+  CirclePlay as bh,
+  RotateCcw as bi,
+  CalendarDays as bj,
+  Map$5 as bk,
+  SquareCheckBig as bl,
+  Flag as bm,
+  Briefcase as bn,
+  Moon as bo,
+  Sun as bp,
+  Coffee as bq,
+  Wind as br,
+  Music as bs,
+  CloudRain as bt,
+  Trees as bu,
+  Waves as bv,
+  Radio as bw,
+  Volume2 as bx,
+  clientExports as by,
+  React$2 as bz,
   BookOpen as c,
   ChevronLeft as d,
   ChevronRight as e,

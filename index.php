@@ -1,0 +1,1 @@
+<?php echo json_encode(["status" => "active", "version" => "13.1", "engine" => "Production Logic Hub"]); ?>

@@ -184,7 +184,25 @@ const App = () => {
           });
           setProgress(progMap);
         }
-        if (data.attempts) setTestAttempts(data.attempts.map((a) => ({ ...a, accuracy: Number(a.accuracy_percent || a.accuracy || 0), detailedResults: a.detailed_results ? JSON.parse(a.detailed_results) : [] })));
+        if (data.attempts) {
+          setTestAttempts(data.attempts.map((a) => ({
+            id: a.id,
+            date: a.date,
+            title: a.title,
+            score: Number(a.score),
+            totalMarks: Number(a.total_marks || a.totalMarks),
+            accuracy: Number(a.accuracy),
+            accuracy_percent: Number(a.accuracy),
+            testId: a.test_id || a.testId,
+            totalQuestions: Number(a.total_questions || a.totalQuestions),
+            correctCount: Number(a.correct_count || a.correctCount),
+            incorrectCount: Number(a.incorrect_count || a.incorrectCount),
+            unattemptedCount: Number(a.unattempted_count || a.unattemptedCount),
+            topicId: a.topic_id || a.topicId,
+            difficulty: a.difficulty,
+            detailedResults: a.detailed_results ? JSON.parse(a.detailed_results) : []
+          })));
+        }
         if (data.goals) setGoals(data.goals.map((g) => ({ ...g, completed: g.completed == 1 })));
         if (data.backlogs) setBacklogs(data.backlogs.map((b) => ({ ...b, status: b.status || "PENDING" })));
         if (data.mistakes) setMistakes(data.mistakes.map((m) => ({ ...m })));

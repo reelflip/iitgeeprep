@@ -109,7 +109,7 @@ const DeploymentScreen = () => {
     const report = {
       metadata: {
         timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-        version: "13.0 Ultimate Sync Core",
+        version: "v13.5 Ultimate Sync Core",
         totalFiles: API_FILES.length,
         dbStatus: dbTables.length > 0 ? "CONNECTED" : "DISCONNECTED"
       },
@@ -145,7 +145,7 @@ const DeploymentScreen = () => {
     try {
       const res = await fetch("/api/migrate_db.php");
       if (res.ok) {
-        alert("v13.0 Ultimate Sync Schema Verification Successful!");
+        alert("v13.5 Ultimate Sync Schema Verification Successful!");
         scanDatabase();
       } else throw new Error(`HTTP ${res.status}`);
     } catch (e) {
@@ -173,7 +173,7 @@ const DeploymentScreen = () => {
       const url = URL.createObjectURL(content);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "IITGEEPrep_Full_v13_0.zip";
+      link.download = "IITGEEPrep_Full_v13_5.zip";
       link.click();
     } catch (error) {
       alert("Zip creation failed.");
@@ -192,9 +192,9 @@ const DeploymentScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold", children: "Deployment Center" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-1 rounded-md bg-blue-600 text-xs font-mono text-white animate-pulse uppercase tracking-widest", children: "v13.0 MASTER SYNC" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2 py-1 rounded-md bg-blue-600 text-xs font-mono text-white animate-pulse uppercase tracking-widest", children: "v13.5 MASTER SYNC" })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-lg", children: "Platform-wide synchronization for 38 endpoints and v13.0 SQL schema." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-lg", children: "Platform-wide synchronization for 38 endpoints and v13.5 SQL schema." })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex bg-slate-700/50 p-1 rounded-xl border border-slate-600/50", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setActiveTab("guide"), className: `px-6 py-2 rounded-lg text-sm font-bold ${activeTab === "guide" ? "bg-blue-600 text-white" : "text-slate-400"}`, children: "Guide" }),
@@ -209,7 +209,7 @@ const DeploymentScreen = () => {
               /* @__PURE__ */ jsxRuntimeExports.jsx(Database, { className: "text-blue-500", size: 20 }),
               " Database Sync Tracker"
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-slate-500", children: "Checking v13.0 schema compliance across 26 tables." })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-slate-500", children: "Checking v13.5 schema compliance across 26 tables." })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 w-full md:w-auto", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: runDbRepair, disabled: repairing, className: "flex-1 md:flex-none bg-slate-800 hover:bg-black text-white px-6 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50", children: [
@@ -287,13 +287,13 @@ const DeploymentScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "lg:col-span-2 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-xl font-bold text-slate-800 flex items-center gap-2 text-blue-600", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "animate-pulse" }),
-          " Master Synchronization Guide (v13.0)"
+          " Master Synchronization Guide (v13.5)"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-600 text-sm leading-relaxed", children: "System v13.0 ensures 100% synchronization. This is the production-ready build for Hostinger." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-600 text-sm leading-relaxed", children: "System v13.5 ensures 100% synchronization. This is the production-ready build for Hostinger." }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("ol", { className: "space-y-4 text-slate-600 text-sm list-decimal pl-5", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
             "Download the ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "v13.0 Ultimate Sync Bundle" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "v13.5 Ultimate Sync Bundle" }),
             "."
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
@@ -303,7 +303,7 @@ const DeploymentScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
             "Run ",
             /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: "Repair Schema" }),
-            " to initialize the v13.0 SQL structure."
+            " to initialize the v13.5 SQL structure."
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
             "Perform a ",
@@ -314,10 +314,10 @@ const DeploymentScreen = () => {
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "lg:col-span-1 space-y-6", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-blue-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden flex flex-col h-full", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-xl font-bold mb-2", children: "Ultimate Sync Bundle" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-200 text-sm mb-6 flex-1", children: "38 Synchronized PHP APIs and v13.0 SQL Schema." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-blue-200 text-sm mb-6 flex-1", children: "38 Synchronized PHP APIs and v13.5 SQL Schema." }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: downloadAllZip, disabled: isZipping, className: "w-full bg-white text-blue-900 font-black py-3 rounded-xl flex items-center justify-center transition-all disabled:opacity-50", children: [
           isZipping ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "animate-spin mr-2" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { className: "mr-2" }),
-          " Download v13.0"
+          " Download v13.5"
         ] })
       ] }) })
     ] })

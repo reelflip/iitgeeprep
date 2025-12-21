@@ -12958,7 +12958,7 @@ const CircleX = createLucideIcon("CircleX", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const ClipboardList = createLucideIcon("ClipboardList", [
+const ClipboardCheck = createLucideIcon("ClipboardCheck", [
   ["rect", { width: "8", height: "4", x: "8", y: "2", rx: "1", ry: "1", key: "tgr4d6" }],
   [
     "path",
@@ -12967,10 +12967,7 @@ const ClipboardList = createLucideIcon("ClipboardList", [
       key: "116196"
     }
   ],
-  ["path", { d: "M12 11h4", key: "1jrz19" }],
-  ["path", { d: "M12 16h4", key: "n85exb" }],
-  ["path", { d: "M8 11h.01", key: "1dfujw" }],
-  ["path", { d: "M8 16h.01", key: "18s6g9" }]
+  ["path", { d: "m9 14 2 2 4-4", key: "df797q" }]
 ]);
 /**
  * @license lucide-react v0.468.0 - ISC
@@ -13159,23 +13156,6 @@ const FileWarning = createLucideIcon("FileWarning", [
   ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
   ["path", { d: "M12 9v4", key: "juzpu7" }],
   ["path", { d: "M12 17h.01", key: "p32p05" }]
-]);
-/**
- * @license lucide-react v0.468.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const Fingerprint = createLucideIcon("Fingerprint", [
-  ["path", { d: "M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4", key: "1nerag" }],
-  ["path", { d: "M14 13.12c0 2.38 0 6.38-1 8.88", key: "o46ks0" }],
-  ["path", { d: "M17.29 21.02c.12-.6.43-2.3.5-3.02", key: "ptglia" }],
-  ["path", { d: "M2 12a10 10 0 0 1 18-6", key: "ydlgp0" }],
-  ["path", { d: "M2 16h.01", key: "1gqxmh" }],
-  ["path", { d: "M21.8 16c.2-2 .131-5.354 0-6", key: "drycrb" }],
-  ["path", { d: "M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2", key: "1tidbn" }],
-  ["path", { d: "M8.65 22c.21-.66.45-1.32.57-2", key: "13wd9y" }],
-  ["path", { d: "M9 6.8a6 6 0 0 1 9 5.2v2", key: "1fr1j5" }]
 ]);
 /**
  * @license lucide-react v0.468.0 - ISC
@@ -13631,21 +13611,6 @@ const Moon = createLucideIcon("Moon", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const MousePointer2 = createLucideIcon("MousePointer2", [
-  [
-    "path",
-    {
-      d: "M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z",
-      key: "edeuup"
-    }
-  ]
-]);
-/**
- * @license lucide-react v0.468.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
 const Music = createLucideIcon("Music", [
   ["path", { d: "M9 18V5l12-2v13", key: "1jmyc2" }],
   ["circle", { cx: "6", cy: "18", r: "3", key: "fqmcym" }],
@@ -13866,6 +13831,36 @@ const Settings = createLucideIcon("Settings", [
     }
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
+]);
+/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const Share2 = createLucideIcon("Share2", [
+  ["circle", { cx: "18", cy: "5", r: "3", key: "gq8acd" }],
+  ["circle", { cx: "6", cy: "12", r: "3", key: "w7nqdw" }],
+  ["circle", { cx: "18", cy: "19", r: "3", key: "1xt0gg" }],
+  ["line", { x1: "8.59", x2: "15.42", y1: "13.51", y2: "17.49", key: "47mynk" }],
+  ["line", { x1: "15.41", x2: "8.59", y1: "6.51", y2: "10.49", key: "1n3mei" }]
+]);
+/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const ShieldAlert = createLucideIcon("ShieldAlert", [
+  [
+    "path",
+    {
+      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+      key: "oel41y"
+    }
+  ],
+  ["path", { d: "M12 8v4", key: "1got3b" }],
+  ["path", { d: "M12 16h.01", key: "1drbdi" }]
 ]);
 /**
  * @license lucide-react v0.468.0 - ISC
@@ -39837,15 +39832,15 @@ export {
   FileJson as b2,
   Download as b3,
   JSZip as b4,
-  Play as b5,
-  ClipboardList as b6,
-  Fingerprint as b7,
-  MousePointer2 as b8,
-  Award as b9,
-  Bell as ba,
-  ThumbsUp as bb,
-  Star as bc,
-  Pause as bd,
+  ClipboardCheck as b5,
+  Share2 as b6,
+  ShieldAlert as b7,
+  Award as b8,
+  Bell as b9,
+  ThumbsUp as ba,
+  Star as bb,
+  Pause as bc,
+  Play as bd,
   Camera as be,
   HeartPulse as bf,
   StickyNote as bg,

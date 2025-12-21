@@ -4,7 +4,7 @@ import { N as Navigation, M as MobileNavigation } from "./components/Navigation.
 import { A as AITutorChat } from "./components/AITutorChat.js";
 import { P as PublicLayout } from "./components/PublicLayout.js";
 import { S as SyncStatusBadge } from "./components/SyncStatusBadge.js";
-import { d as generateInitialQuestionBank, M as MOCK_TESTS_DATA, S as SYLLABUS_DATA, e as calculateNextRevision } from "./shared-core.js";
+import { e as generateInitialQuestionBank, M as MOCK_TESTS_DATA, S as SYLLABUS_DATA, h as calculateNextRevision } from "./shared-core.js";
 (function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -139,7 +139,7 @@ const AdminBlogScreen = reactExports.lazy(() => __vitePreload(() => import("./sc
 const PublicBlogScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/PublicBlogScreen.js"), true ? __vite__mapDeps([37,1]) : void 0).then((m) => ({ default: m.PublicBlogScreen })));
 const LoadingView = () => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center justify-center min-h-[60vh] text-slate-400", children: [
   /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-10 h-10 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin mb-4" }),
-  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-bold uppercase tracking-widest text-slate-500", children: "Synchronizing v13.0 Core..." })
+  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-bold uppercase tracking-widest text-slate-500", children: "Synchronizing v13.5 Core..." })
 ] });
 const App = () => {
   const [user, setUser] = reactExports.useState(() => {

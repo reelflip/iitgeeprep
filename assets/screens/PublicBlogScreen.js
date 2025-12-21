@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, b6 as ArrowLeft, as as Tag, U as User, i as Calendar } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, b4 as ArrowLeft, as as Tag, U as User, i as Calendar } from "../vendor.js";
 const PublicBlogScreen = ({ blogs, onBack }) => {
   const [selectedPost, setSelectedPost] = reactExports.useState(null);
   if (selectedPost) {

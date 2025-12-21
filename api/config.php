@@ -1,7 +1,7 @@
 <?php
 $host = "localhost";
 $db_name = "u131922718_iitgeedb2";
-$user = "u131922718_iitgeedb2_user";
+$username = "u131922718_iitgeedb2_user";
 $pass = "lU5/8@e~fy";
 
 $conn = null;

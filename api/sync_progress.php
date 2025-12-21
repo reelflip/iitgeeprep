@@ -37,14 +37,30 @@ function sendSuccess($data = []) {
     exit;
 }
 
-// Business Logic for sync_progress.php
-if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
+if(!$conn) sendError("DATABASE_OFFLINE", 500);
+$input = getJsonInput();
+if(!$input || !isset($input->userId)) sendError("MISSING_DATA");
 
-$input = null;
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $input = getJsonInput();
-    if(!$input) sendError("INVALID_JSON_INPUT", 400);
-}
+try {
+    $sql = "INSERT INTO user_progress (user_id, topic_id, status, last_revised, revision_level, next_revision_date, solved_questions_json) 
+            VALUES (:uid, :tid, :status, :lr, :rl, :nrd, :sqj) 
+            ON DUPLICATE KEY UPDATE 
+            status = VALUES(status), 
+            last_revised = VALUES(last_revised), 
+            revision_level = VALUES(revision_level), 
+            next_revision_date = VALUES(next_revision_date),
+            solved_questions_json = VALUES(solved_questions_json)";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        ':uid' => $input->userId,
+        ':tid' => $input->topicId,
+        ':status' => $input->status,
+        ':lr' => $input->lastRevised ?? null,
+        ':rl' => $input->revisionLevel ?? 0,
+        ':nrd' => $input->nextRevisionDate ?? null,
+        ':sqj' => isset($input->solvedQuestions) ? json_encode($input->solvedQuestions) : null
+    ]);
 
-// TODO: Implement specific logic for sync_progress.php
-sendSuccess(["info" => "Endpoint Active", "method" => $_SERVER['REQUEST_METHOD']]);
+    sendSuccess();
+} catch(Exception $e) { sendError($e->getMessage(), 500); }

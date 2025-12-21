@@ -37,14 +37,26 @@ function sendSuccess($data = []) {
     exit;
 }
 
-// Business Logic for login.php
-if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
+if(!$conn) sendError("DATABASE_OFFLINE", 500);
+$input = getJsonInput();
+if(!$input || !isset($input->email) || !isset($input->password)) sendError("MISSING_CREDENTIALS");
 
-$input = null;
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $input = getJsonInput();
-    if(!$input) sendError("INVALID_JSON_INPUT", 400);
-}
+try {
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->execute([$input->email]);
+    $user = $stmt->fetch();
 
-// TODO: Implement specific logic for login.php
-sendSuccess(["info" => "Endpoint Active", "method" => $_SERVER['REQUEST_METHOD']]);
+    if(!$user || !password_verify($input->password, $user['password_hash'])) {
+        sendError("INVALID_CREDENTIALS", 401);
+    }
+
+    // Clean sensitive data
+    unset($user['password_hash']);
+    
+    // Map DB names to Frontend names
+    $user['targetExam'] = $user['target_exam'];
+    $user['targetYear'] = $user['target_year'];
+    $user['isVerified'] = (bool)$user['is_verified'];
+
+    sendSuccess(["user" => $user]);
+} catch(Exception $e) { sendError($e->getMessage(), 500); }

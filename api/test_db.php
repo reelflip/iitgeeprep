@@ -46,5 +46,5 @@ try {
         $countStmt = $conn->query("SELECT COUNT(*) FROM `$name`");
         $tables[] = ["name" => $name, "rows" => (int)$countStmt->fetchColumn()];
     }
-    sendSuccess(["engine" => "MySQL", "tables" => $tables]);
+    sendSuccess(["status" => "CONNECTED", "engine" => "MySQL", "tables" => $tables]);
 } catch (Exception $e) { sendError("QUERY_FAILED", 500, $e->getMessage()); }

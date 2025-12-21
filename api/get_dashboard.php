@@ -37,14 +37,35 @@ function sendSuccess($data = []) {
     exit;
 }
 
-// Business Logic for get_dashboard.php
-if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
+if(!$conn) sendError("DATABASE_OFFLINE", 500);
+$user_id = $_GET['user_id'] ?? null;
+if(!$user_id) sendError("MISSING_USER_ID");
 
-$input = null;
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $input = getJsonInput();
-    if(!$input) sendError("INVALID_JSON_INPUT", 400);
-}
+try {
+    // 1. Progress
+    $stmt = $conn->prepare("SELECT * FROM user_progress WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    $progress = $stmt->fetchAll();
 
-// TODO: Implement specific logic for get_dashboard.php
-sendSuccess(["info" => "Endpoint Active", "method" => $_SERVER['REQUEST_METHOD']]);
+    // 2. Test Attempts
+    $stmt = $conn->prepare("SELECT * FROM test_attempts WHERE user_id = ? ORDER BY date DESC LIMIT 20");
+    $stmt->execute([$user_id]);
+    $attempts = $stmt->fetchAll();
+
+    // 3. Goals
+    $stmt = $conn->prepare("SELECT * FROM goals WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    $goals = $stmt->fetchAll();
+
+    // 4. Backlogs
+    $stmt = $conn->prepare("SELECT * FROM backlogs WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    $backlogs = $stmt->fetchAll();
+
+    sendSuccess([
+        "progress" => $progress,
+        "attempts" => $attempts,
+        "goals" => $goals,
+        "backlogs" => $backlogs
+    ]);
+} catch(Exception $e) { sendError($e->getMessage(), 500); }

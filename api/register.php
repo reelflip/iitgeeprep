@@ -37,14 +37,35 @@ function sendSuccess($data = []) {
     exit;
 }
 
-// Business Logic for register.php
-if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
+if(!$conn) sendError("DATABASE_OFFLINE", 500);
+$input = getJsonInput();
+if(!$input || !isset($input->email) || !isset($input->password)) sendError("MISSING_CREDENTIALS");
 
-$input = null;
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $input = getJsonInput();
-    if(!$input) sendError("INVALID_JSON_INPUT", 400);
-}
+try {
+    // Check for existing
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $stmt->execute([$input->email]);
+    if($stmt->fetch()) sendError("EMAIL_ALREADY_EXISTS");
 
-// TODO: Implement specific logic for register.php
-sendSuccess(["info" => "Endpoint Active", "method" => $_SERVER['REQUEST_METHOD']]);
+    $id = bin2hex(random_bytes(4)); // Short 8-char ID
+    $hash = password_hash($input->password, PASSWORD_DEFAULT);
+    
+    $sql = "INSERT INTO users (id, name, email, password_hash, role, institute, target_exam, target_year, dob, gender) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        $id,
+        $input->name ?? 'Student',
+        $input->email,
+        $hash,
+        $input->role ?? 'STUDENT',
+        $input->institute ?? null,
+        $input->targetExam ?? null,
+        $input->targetYear ?? null,
+        $input->dob ?? null,
+        $input->gender ?? null
+    ]);
+
+    sendSuccess(["id" => $id]);
+} catch(Exception $e) { sendError($e->getMessage(), 500); }

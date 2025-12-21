@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, aB as ShieldCheck, a7 as RefreshCw, b5 as Play, b3 as Download, aC as Shield, a6 as CircleCheck, aD as CircleX, b6 as Circle, Z as Zap, b7 as ShieldAlert, ax as Database, b8 as Wrench, aA as Check, b9 as ClipboardList, b0 as Sparkles, B as Bot, ba as Share2 } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, aB as ShieldCheck, a7 as RefreshCw, b5 as Play, b3 as Download, aC as Shield, a6 as CircleCheck, aD as CircleX, b6 as Circle, Z as Zap, b2 as FileJson, b7 as ShieldAlert, ax as Database, b8 as Wrench, aA as Check, b9 as ClipboardList, b0 as Sparkles, B as Bot, ba as Share2 } from "../vendor.js";
 import { c as CATEGORY_MAP, E as E2ETestRunner } from "../shared-core.js";
 import { GoogleGenAI } from "@google/genai";
 var define_process_env_default = {};
@@ -47,6 +47,10 @@ const DiagnosticsScreen = () => {
     setIsGating(false);
     fetchDbStatus();
   };
+  const exportGateReport = () => {
+    const runner = initRunner();
+    runner.exportGateReport(gateChecks);
+  };
   const runMasterAudit = async () => {
     if (!gatePassed) {
       alert("Please complete the Database Pre-Check Gate first.");
@@ -93,14 +97,8 @@ const DiagnosticsScreen = () => {
   const generateAIReport = async () => {
     if (isAnalyzing || results.length === 0) return;
     setIsAnalyzing(true);
-    const apiKey = define_process_env_default.API_KEY;
-    if (!apiKey || apiKey === "undefined") {
-      setAnalysisReport("### API KEY MISSING\nPlease configure an API key in system settings to use live AI diagnostics.");
-      setIsAnalyzing(false);
-      return;
-    }
     try {
-      const ai = new GoogleGenAI({ apiKey });
+      const ai = new GoogleGenAI({ apiKey: define_process_env_default.API_KEY });
       const failures = results.filter((r) => r.status === "FAIL").map((r) => `[${r.id}] ${r.description}: ${r.details}`).join("\n");
       const prompt = `Act as a Senior SRE. Analyze these diagnostic results: 121 TOTAL, ${results.filter((r) => r.status === "FAIL").length} FAILED.
             Failures list:
@@ -109,7 +107,9 @@ ${failures}
       const response = await ai.models.generateContent({
         model: "gemini-3-pro-preview",
         contents: prompt,
-        config: { systemInstruction: "Expert System Reliability Engineer." }
+        config: {
+          systemInstruction: "Expert System Reliability Engineer."
+        }
       });
       setAnalysisReport(response.text || "Report empty.");
     } catch (error) {
@@ -122,6 +122,7 @@ ${error.message}`);
   };
   const currentResults = results.filter((r) => r.category === activeTab);
   const progressPercent = Math.round(results.length / 121 * 100);
+  const gateHasRun = Object.values(gateChecks).some((c) => c.status !== "PENDING");
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6 max-w-7xl mx-auto pb-24 animate-in fade-in", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-2xl border border-slate-800 relative overflow-hidden", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8", children: [
@@ -171,18 +172,32 @@ ${error.message}`);
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-bold text-slate-400 uppercase", children: check.msg })
               ] })
             ] }) }, check.id)),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              "button",
-              {
-                onClick: runGateCheck,
-                disabled: isGating,
-                className: "w-full mt-4 bg-slate-900 hover:bg-black text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95",
-                children: [
-                  isGating ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "w-4 h-4 animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "w-4 h-4" }),
-                  "Initialize DB Checker"
-                ]
-              }
-            )
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 gap-2 mt-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  onClick: runGateCheck,
+                  disabled: isGating,
+                  className: "w-full bg-slate-900 hover:bg-black text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95",
+                  children: [
+                    isGating ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: "w-4 h-4 animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "w-4 h-4" }),
+                    "Initialize DB Checker"
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  onClick: exportGateReport,
+                  disabled: !gateHasRun || isGating,
+                  className: "w-full bg-slate-50 hover:bg-slate-100 text-slate-600 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all border border-slate-200 disabled:opacity-50",
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(FileJson, { className: "w-4 h-4" }),
+                    "Export Gate JSON"
+                  ]
+                }
+              )
+            ] })
           ] }),
           !gatePassed && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-6 pb-6 pt-2", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9px] font-black text-rose-600 bg-rose-50 p-3 rounded-xl border border-rose-100 uppercase tracking-widest leading-relaxed", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldAlert, { className: "inline-block w-3 h-3 mr-1 mb-0.5" }),

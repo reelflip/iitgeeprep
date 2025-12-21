@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, bj as CalendarDays, a_ as Clock, bk as Map, a7 as RefreshCw, a6 as CircleCheck, ae as Save, bl as SquareCheckBig, bm as Flag, c as BookOpen, bn as Briefcase, bo as Moon, Z as Zap, i as Calendar, bp as Sun, bq as Coffee, R as RotateCw, l as Layers, P as PenTool, a as Brain } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, bl as CalendarDays, a_ as Clock, bm as Map, a7 as RefreshCw, a6 as CircleCheck, ae as Save, bn as SquareCheckBig, bo as Flag, c as BookOpen, bp as Briefcase, bq as Moon, Z as Zap, i as Calendar, br as Sun, bs as Coffee, R as RotateCw, l as Layers, P as PenTool, a as Brain } from "../vendor.js";
 import { S as SYLLABUS_DATA } from "../shared-core.js";
 const TimetableScreen = ({ user, savedConfig, savedSlots, onSave, progress }) => {
   const [viewMode, setViewMode] = reactExports.useState("DAILY");

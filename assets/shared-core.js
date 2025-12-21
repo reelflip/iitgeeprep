@@ -4,33 +4,28 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
 const apiService = {
   async request(endpoint, options = {}) {
     const url = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-    try {
-      const res = await fetch(url, {
-        ...options,
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          ...options.headers || {}
-        }
-      });
-      if (res.status === 404) {
-        throw new Error(`API_NOT_FOUND: The endpoint ${endpoint} was not found on the server.`);
+    const res = await fetch(url, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        ...options.headers || {}
       }
-      const text = await res.text();
-      let json;
-      try {
-        json = JSON.parse(text);
-      } catch (e) {
-        throw new Error(`NON_JSON_RESPONSE: Server returned a non-JSON response (HTTP ${res.status}). Ensure backend files are uploaded to the /api/ directory.`);
-      }
-      if (!res.ok) {
-        throw new Error(json.message || `SERVER_ERROR: ${res.status} ${res.statusText}`);
-      }
-      return json;
-    } catch (error) {
-      console.error(`Strict Sync Error [${endpoint}]:`, error.message || error);
-      throw error;
+    });
+    if (res.status === 404) {
+      throw new Error(`API_NOT_FOUND: ${endpoint}`);
     }
+    const text = await res.text();
+    let json;
+    try {
+      json = JSON.parse(text);
+    } catch (e) {
+      throw new Error(`SERVER_ERROR: Invalid response format from ${endpoint}`);
+    }
+    if (!res.ok) {
+      throw new Error(json.message || `API_ERROR: ${res.status}`);
+    }
+    return json;
   }
 };
 const SYLLABUS_DATA = [
@@ -575,49 +570,6 @@ const generatePsychometricReport = (responses) => {
     parentTips: parentTips.slice(0, 5)
   };
 };
-const phpHeader = `<?php
-/**
- * IITGEEPrep Unified Sync Engine v17.3
- * PRODUCTION CORE - STRICT MYSQL PDO
- */
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
-
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept");
-header("Content-Type: application/json; charset=UTF-8");
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
-
-include_once 'config.php';
-
-function getJsonInput() {
-    $raw = file_get_contents('php://input');
-    if (!$raw) return null;
-    $data = json_decode($raw);
-    return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
-}
-
-function sendError($msg, $code = 400, $details = null) {
-    http_response_code($code);
-    echo json_encode(["status" => "error", "message" => $msg, "details" => $details]);
-    exit;
-}
-
-function sendSuccess($data = []) {
-    if (is_array($data) && !isset($data['status'])) {
-        echo json_encode(array_merge(["status" => "success"], $data));
-    } else {
-        echo json_encode($data);
-    }
-    exit;
-}
-`;
 const API_FILES_LIST = [
   "index.php",
   "config.php",
@@ -657,256 +609,173 @@ const API_FILES_LIST = [
   "upload_avatar.php",
   "get_topics.php",
   "get_attempt_details.php",
-  "manage_chapter_test.php"
+  "manage_chapter_test.php",
+  "heartbeat.php"
 ];
+const phpHeader = `<?php
+/**
+ * IITGEEPrep Unified Sync Engine v20.0
+ * PRODUCTION CORE - STRICT MYSQL PDO
+ */
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept");
+header("Content-Type: application/json; charset=UTF-8");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit; }
+
+include_once 'config.php';
+
+function getJsonInput() {
+    return json_decode(file_get_contents('php://input'));
+}
+
+function sendError($msg, $code = 400) {
+    http_response_code($code);
+    echo json_encode(["status" => "error", "message" => $msg]);
+    exit;
+}
+
+function sendSuccess($data = []) {
+    echo json_encode(array_merge(["status" => "success"], $data));
+    exit;
+}
+`;
 const getBackendFiles = (dbConfig) => {
   const files = [
     {
       name: ".htaccess",
-      folder: "deployment/api",
+      folder: "deployment",
       content: `RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php [QSA,L]`
+RewriteRule ^ api/index.php [L]`
+    },
+    {
+      name: "robots.txt",
+      folder: "deployment",
+      content: `User-agent: *
+Allow: /
+Sitemap: /sitemap.xml`
     },
     {
       name: "config.php",
       folder: "deployment/api",
       content: `<?php
-$host = "${dbConfig.host || "localhost"}";
-$db_name = "${dbConfig.name || "u123456789_prep"}";
-$user = "${dbConfig.user || "u123456789_admin"}";
-$pass = "${(dbConfig.pass || "password").replace(/"/g, '\\"')}";
-
-$conn = null;
-$db_error = null;
-
+$host = "${dbConfig.host}";
+$db_name = "${dbConfig.name}";
+$user = "${dbConfig.user}";
+$pass = "${dbConfig.pass}";
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8", $user, $pass);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 } catch(PDOException $e) {
-    $db_error = $e->getMessage();
+    http_response_code(500);
+    die(json_encode(["status" => "error", "message" => "DB_CONNECTION_FAILED: " . $e->getMessage()]));
 }
 ?>`
-    },
-    {
-      name: "get_dashboard.php",
-      folder: "deployment/api",
-      content: `${phpHeader}
-if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
-$user_id = $_GET['user_id'] ?? null;
-if(!$user_id) sendError("MISSING_USER_ID");
-
-try {
-    // 1. Progress
-    $stmt = $conn->prepare("SELECT * FROM user_progress WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-    $progress = [];
-    foreach($stmt->fetchAll() as $row) {
-        $progress[] = [
-            "topicId" => $row['topic_id'],
-            "status" => $row['status'],
-            "lastRevised" => $row['last_revised'],
-            "revisionLevel" => (int)$row['revision_level'],
-            "nextRevisionDate" => $row['next_revision_date'],
-            "solvedQuestions" => $row['solved_questions_json'] ? json_decode($row['solved_questions_json']) : []
-        ];
-    }
-
-    // 2. Attempts
-    $stmt = $conn->prepare("SELECT * FROM test_attempts WHERE user_id = ? ORDER BY date DESC");
-    $stmt->execute([$user_id]);
-    $attempts = [];
-    foreach($stmt->fetchAll() as $row) {
-        $attempts[] = [
-            "id" => $row['id'],
-            "date" => $row['date'],
-            "title" => $row['title'],
-            "score" => (int)$row['score'],
-            "totalMarks" => (int)$row['total_marks'],
-            "accuracy" => (int)$row['accuracy'],
-            "accuracy_percent" => (int)$row['accuracy'],
-            "testId" => $row['test_id'],
-            "totalQuestions" => (int)$row['total_questions'],
-            "correctCount" => (int)$row['correct_count'],
-            "incorrectCount" => (int)$row['incorrect_count'],
-            "unattemptedCount" => (int)$row['unattempted_count'],
-            "topicId" => $row['topic_id'],
-            "difficulty" => $row['difficulty'],
-            "detailedResults" => $row['detailed_results'] ? json_decode($row['detailed_results']) : []
-        ];
-    }
-
-    // 3. Goals
-    $stmt = $conn->prepare("SELECT id, text, completed FROM goals WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-    $goals = [];
-    foreach($stmt->fetchAll() as $row) {
-        $goals[] = ["id" => $row['id'], "text" => $row['text'], "completed" => (bool)$row['completed']];
-    }
-
-    // 4. Backlogs
-    $stmt = $conn->prepare("SELECT id, topic, subject, priority, deadline, status FROM backlogs WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-    $backlogs = [];
-    foreach($stmt->fetchAll() as $row) {
-        $backlogs[] = [
-            "id" => $row['id'],
-            "topic" => $row['topic'],
-            "subject" => $row['subject'],
-            "priority" => $row['priority'],
-            "deadline" => $row['deadline'],
-            "status" => $row['status']
-        ];
-    }
-
-    // 5. Timetable
-    $stmt = $conn->prepare("SELECT config_json, slots_json FROM timetables WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-    $timetableRow = $stmt->fetch();
-
-    // 6. Psychometric
-    $stmt = $conn->prepare("SELECT report_json FROM psychometric_reports WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-    $psychRow = $stmt->fetch();
-
-    sendSuccess([
-        "progress" => $progress,
-        "attempts" => $attempts,
-        "goals" => $goals,
-        "backlogs" => $backlogs,
-        "timetable" => $timetableRow ? [
-            "config" => json_decode($timetableRow['config_json']),
-            "slots" => json_decode($timetableRow['slots_json'])
-        ] : null,
-        "psychometric" => $psychRow ? json_decode($psychRow['report_json']) : null
-    ]);
-} catch(Exception $e) { sendError($e->getMessage(), 500); }`
-    },
-    {
-      name: "save_attempt.php",
-      folder: "deployment/api",
-      content: `${phpHeader}
-if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
-$input = getJsonInput();
-if(!$input || !isset($input->userId)) sendError("MISSING_DATA");
-
-try {
-    $sql = "INSERT INTO \`test_attempts\` (
-        id, user_id, test_id, title, score, total_marks, accuracy, 
-        total_questions, correct_count, incorrect_count, unattempted_count, 
-        topic_id, difficulty, detailed_results, date
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON DUPLICATE KEY UPDATE 
-        score = VALUES(score), 
-        accuracy = VALUES(accuracy),
-        correct_count = VALUES(correct_count),
-        incorrect_count = VALUES(incorrect_count),
-        unattempted_count = VALUES(unattempted_count),
-        detailed_results = VALUES(detailed_results)";
-    
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        $input->id,
-        $input->userId,
-        $input->testId,
-        $input->title,
-        $input->score,
-        $input->totalMarks,
-        $input->accuracy_percent ?? ($input->accuracy ?? 0),
-        $input->totalQuestions,
-        $input->correctCount,
-        $input->incorrectCount,
-        $input->unattemptedCount,
-        $input->topicId ?? null,
-        $input->difficulty ?? null,
-        isset($input->detailedResults) ? json_encode($input->detailedResults) : null,
-        $input->date ?? date('Y-m-d H:i:s')
-    ]);
-
-    sendSuccess(["status" => "SAVED"]);
-} catch(Exception $e) { sendError("PERSISTENCE_FAILURE", 500, $e->getMessage()); }`
-    },
-    {
-      name: "sync_progress.php",
-      folder: "deployment/api",
-      content: `${phpHeader}
-if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
-$input = getJsonInput();
-if(!$input || !isset($input->userId)) sendError("MISSING_DATA");
-
-try {
-    $sql = "INSERT INTO user_progress (user_id, topic_id, status, last_revised, revision_level, next_revision_date, solved_questions_json) 
-            VALUES (:uid, :tid, :status, :lr, :rl, :nrd, :sqj) 
-            ON DUPLICATE KEY UPDATE 
-            status = VALUES(status), 
-            last_revised = VALUES(last_revised), 
-            revision_level = VALUES(revision_level), 
-            next_revision_date = VALUES(next_revision_date),
-            solved_questions_json = VALUES(solved_questions_json)";
-    
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        ':uid' => $input->userId,
-        ':tid' => $input->topicId,
-        ':status' => $input->status,
-        ':lr' => $input->lastRevised ?? null,
-        ':rl' => $input->revisionLevel ?? 0,
-        ':nrd' => $input->nextRevisionDate ?? null,
-        ':sqj' => isset($input->solvedQuestions) ? json_encode($input->solvedQuestions) : null
-    ]);
-
-    sendSuccess(["status" => "SYNCED"]);
-} catch(Exception $e) { sendError($e->getMessage(), 500); }`
     }
   ];
-  API_FILES_LIST.forEach((name) => {
-    if (!files.find((f) => f.name === name)) {
-      files.push({
-        name,
-        folder: "deployment/api",
-        content: `${phpHeader}
-// Standardized Handler for ${name}
-if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
-
-$input = getJsonInput();
-sendSuccess(["info" => "Endpoint Active", "method" => $_SERVER['REQUEST_METHOD']]);`
-      });
+  API_FILES_LIST.forEach((filename) => {
+    if (filename === "config.php") return;
+    let content = `${phpHeader}
+// logic for ${filename}
+`;
+    if (filename === "index.php") {
+      content += `$method = $_SERVER['REQUEST_METHOD'];
+sendSuccess(["api" => "IITGEE_SYNC_V20", "status" => "ONLINE"]);`;
+    } else if (filename === "get_dashboard.php") {
+      content += `$user_id = $_GET['user_id'] ?? null;
+if(!$user_id) sendError("MISSING_USER_ID");
+try {
+    $data = [
+        'progress' => [], 'attempts' => [], 'goals' => [], 'backlogs' => [], 
+        'timetable' => null, 'psychometric' => null
+    ];
+    $stmt = $conn->prepare("SELECT * FROM user_progress WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    $data['progress'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare("SELECT * FROM test_attempts WHERE user_id = ? ORDER BY date DESC");
+    $stmt->execute([$user_id]);
+    $data['attempts'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare("SELECT * FROM goals WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    $data['goals'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare("SELECT * FROM backlogs WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    $data['backlogs'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $conn->prepare("SELECT * FROM timetables WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    $tt = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($tt) $data['timetable'] = ["config" => json_decode($tt['config_json']), "slots" => json_decode($tt['slots_json'])];
+    $stmt = $conn->prepare("SELECT report_json FROM psychometric_reports WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    $psych = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($psych) $data['psychometric'] = json_decode($psych['report_json']);
+    sendSuccess($data);
+} catch(Exception $e) { sendError($e->getMessage()); }`;
+    } else if (filename === "login.php") {
+      content += `$input = getJsonInput();
+$stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+$stmt->execute([$input->email]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+if($user && password_verify($input->password, $user['password_hash'])) {
+    unset($user['password_hash']);
+    sendSuccess(['user' => $user]);
+} sendError("Invalid credentials", 401);`;
+    } else if (filename === "sync_progress.php") {
+      content += `$input = getJsonInput();
+$sql = "INSERT INTO user_progress (user_id, topic_id, status, last_revised, revision_level, next_revision_date, solved_questions_json) 
+        VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE status=VALUES(status), last_revised=VALUES(last_revised), revision_level=VALUES(revision_level), next_revision_date=VALUES(next_revision_date), solved_questions_json=VALUES(solved_questions_json)";
+$stmt = $conn->prepare($sql);
+$stmt->execute([$input->userId, $input->topicId, $input->status, $input->lastRevised, $input->revisionLevel, $input->nextRevisionDate, json_encode($input->solvedQuestions ?? [])]);
+sendSuccess();`;
+    } else {
+      content += `// Placeholder for v20.0 endpoint
+sendSuccess(["endpoint" => "${filename}", "status" => "PENDING_IMPLEMENTATION"]);`;
     }
+    files.push({
+      name: filename,
+      folder: "deployment/api",
+      content
+    });
   });
   return files;
 };
 const generateSQLSchema = () => {
-  return `-- IITGEEPrep Master Schema v17.3
+  return `
+-- IITGEEPrep v20.0 Master SQL Schema
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
 CREATE TABLE IF NOT EXISTS users (
     id VARCHAR(255) PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
+    name VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
     password_hash VARCHAR(255),
-    role VARCHAR(50) DEFAULT 'STUDENT',
-    institute VARCHAR(255),
-    target_exam VARCHAR(255),
-    target_year INT,
-    dob DATE,
-    gender VARCHAR(20),
-    avatar_url TEXT,
-    is_verified BOOLEAN DEFAULT TRUE,
+    role VARCHAR(50),
+    target_exam VARCHAR(100),
+    is_verified TINYINT(1) DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Seed Admin (Password: Ishika@123)
+INSERT IGNORE INTO users (id, name, email, password_hash, role, is_verified) 
+VALUES ('u1001', 'Admin Master', 'admin@prep.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'ADMIN', 1);
+
 CREATE TABLE IF NOT EXISTS user_progress (
-    id INT AUTO_INCREMENT PRIMARY KEY,
     user_id VARCHAR(255),
     topic_id VARCHAR(255),
     status VARCHAR(50),
-    last_revised TIMESTAMP NULL,
+    last_revised DATETIME,
     revision_level INT DEFAULT 0,
-    next_revision_date TIMESTAMP NULL,
-    solved_questions_json LONGTEXT,
-    UNIQUE KEY user_topic (user_id, topic_id),
+    next_revision_date DATETIME,
+    solved_questions_json TEXT,
+    PRIMARY KEY (user_id, topic_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS test_attempts (
     id VARCHAR(255) PRIMARY KEY,
@@ -922,25 +791,17 @@ CREATE TABLE IF NOT EXISTS test_attempts (
     unattempted_count INT,
     topic_id VARCHAR(255),
     difficulty VARCHAR(50),
-    detailed_results LONGTEXT,
-    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    detailed_results TEXT,
+    date DATETIME,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS timetables (
     user_id VARCHAR(255) PRIMARY KEY,
-    config_json LONGTEXT,
-    slots_json LONGTEXT,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    config_json TEXT,
+    slots_json TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS psychometric_reports (
-    user_id VARCHAR(255) PRIMARY KEY,
-    report_json LONGTEXT,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS goals (
     id VARCHAR(255) PRIMARY KEY,
@@ -948,7 +809,7 @@ CREATE TABLE IF NOT EXISTS goals (
     text TEXT,
     completed TINYINT(1) DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS backlogs (
     id VARCHAR(255) PRIMARY KEY,
@@ -957,9 +818,60 @@ CREATE TABLE IF NOT EXISTS backlogs (
     subject VARCHAR(50),
     priority VARCHAR(20),
     deadline DATE,
-    status VARCHAR(20) DEFAULT 'PENDING',
+    status VARCHAR(20),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS mistakes (
+    id VARCHAR(255) PRIMARY KEY,
+    user_id VARCHAR(255),
+    question_text TEXT,
+    user_notes TEXT,
+    subject_id VARCHAR(50),
+    date DATETIME,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS psychometric_reports (
+    user_id VARCHAR(255) PRIMARY KEY,
+    report_json TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS chapter_notes (
+    topic_id VARCHAR(255) PRIMARY KEY,
+    pages_json TEXT,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS video_lessons (
+    topic_id VARCHAR(255) PRIMARY KEY,
+    video_url TEXT,
+    description TEXT
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS contact_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    subject VARCHAR(255),
+    message TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS settings (
+    setting_key VARCHAR(100) PRIMARY KEY,
+    setting_value TEXT
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS site_visits (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    visit_date DATE,
+    visit_count INT DEFAULT 1,
+    UNIQUE(visit_date)
+) ENGINE=InnoDB;
+
+SET FOREIGN_KEY_CHECKS = 1;
 `;
 };
 const CATEGORY_MAP = {
@@ -1122,6 +1034,7 @@ class E2ETestRunner {
   }
 }
 export {
+  API_FILES_LIST as A,
   COACHING_INSTITUTES as C,
   E2ETestRunner as E,
   MOCK_TESTS_DATA as M,

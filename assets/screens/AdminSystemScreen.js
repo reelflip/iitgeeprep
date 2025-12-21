@@ -1,4 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports, A as Activity, ae as Terminal, L as LoaderCircle, af as Lock, ag as ToggleRight, ah as ToggleLeft, ai as Key, _ as RefreshCw, aj as ChartColumn, ak as Globe, a0 as Save, al as Database, am as FileCode, Y as CircleCheck } from "../vendor.js";
+import { A as API_FILES_LIST } from "../shared-core.js";
 const AI_MODELS = [
   { id: "gemini-3-flash-preview", name: "Gemini 3 Flash", provider: "Google", description: "Ultra-fast, optimized for quick doubts and scheduling.", strength: "Speed", color: "blue" },
   { id: "gemini-3-pro-preview", name: "Gemini 3 Pro", provider: "Google", description: "Deep reasoning and complex Physics problem solving.", strength: "Reasoning", color: "indigo" },
@@ -6,47 +7,6 @@ const AI_MODELS = [
   { id: "deepseek-v3", name: "DeepSeek V3", provider: "DeepSeek", description: "Logic-heavy model, excellent for Inorganic Chemistry facts.", strength: "Logic", color: "cyan" },
   { id: "qwen-2.5-72b", name: "Qwen 2.5 Math", provider: "Alibaba", description: "Specialized for high-level Mathematics and Calculus.", strength: "Math", color: "emerald" },
   { id: "mistral-large", name: "Mistral Large", provider: "Mistral", description: "Balanced performance for general guidance and motivation.", strength: "Balanced", color: "orange" }
-];
-const API_FILE_LIST = [
-  "index.php",
-  "config.php",
-  "cors.php",
-  "test_db.php",
-  "migrate_db.php",
-  "login.php",
-  "register.php",
-  "google_login.php",
-  "update_password.php",
-  "get_dashboard.php",
-  "sync_progress.php",
-  "save_attempt.php",
-  "save_timetable.php",
-  "manage_users.php",
-  "manage_content.php",
-  "manage_tests.php",
-  "manage_syllabus.php",
-  "manage_questions.php",
-  "manage_backlogs.php",
-  "manage_goals.php",
-  "manage_mistakes.php",
-  "manage_notes.php",
-  "manage_videos.php",
-  "manage_contact.php",
-  "contact.php",
-  "manage_settings.php",
-  "update_profile.php",
-  "track_visit.php",
-  "get_admin_stats.php",
-  "search_students.php",
-  "send_request.php",
-  "respond_request.php",
-  "get_psychometric.php",
-  "save_psychometric.php",
-  "delete_account.php",
-  "upload_avatar.php",
-  "get_topics.php",
-  "get_attempt_details.php",
-  "manage_chapter_test.php"
 ];
 const AdminSystemScreen = () => {
   const [activeTab, setActiveTab] = reactExports.useState("ai");
@@ -121,7 +81,7 @@ const AdminSystemScreen = () => {
         if (data.tables) setDbTables(data.tables);
       }
       const statusMap = {};
-      for (const file of API_FILE_LIST) {
+      for (const file of API_FILES_LIST) {
         const res = await fetch(`/api/${file}`, { method: "HEAD" }).catch(() => ({ ok: false, status: 0 }));
         statusMap[file] = { code: res.status, ok: res.ok };
       }
@@ -206,7 +166,7 @@ const AdminSystemScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-bold", children: "AI Sandbox Verification" })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col md:flex-row gap-6", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("textarea", { value: testInput, onChange: (e) => setTestInput(testInput), className: "flex-1 p-4 bg-slate-50 border rounded-xl text-sm h-32", placeholder: "Send a test doubt..." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("textarea", { value: testInput, onChange: (e) => setTestInput(e.target.value), className: "flex-1 p-4 bg-slate-50 border rounded-xl text-sm h-32", placeholder: "Send a test doubt..." }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 bg-slate-50 rounded-xl p-4 border overflow-y-auto text-sm min-h-[128px]", children: testResponse || "No output." })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-6 flex justify-between items-center", children: [
@@ -312,14 +272,17 @@ const AdminSystemScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsx(FileCode, { className: "text-orange-500" }),
           " API File Map (38 Enpoints)"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 gap-2 max-h-[400px] overflow-y-auto", children: API_FILE_LIST.map((file) => {
-          var _a, _b;
-          return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `p-2 border rounded-lg text-[10px] font-bold ${((_a = fileStatus[file]) == null ? void 0 : _a.ok) ? "bg-green-50 border-green-200 text-green-700" : "bg-red-50 border-red-200 text-red-700"}`, children: [
-            file,
-            " • ",
-            ((_b = fileStatus[file]) == null ? void 0 : _b.code) || "..."
-          ] }, file);
-        }) })
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-2 max-h-[400px] overflow-y-auto", children: [
+          "/* Fix: Use the shared API_FILES_LIST plural constant */",
+          API_FILES_LIST.map((file) => {
+            var _a, _b;
+            return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `p-2 border rounded-lg text-[10px] font-bold ${((_a = fileStatus[file]) == null ? void 0 : _a.ok) ? "bg-green-50 border-green-200 text-green-700" : "bg-red-50 border-red-200 text-red-700"}`, children: [
+              file,
+              " • ",
+              ((_b = fileStatus[file]) == null ? void 0 : _b.code) || "..."
+            ] }, file);
+          })
+        ] })
       ] })
     ] }),
     saveSuccess && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed bottom-24 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4 z-50", children: [

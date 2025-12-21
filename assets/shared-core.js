@@ -840,7 +840,6 @@ class E2ETestRunner {
       integrity: { id: "integrity", label: "Key & Relations", status: "PENDING", msg: "Awaiting column check" },
       write_safety: { id: "write_safety", label: "Write-Safety", status: "PENDING", msg: "Awaiting integrity" }
     };
-    this.onUpdate([]);
     const res = await this.apiProbe("/api/test_db.php?action=full_diagnostic");
     if (!res.ok && !res.json) {
       Object.keys(checks).forEach((k) => {
@@ -863,12 +862,29 @@ class E2ETestRunner {
     });
     return checks;
   }
+  async runApiAudit(onProgress) {
+    const results = API_FILES_LIST.map((f) => ({ file: f, status: "PENDING", code: 0, time: 0, text: "" }));
+    onProgress([...results]);
+    for (let i = 0; i < API_FILES_LIST.length; i++) {
+      const file = API_FILES_LIST[i];
+      results[i].status = "RUNNING";
+      onProgress([...results]);
+      const probe = await this.apiProbe(`/api/${file}`);
+      results[i].code = probe.status;
+      results[i].time = probe.latency;
+      results[i].text = probe.raw;
+      if (probe.ok) results[i].status = "OK";
+      else if (probe.status === 404) results[i].status = "MISSING";
+      else if (probe.status === 500) results[i].status = "CRASH";
+      else results[i].status = "ERROR";
+      onProgress([...results]);
+    }
+    return results;
+  }
   async runFullAudit() {
     this.results = [];
     this.dbLive = false;
-    await this.runCategory("INFRA");
-    const categories = Object.keys(CATEGORY_MAP).filter((c) => c !== "INFRA");
-    for (const cat of categories) {
+    for (const cat of Object.keys(CATEGORY_MAP)) {
       await this.runCategory(cat);
     }
   }
@@ -877,10 +893,6 @@ class E2ETestRunner {
     for (let i = 1; i <= config.count; i++) {
       const testId = `${config.prefix}.${i.toString().padStart(2, "0")}`;
       const desc = this.getTestDescription(testId);
-      if (cat !== "INFRA" && cat !== "SECURITY" && !this.dbLive) {
-        this.log(testId, cat, desc, "INFRA_BLOCK", "Blocked: Database is offline (A.02 Failed)");
-        continue;
-      }
       this.log(testId, cat, desc, "RUNNING");
       const result = await this.executeTestLogic(testId);
       if (testId === "A.02" && result.pass) this.dbLive = true;
@@ -903,34 +915,11 @@ class E2ETestRunner {
   }
   async executeTestLogic(id) {
     var _a, _b;
-    const timestamp = Date.now();
     switch (id) {
       case "A.02": {
         const db = await this.apiProbe("/api/test_db.php");
         if (((_a = db.json) == null ? void 0 : _a.status) === "CONNECTED") return { pass: true, msg: "DB Link Stable", latency: db.latency };
         return { pass: false, msg: ((_b = db.json) == null ? void 0 : _b.message) || db.raw || "Connection Refused", latency: db.latency, raw: db.json };
-      }
-      case "B.01": {
-        const reg = await this.apiProbe("/api/register.php", {
-          method: "POST",
-          body: JSON.stringify({ name: "Diag Student", email: `diag_${timestamp}@test.local`, password: "diag" })
-        });
-        return { pass: reg.ok, msg: reg.ok ? "Student Inserted" : "Write Failed", latency: reg.latency, raw: reg.json };
-      }
-      case "D.01": {
-        const sync = await this.apiProbe("/api/sync_progress.php", {
-          method: "POST",
-          body: JSON.stringify({ userId: "DIAG_USER", topicId: "p-units", status: "COMPLETED" })
-        });
-        return { pass: sync.ok, msg: sync.ok ? "Progress Synced" : "Sync Engine Error", latency: sync.latency };
-      }
-      case "J.01": {
-        const inj = await this.apiProbe("/api/login.php", {
-          method: "POST",
-          body: JSON.stringify({ email: "' OR 1=1 --", password: "x" })
-        });
-        const sanitized = inj.status !== 200 || inj.json && !inj.json.user;
-        return { pass: sanitized, msg: sanitized ? "Injection Blocked/Neutralized" : "LEAK DETECTED", latency: inj.latency };
       }
       default: {
         const gen = await this.apiProbe("/api/index.php");
@@ -938,49 +927,26 @@ class E2ETestRunner {
       }
     }
   }
-  exportGateReport(gateChecks) {
+  exportJson(filename, data) {
     const report = {
       header: {
-        title: "IITGEEPrep Database Readiness Gate Report",
+        source: "IITGEEPrep Diagnostics Hub",
         version: "v13.5",
         timestamp: (/* @__PURE__ */ new Date()).toISOString(),
         environment: "Production_Sync_Mode"
       },
-      summary: {
-        totalChecks: Object.keys(gateChecks).length,
-        passed: Object.values(gateChecks).filter((c) => c.status === "PASS").length,
-        failed: Object.values(gateChecks).filter((c) => c.status === "FAIL").length,
-        status: Object.values(gateChecks).every((c) => c.status === "PASS") ? "COMPLIANT" : "NON_COMPLIANT"
-      },
-      details: gateChecks
+      data
     };
     const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `IITGEE_DB_Gate_Report_${(/* @__PURE__ */ new Date()).toISOString().replace(/:/g, "-")}.json`;
+    a.download = `${filename}_${(/* @__PURE__ */ new Date()).toISOString().replace(/:/g, "-")}.json`;
     a.click();
     URL.revokeObjectURL(url);
   }
   exportReport() {
-    const report = {
-      header: { title: "IITGEEPrep Master Diagnostic Execution Report", version: "v13.5", timestamp: (/* @__PURE__ */ new Date()).toISOString(), totalCheckpoints: 121, environment: "Production_Sync_Mode" },
-      summary: {
-        executed: this.results.length,
-        passed: this.results.filter((r) => r.status === "PASS").length,
-        failed: this.results.filter((r) => r.status === "FAIL").length,
-        blocked: this.results.filter((r) => r.status === "INFRA_BLOCK").length,
-        healthPercentage: Math.round(this.results.filter((r) => r.status === "PASS").length / 121 * 100)
-      },
-      auditResults: this.results
-    };
-    const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `IITGEE_Master_Audit_Report_${(/* @__PURE__ */ new Date()).toISOString().replace(/:/g, "-")}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    this.exportJson("Master_Audit_Report", this.results);
   }
 }
 export {

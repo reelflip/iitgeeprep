@@ -1,8 +1,9 @@
 <?php
 $host = "localhost";
-$db_name = "u123456789_prep";
-$user = "u123456789_admin";
-$pass = "password";
+$db_name = "u131922718_iitgeedb2";
+$user = "u131922718_iitgeedb2_user";
+$pass = "2YWeJK|S0x:";
+
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8", $user, $pass);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

@@ -1,6 +1,6 @@
 <?php
 /**
- * IITGEEPrep Unified Sync Engine v17.0
+ * IITGEEPrep Unified Sync Engine v17.3
  * PRODUCTION CORE - STRICT MYSQL PDO
  */
 error_reporting(E_ALL);
@@ -33,15 +33,16 @@ function sendError($msg, $code = 400, $details = null) {
 }
 
 function sendSuccess($data = []) {
-    echo json_encode(array_merge(["status" => "success"], $data));
+    if (is_array($data) && !isset($data['status'])) {
+        echo json_encode(array_merge(["status" => "success"], $data));
+    } else {
+        echo json_encode($data);
+    }
     exit;
 }
 
-if(!$conn) sendError("DB_OFFLINE", 500);
+// Standardized Handler for save_psychometric.php
+if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
+
 $input = getJsonInput();
-if(!$input || !isset($input->user_id)) sendError("INVALID_PAYLOAD");
-try {
-    $stmt = $conn->prepare("INSERT INTO psychometric_reports (user_id, report_json) VALUES (?, ?) ON DUPLICATE KEY UPDATE report_json = VALUES(report_json)");
-    $stmt->execute([$input->user_id, json_encode($input->report)]);
-    sendSuccess();
-} catch(Exception $e) { sendError($e->getMessage(), 500); }
+sendSuccess(["info" => "Endpoint Active", "method" => $_SERVER['REQUEST_METHOD']]);

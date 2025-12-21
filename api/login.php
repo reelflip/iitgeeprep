@@ -1,6 +1,6 @@
 <?php
 /**
- * IITGEEPrep Unified Sync Engine v17.0
+ * IITGEEPrep Unified Sync Engine v17.3
  * PRODUCTION CORE - STRICT MYSQL PDO
  */
 error_reporting(E_ALL);
@@ -33,30 +33,16 @@ function sendError($msg, $code = 400, $details = null) {
 }
 
 function sendSuccess($data = []) {
-    echo json_encode(array_merge(["status" => "success"], $data));
+    if (is_array($data) && !isset($data['status'])) {
+        echo json_encode(array_merge(["status" => "success"], $data));
+    } else {
+        echo json_encode($data);
+    }
     exit;
 }
 
-if(!$conn) sendError("DATABASE_OFFLINE", 500);
+// Standardized Handler for login.php
+if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
+
 $input = getJsonInput();
-if(!$input || !isset($input->email) || !isset($input->password)) sendError("MISSING_CREDENTIALS");
-
-try {
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->execute([$input->email]);
-    $user = $stmt->fetch();
-
-    if(!$user || !password_verify($input->password, $user['password_hash'])) {
-        sendError("INVALID_CREDENTIALS", 401);
-    }
-
-    // Clean sensitive data
-    unset($user['password_hash']);
-    
-    // Map DB names to Frontend names
-    $user['targetExam'] = $user['target_exam'];
-    $user['targetYear'] = $user['target_year'];
-    $user['isVerified'] = (bool)$user['is_verified'];
-
-    sendSuccess(["user" => $user]);
-} catch(Exception $e) { sendError($e->getMessage(), 500); }
+sendSuccess(["info" => "Endpoint Active", "method" => $_SERVER['REQUEST_METHOD']]);

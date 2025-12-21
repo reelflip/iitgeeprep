@@ -1,6 +1,6 @@
 <?php
 /**
- * IITGEEPrep Unified Sync Engine v17.0
+ * IITGEEPrep Unified Sync Engine v17.3
  * PRODUCTION CORE - STRICT MYSQL PDO
  */
 error_reporting(E_ALL);
@@ -33,18 +33,16 @@ function sendError($msg, $code = 400, $details = null) {
 }
 
 function sendSuccess($data = []) {
-    echo json_encode(array_merge(["status" => "success"], $data));
+    if (is_array($data) && !isset($data['status'])) {
+        echo json_encode(array_merge(["status" => "success"], $data));
+    } else {
+        echo json_encode($data);
+    }
     exit;
 }
 
-if (!$conn) sendError("DATABASE_CONNECTION_FAILED", 500, $db_error);
-try {
-    $tables = [];
-    $stmt = $conn->query("SHOW TABLES");
-    while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-        $name = $row[0];
-        $countStmt = $conn->query("SELECT COUNT(*) FROM `$name`");
-        $tables[] = ["name" => $name, "rows" => (int)$countStmt->fetchColumn()];
-    }
-    sendSuccess(["status" => "CONNECTED", "engine" => "MySQL", "tables" => $tables]);
-} catch (Exception $e) { sendError("QUERY_FAILED", 500, $e->getMessage()); }
+// Standardized Handler for test_db.php
+if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
+
+$input = getJsonInput();
+sendSuccess(["info" => "Endpoint Active", "method" => $_SERVER['REQUEST_METHOD']]);

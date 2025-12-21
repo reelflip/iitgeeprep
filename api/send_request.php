@@ -1,6 +1,6 @@
 <?php
 /**
- * IITGEEPrep Unified Sync Engine v17.0
+ * IITGEEPrep Unified Sync Engine v17.3
  * PRODUCTION CORE - STRICT MYSQL PDO
  */
 error_reporting(E_ALL);
@@ -33,18 +33,16 @@ function sendError($msg, $code = 400, $details = null) {
 }
 
 function sendSuccess($data = []) {
-    echo json_encode(array_merge(["status" => "success"], $data));
+    if (is_array($data) && !isset($data['status'])) {
+        echo json_encode(array_merge(["status" => "success"], $data));
+    } else {
+        echo json_encode($data);
+    }
     exit;
 }
 
-// Business Logic for send_request.php
+// Standardized Handler for send_request.php
 if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
 
-$input = null;
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $input = getJsonInput();
-    if(!$input) sendError("INVALID_JSON_INPUT", 400);
-}
-
-// TODO: Implement specific logic for send_request.php
+$input = getJsonInput();
 sendSuccess(["info" => "Endpoint Active", "method" => $_SERVER['REQUEST_METHOD']]);

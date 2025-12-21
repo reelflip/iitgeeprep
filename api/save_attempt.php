@@ -1,6 +1,6 @@
 <?php
 /**
- * IITGEEPrep Unified Sync Engine v17.0
+ * IITGEEPrep Unified Sync Engine v17.3
  * PRODUCTION CORE - STRICT MYSQL PDO
  */
 error_reporting(E_ALL);
@@ -33,18 +33,50 @@ function sendError($msg, $code = 400, $details = null) {
 }
 
 function sendSuccess($data = []) {
-    echo json_encode(array_merge(["status" => "success"], $data));
+    if (is_array($data) && !isset($data['status'])) {
+        echo json_encode(array_merge(["status" => "success"], $data));
+    } else {
+        echo json_encode($data);
+    }
     exit;
 }
 
-// Business Logic for save_attempt.php
 if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
+$input = getJsonInput();
+if(!$input || !isset($input->userId)) sendError("MISSING_DATA");
 
-$input = null;
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $input = getJsonInput();
-    if(!$input) sendError("INVALID_JSON_INPUT", 400);
-}
+try {
+    $sql = "INSERT INTO `test_attempts` (
+        id, user_id, test_id, title, score, total_marks, accuracy, 
+        total_questions, correct_count, incorrect_count, unattempted_count, 
+        topic_id, difficulty, detailed_results, date
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE 
+        score = VALUES(score), 
+        accuracy = VALUES(accuracy),
+        correct_count = VALUES(correct_count),
+        incorrect_count = VALUES(incorrect_count),
+        unattempted_count = VALUES(unattempted_count),
+        detailed_results = VALUES(detailed_results)";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        $input->id,
+        $input->userId,
+        $input->testId,
+        $input->title,
+        $input->score,
+        $input->totalMarks,
+        $input->accuracy_percent ?? ($input->accuracy ?? 0),
+        $input->totalQuestions,
+        $input->correctCount,
+        $input->incorrectCount,
+        $input->unattemptedCount,
+        $input->topicId ?? null,
+        $input->difficulty ?? null,
+        isset($input->detailedResults) ? json_encode($input->detailedResults) : null,
+        $input->date ?? date('Y-m-d H:i:s')
+    ]);
 
-// TODO: Implement specific logic for save_attempt.php
-sendSuccess(["info" => "Endpoint Active", "method" => $_SERVER['REQUEST_METHOD']]);
+    sendSuccess(["status" => "SAVED"]);
+} catch(Exception $e) { sendError("PERSISTENCE_FAILURE", 500, $e->getMessage()); }

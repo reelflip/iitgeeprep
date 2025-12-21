@@ -1,13 +1,12 @@
 <?php
 /**
- * IITGEEPrep Engine v16.0 - MySQL Production Core
- * HOSTINGER OPTIMIZED - NO MOCKING
+ * IITGEEPrep Unified Sync Engine v17.0
+ * PRODUCTION CORE - STRICT MYSQL PDO
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
-// PRODUCTION CORS HEADERS
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept");
@@ -20,10 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 include_once 'config.php';
 
-/**
- * Standardized JSON Input Reader
- * Essential for modern React Fetch requests.
- */
 function getJsonInput() {
     $raw = file_get_contents('php://input');
     if (!$raw) return null;
@@ -42,20 +37,14 @@ function sendSuccess($data = []) {
     exit;
 }
 
-if (!$conn) {
-    sendError("DATABASE_CONNECTION_FAILED", 500, $db_error);
-}
-
+if (!$conn) sendError("DATABASE_CONNECTION_FAILED", 500, $db_error);
 try {
     $tables = [];
     $stmt = $conn->query("SHOW TABLES");
     while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
         $name = $row[0];
         $countStmt = $conn->query("SELECT COUNT(*) FROM `$name`");
-        $count = $countStmt->fetchColumn();
-        $tables[] = ["name" => $name, "rows" => (int)$count];
+        $tables[] = ["name" => $name, "rows" => (int)$countStmt->fetchColumn()];
     }
-    sendSuccess(["status" => "CONNECTED", "engine" => "MySQL", "tables" => $tables]);
-} catch (Exception $e) {
-    sendError("QUERY_FAILED", 500, $e->getMessage());
-}
+    sendSuccess(["engine" => "MySQL", "tables" => $tables]);
+} catch (Exception $e) { sendError("QUERY_FAILED", 500, $e->getMessage()); }

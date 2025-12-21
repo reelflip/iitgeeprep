@@ -1,13 +1,12 @@
 <?php
 /**
- * IITGEEPrep Engine v16.0 - MySQL Production Core
- * HOSTINGER OPTIMIZED - NO MOCKING
+ * IITGEEPrep Unified Sync Engine v17.0
+ * PRODUCTION CORE - STRICT MYSQL PDO
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
-// PRODUCTION CORS HEADERS
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept");
@@ -20,10 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 include_once 'config.php';
 
-/**
- * Standardized JSON Input Reader
- * Essential for modern React Fetch requests.
- */
 function getJsonInput() {
     $raw = file_get_contents('php://input');
     if (!$raw) return null;
@@ -42,16 +37,11 @@ function sendSuccess($data = []) {
     exit;
 }
 
-// MySQL Business logic for save_psychometric.php
-if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
-
-/**
- * Fixed: Only enforce JSON input on POST/PUT requests to avoid 400 on diagnostic probes
- */
-$input = null;
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $input = getJsonInput();
-    if(!$input) sendError("INVALID_JSON_INPUT", 400);
-}
-
-sendSuccess(["info" => "Production Endpoint Active", "method" => $_SERVER['REQUEST_METHOD']]);
+if(!$conn) sendError("DB_OFFLINE", 500);
+$input = getJsonInput();
+if(!$input || !isset($input->user_id)) sendError("INVALID_PAYLOAD");
+try {
+    $stmt = $conn->prepare("INSERT INTO psychometric_reports (user_id, report_json) VALUES (?, ?) ON DUPLICATE KEY UPDATE report_json = VALUES(report_json)");
+    $stmt->execute([$input->user_id, json_encode($input->report)]);
+    sendSuccess();
+} catch(Exception $e) { sendError($e->getMessage(), 500); }

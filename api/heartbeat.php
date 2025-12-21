@@ -29,6 +29,6 @@ function sendSuccess($data = []) {
     exit;
 }
 
-// logic for manage_videos.php
+// logic for heartbeat.php
 // Placeholder for v20.0 endpoint
-sendSuccess(["endpoint" => "manage_videos.php", "status" => "PENDING_IMPLEMENTATION"]);
+sendSuccess(["endpoint" => "heartbeat.php", "status" => "PENDING_IMPLEMENTATION"]);

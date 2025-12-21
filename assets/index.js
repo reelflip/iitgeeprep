@@ -3,7 +3,7 @@ import { r as reactExports, j as jsxRuntimeExports, bm as clientExports, bn as R
 import { N as Navigation, M as MobileNavigation } from "./components/Navigation.js";
 import { A as AITutorChat } from "./components/AITutorChat.js";
 import { S as SyncStatusBadge } from "./components/SyncStatusBadge.js";
-import { e as apiService, S as SYLLABUS_DATA, M as MOCK_TESTS_DATA, h as generateInitialQuestionBank } from "./shared-core.js";
+import { a as apiService, S as SYLLABUS_DATA, M as MOCK_TESTS_DATA, h as generateInitialQuestionBank } from "./shared-core.js";
 (function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -120,7 +120,7 @@ const WellnessScreen = reactExports.lazy(() => __vitePreload(() => import("./scr
 const BacklogScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/BacklogScreen.js"), true ? __vite__mapDeps([17,1]) : void 0).then((m) => ({ default: m.BacklogScreen })));
 const HacksScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/HacksScreen.js"), true ? __vite__mapDeps([18,1]) : void 0).then((m) => ({ default: m.HacksScreen })));
 const PsychometricScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/PsychometricScreen.js"), true ? __vite__mapDeps([19,1,2]) : void 0).then((m) => ({ default: m.PsychometricScreen })));
-const AdminUserManagementScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminUserManagementScreen.js"), true ? __vite__mapDeps([20,1]) : void 0).then((m) => ({ default: m.AdminUserManagementScreen })));
+const AdminUserManagementScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminUserManagementScreen.js"), true ? __vite__mapDeps([20,1,2]) : void 0).then((m) => ({ default: m.AdminUserManagementScreen })));
 const AdminInboxScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminInboxScreen.js"), true ? __vite__mapDeps([21,1]) : void 0).then((m) => ({ default: m.AdminInboxScreen })));
 const AdminSyllabusScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminSyllabusScreen.js"), true ? __vite__mapDeps([22,1,23]) : void 0).then((m) => ({ default: m.AdminSyllabusScreen })));
 reactExports.lazy(() => __vitePreload(() => import("./screens/AdminTestManagerScreen.js"), true ? __vite__mapDeps([24,1,25,2]) : void 0).then((m) => ({ default: m.AdminTestManagerScreen })));
@@ -172,6 +172,7 @@ const App = () => {
       if (data.attempts) setTestAttempts(data.attempts);
       if (data.goals) setGoals(data.goals);
       if (data.backlogs) setBacklogs(data.backlogs);
+      if (data.timetable) setTimetable(data.timetable);
       setGlobalSyncStatus("SYNCED");
     } catch (e) {
       setGlobalSyncStatus("ERROR");
@@ -204,6 +205,16 @@ const App = () => {
       setGlobalSyncStatus("ERROR");
     }
   };
+  const saveTimetable = async (config, slots) => {
+    setGlobalSyncStatus("SYNCING");
+    setTimetable({ config, slots });
+    try {
+      await apiService.request("/api/save_timetable.php", { method: "POST", body: JSON.stringify({ userId: user == null ? void 0 : user.id, config, slots }) });
+      setGlobalSyncStatus("SYNCED");
+    } catch (e) {
+      setGlobalSyncStatus("ERROR");
+    }
+  };
   const renderContent = () => {
     const isAdmin = (user == null ? void 0 : user.role) === "ADMIN" || (user == null ? void 0 : user.role) === "ADMIN_EXECUTIVE";
     switch (currentScreen) {
@@ -226,7 +237,7 @@ const App = () => {
       case "focus":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(FocusScreen, {});
       case "timetable":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(TimetableScreen, { user, savedConfig: timetable.config, savedSlots: timetable.slots, progress, onSave: (c, s) => setTimetable({ config: c, slots: s }) });
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(TimetableScreen, { user, savedConfig: timetable.config, savedSlots: timetable.slots, progress, onSave: saveTimetable });
       case "revision":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(RevisionScreen, { progress, handleRevisionComplete: (id) => updateProgress(id, { lastRevised: (/* @__PURE__ */ new Date()).toISOString() }) });
       case "mistakes":

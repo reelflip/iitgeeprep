@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports, b1 as Camera, an as Target, a0 as Save, U as User, b2 as Bell, a7 as Mail, ar as Shield, Y as CircleCheck } from "../vendor.js";
-import { a as TARGET_EXAMS } from "../shared-core.js";
+import { b as TARGET_EXAMS } from "../shared-core.js";
 const ProfileScreen = ({ user, onAcceptRequest, onUpdateUser, linkedStudentName }) => {
   var _a;
   const requests = ((_a = user.notifications) == null ? void 0 : _a.filter((n) => n.type === "connection_request")) || [];

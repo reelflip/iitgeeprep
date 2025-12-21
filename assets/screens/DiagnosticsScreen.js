@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, au as ShieldCheck, aZ as Wrench, Y as CircleCheck, W as TriangleAlert, _ as RefreshCw, a_ as Play, aw as CircleX, a$ as ClipboardList, a4 as Globe, e as ChevronRight, A as Activity, Z as Zap, aq as Database, l as Layers } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, aq as ShieldCheck, aV as Wrench, Y as CircleCheck, W as TriangleAlert, _ as RefreshCw, aW as Play, as as CircleX, aX as ClipboardList, ak as Globe, e as ChevronRight, A as Activity, Z as Zap, al as Database, l as Layers } from "../vendor.js";
 import { c as CATEGORY_MAP, E as E2ETestRunner } from "../shared-core.js";
 const DiagnosticsScreen = () => {
   const [activeTab, setActiveTab] = reactExports.useState("MASTER");
@@ -82,7 +82,7 @@ const DiagnosticsScreen = () => {
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 bg-blue-600 rounded-2xl shadow-xl shadow-blue-900/50", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "w-10 h-10 text-white" }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-black uppercase tracking-tight", children: "System Integrity Hub" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-sm font-bold uppercase tracking-widest", children: "Diagnostic & Deployment Analyzer • v14.5" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 text-sm font-bold uppercase tracking-widest", children: "Diagnostic & Deployment Analyzer • v17.0" })
         ] })
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex bg-slate-800 p-1 rounded-2xl border border-slate-700 shadow-inner flex-wrap justify-center", children: [
@@ -216,7 +216,7 @@ const DiagnosticsScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "lg:col-span-8 bg-white p-10 rounded-[3rem] border border-slate-200 shadow-sm", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-xl font-black uppercase text-slate-800 tracking-tighter mb-10 flex items-center gap-3", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Database, { className: "text-indigo-600", size: 24 }),
-          " SQL Registry (v14.5)"
+          " SQL Registry (v17.0)"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: dbTables.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center p-5 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm group", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [

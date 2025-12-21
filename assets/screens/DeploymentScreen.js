@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, aq as Database, ak as Terminal, _ as RefreshCw, aX as Download, A as Activity, l as Layers, W as TriangleAlert, aY as JSZip } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, al as Database, ae as Terminal, _ as RefreshCw, aT as Download, A as Activity, l as Layers, W as TriangleAlert, aU as JSZip } from "../vendor.js";
 import { g as getBackendFiles, b as generateSQLSchema } from "../shared-core.js";
 const DeploymentScreen = () => {
   const [activeTab, setActiveTab] = reactExports.useState("guide");

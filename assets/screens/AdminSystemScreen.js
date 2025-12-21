@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, A as Activity, ak as Terminal, L as LoaderCircle, al as Lock, am as ToggleRight, an as ToggleLeft, ao as Key, _ as RefreshCw, ap as ChartColumn, a4 as Globe, a6 as Save, aq as Database, ar as FileCode, Y as CircleCheck } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, A as Activity, ae as Terminal, L as LoaderCircle, af as Lock, ag as ToggleRight, ah as ToggleLeft, ai as Key, _ as RefreshCw, aj as ChartColumn, ak as Globe, a0 as Save, al as Database, am as FileCode, Y as CircleCheck } from "../vendor.js";
 const AI_MODELS = [
   { id: "gemini-3-flash-preview", name: "Gemini 3 Flash", provider: "Google", description: "Ultra-fast, optimized for quick doubts and scheduling.", strength: "Speed", color: "blue" },
   { id: "gemini-3-pro-preview", name: "Gemini 3 Pro", provider: "Google", description: "Deep reasoning and complex Physics problem solving.", strength: "Reasoning", color: "indigo" },
@@ -182,7 +182,7 @@ const AdminSystemScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { className: "text-blue-400" }),
           " Admin System"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 mt-2", children: "v12.39 Sync Status Control" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-slate-400 mt-2", children: "v17.0 Sync Status Control" })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex bg-slate-800/50 p-1 rounded-xl border border-slate-700/50", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setActiveTab("ai"), className: `px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === "ai" ? "bg-blue-600 text-white" : "text-slate-400"}`, children: "AI" }),
@@ -206,7 +206,7 @@ const AdminSystemScreen = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-bold", children: "AI Sandbox Verification" })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col md:flex-row gap-6", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("textarea", { value: testInput, onChange: (e) => setTestInput(e.target.value), className: "flex-1 p-4 bg-slate-50 border rounded-xl text-sm h-32", placeholder: "Send a test doubt..." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("textarea", { value: testInput, onChange: (e) => setTestInput(testInput), className: "flex-1 p-4 bg-slate-50 border rounded-xl text-sm h-32", placeholder: "Send a test doubt..." }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 bg-slate-50 rounded-xl p-4 border overflow-y-auto text-sm min-h-[128px]", children: testResponse || "No output." })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-6 flex justify-between items-center", children: [
@@ -297,7 +297,7 @@ const AdminSystemScreen = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-2xl border border-slate-200 p-6", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-black uppercase tracking-wider text-xs mb-6 flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Database, { className: "text-blue-500" }),
-          " Database Schema (v12.39)"
+          " Database Schema (v17.0)"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-3 max-h-[400px] overflow-y-auto", children: dbTables.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between p-3 bg-slate-50 rounded-lg border", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-bold text-slate-700", children: t.name }),

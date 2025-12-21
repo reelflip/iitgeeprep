@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, a9 as Trash2, ae as Plus, a6 as Save, af as Youtube, X, ag as Book, ah as FolderPlus, ai as FilePlus, F as FileText, aj as Video } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, a3 as Trash2, a8 as Plus, a0 as Save, a9 as Youtube, X, aa as Book, ab as FolderPlus, ac as FilePlus, F as FileText, ad as Video } from "../vendor.js";
 import { R as RichTextEditor } from "../components/RichTextEditor.js";
 const AdminSyllabusScreen = ({
   syllabus,

@@ -1,9 +1,9 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/screens/AuthScreen.js","assets/vendor.js","assets/shared-core.js","assets/screens/DashboardScreen.js","assets/screens/AdminDashboardScreen.js","assets/components/StatCard.js","assets/screens/SyllabusScreen.js","assets/components/BookReader.js","assets/components/SyncStatusBadge.js","assets/screens/RevisionScreen.js","assets/screens/TimetableScreen.js","assets/screens/TestScreen.js","assets/screens/FocusScreen.js","assets/screens/FlashcardScreen.js","assets/screens/MistakesScreen.js","assets/screens/AnalyticsScreen.js","assets/screens/WellnessScreen.js","assets/screens/BacklogScreen.js","assets/screens/HacksScreen.js","assets/screens/PsychometricScreen.js","assets/screens/AdminUserManagementScreen.js","assets/screens/AdminInboxScreen.js","assets/screens/AdminSyllabusScreen.js","assets/components/RichTextEditor.js","assets/screens/AdminTestManagerScreen.js","assets/components/Button.js","assets/screens/AdminSystemScreen.js","assets/screens/DeploymentScreen.js","assets/screens/DiagnosticsScreen.js","assets/screens/ProfileScreen.js","assets/screens/AboutUsScreen.js","assets/screens/ExamGuideScreen.js","assets/screens/PrivacyPolicyScreen.js","assets/screens/ContactUsScreen.js","assets/screens/FeaturesScreen.js","assets/screens/ContentManagerScreen.js","assets/screens/AdminBlogScreen.js","assets/screens/PublicBlogScreen.js"])))=>i.map(i=>d[i]);
-import { r as reactExports, j as jsxRuntimeExports, bq as clientExports, br as React } from "./vendor.js";
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/screens/AuthScreen.js","assets/vendor.js","assets/shared-core.js","assets/screens/DashboardScreen.js","assets/screens/AdminDashboardScreen.js","assets/components/StatCard.js","assets/screens/SyllabusScreen.js","assets/components/BookReader.js","assets/components/SyncStatusBadge.js","assets/screens/RevisionScreen.js","assets/screens/TimetableScreen.js","assets/screens/TestScreen.js","assets/screens/FocusScreen.js","assets/screens/FlashcardScreen.js","assets/screens/MistakesScreen.js","assets/screens/AnalyticsScreen.js","assets/screens/WellnessScreen.js","assets/screens/BacklogScreen.js","assets/screens/HacksScreen.js","assets/screens/PsychometricScreen.js","assets/screens/AdminUserManagementScreen.js","assets/screens/AdminInboxScreen.js","assets/screens/AdminSyllabusScreen.js","assets/components/RichTextEditor.js","assets/screens/AdminTestManagerScreen.js","assets/components/Button.js","assets/screens/AdminSystemScreen.js","assets/screens/DeploymentScreen.js","assets/screens/DiagnosticsScreen.js","assets/screens/ProfileScreen.js","assets/screens/ContentManagerScreen.js","assets/screens/AdminBlogScreen.js","assets/screens/ParentFamilyScreen.js"])))=>i.map(i=>d[i]);
+import { r as reactExports, j as jsxRuntimeExports, bm as clientExports, bn as React } from "./vendor.js";
 import { N as Navigation, M as MobileNavigation } from "./components/Navigation.js";
 import { A as AITutorChat } from "./components/AITutorChat.js";
 import { S as SyncStatusBadge } from "./components/SyncStatusBadge.js";
-import { e as generateInitialQuestionBank, M as MOCK_TESTS_DATA, h as apiService, S as SYLLABUS_DATA } from "./shared-core.js";
+import { e as apiService, S as SYLLABUS_DATA, M as MOCK_TESTS_DATA, h as generateInitialQuestionBank } from "./shared-core.js";
 (function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -109,36 +109,31 @@ const AuthScreen = reactExports.lazy(() => __vitePreload(() => import("./screens
 const DashboardScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/DashboardScreen.js"), true ? __vite__mapDeps([3,1,2]) : void 0).then((m) => ({ default: m.DashboardScreen })));
 const AdminDashboardScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminDashboardScreen.js"), true ? __vite__mapDeps([4,1,5]) : void 0).then((m) => ({ default: m.AdminDashboardScreen })));
 const SyllabusScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/SyllabusScreen.js"), true ? __vite__mapDeps([6,1,7,8]) : void 0).then((m) => ({ default: m.SyllabusScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/RevisionScreen.js"), true ? __vite__mapDeps([9,1,2]) : void 0).then((m) => ({ default: m.RevisionScreen })));
+const RevisionScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/RevisionScreen.js"), true ? __vite__mapDeps([9,1,2]) : void 0).then((m) => ({ default: m.RevisionScreen })));
 const TimetableScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/TimetableScreen.js"), true ? __vite__mapDeps([10,1,2]) : void 0).then((m) => ({ default: m.TimetableScreen })));
 const TestScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/TestScreen.js"), true ? __vite__mapDeps([11,1]) : void 0).then((m) => ({ default: m.TestScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/FocusScreen.js"), true ? __vite__mapDeps([12,1]) : void 0).then((m) => ({ default: m.FocusScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/FlashcardScreen.js"), true ? __vite__mapDeps([13,1]) : void 0).then((m) => ({ default: m.FlashcardScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/MistakesScreen.js"), true ? __vite__mapDeps([14,1]) : void 0).then((m) => ({ default: m.MistakesScreen })));
+const FocusScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/FocusScreen.js"), true ? __vite__mapDeps([12,1]) : void 0).then((m) => ({ default: m.FocusScreen })));
+const FlashcardScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/FlashcardScreen.js"), true ? __vite__mapDeps([13,1]) : void 0).then((m) => ({ default: m.FlashcardScreen })));
+const MistakesScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/MistakesScreen.js"), true ? __vite__mapDeps([14,1]) : void 0).then((m) => ({ default: m.MistakesScreen })));
 const AnalyticsScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AnalyticsScreen.js"), true ? __vite__mapDeps([15,1,2]) : void 0).then((m) => ({ default: m.AnalyticsScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/WellnessScreen.js"), true ? __vite__mapDeps([16,1]) : void 0).then((m) => ({ default: m.WellnessScreen })));
+const WellnessScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/WellnessScreen.js"), true ? __vite__mapDeps([16,1]) : void 0).then((m) => ({ default: m.WellnessScreen })));
 const BacklogScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/BacklogScreen.js"), true ? __vite__mapDeps([17,1]) : void 0).then((m) => ({ default: m.BacklogScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/HacksScreen.js"), true ? __vite__mapDeps([18,1]) : void 0).then((m) => ({ default: m.HacksScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/PsychometricScreen.js"), true ? __vite__mapDeps([19,1,2]) : void 0).then((m) => ({ default: m.PsychometricScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/AdminUserManagementScreen.js"), true ? __vite__mapDeps([20,1]) : void 0).then((m) => ({ default: m.AdminUserManagementScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/AdminInboxScreen.js"), true ? __vite__mapDeps([21,1]) : void 0).then((m) => ({ default: m.AdminInboxScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/AdminSyllabusScreen.js"), true ? __vite__mapDeps([22,1,23]) : void 0).then((m) => ({ default: m.AdminSyllabusScreen })));
-const AdminTestManagerScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminTestManagerScreen.js"), true ? __vite__mapDeps([24,1,25,2]) : void 0).then((m) => ({ default: m.AdminTestManagerScreen })));
+const HacksScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/HacksScreen.js"), true ? __vite__mapDeps([18,1]) : void 0).then((m) => ({ default: m.HacksScreen })));
+const PsychometricScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/PsychometricScreen.js"), true ? __vite__mapDeps([19,1,2]) : void 0).then((m) => ({ default: m.PsychometricScreen })));
+const AdminUserManagementScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminUserManagementScreen.js"), true ? __vite__mapDeps([20,1]) : void 0).then((m) => ({ default: m.AdminUserManagementScreen })));
+const AdminInboxScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminInboxScreen.js"), true ? __vite__mapDeps([21,1]) : void 0).then((m) => ({ default: m.AdminInboxScreen })));
+const AdminSyllabusScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminSyllabusScreen.js"), true ? __vite__mapDeps([22,1,23]) : void 0).then((m) => ({ default: m.AdminSyllabusScreen })));
+reactExports.lazy(() => __vitePreload(() => import("./screens/AdminTestManagerScreen.js"), true ? __vite__mapDeps([24,1,25,2]) : void 0).then((m) => ({ default: m.AdminTestManagerScreen })));
 const AdminSystemScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminSystemScreen.js"), true ? __vite__mapDeps([26,1]) : void 0).then((m) => ({ default: m.AdminSystemScreen })));
 const DeploymentScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/DeploymentScreen.js"), true ? __vite__mapDeps([27,1,2]) : void 0).then((m) => ({ default: m.DeploymentScreen })));
 const DiagnosticsScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/DiagnosticsScreen.js"), true ? __vite__mapDeps([28,1,2]) : void 0).then((m) => ({ default: m.DiagnosticsScreen })));
 const ProfileScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/ProfileScreen.js"), true ? __vite__mapDeps([29,1,2]) : void 0).then((m) => ({ default: m.ProfileScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/AboutUsScreen.js"), true ? __vite__mapDeps([30,1]) : void 0).then((m) => ({ default: m.AboutUsScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/ExamGuideScreen.js"), true ? __vite__mapDeps([31,1]) : void 0).then((m) => ({ default: m.ExamGuideScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/PrivacyPolicyScreen.js"), true ? __vite__mapDeps([32,1]) : void 0).then((m) => ({ default: m.PrivacyPolicyScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/ContactUsScreen.js"), true ? __vite__mapDeps([33,1,25]) : void 0).then((m) => ({ default: m.ContactUsScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/FeaturesScreen.js"), true ? __vite__mapDeps([34,1]) : void 0).then((m) => ({ default: m.FeaturesScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/ContentManagerScreen.js"), true ? __vite__mapDeps([35,1]) : void 0).then((m) => ({ default: m.ContentManagerScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/AdminBlogScreen.js"), true ? __vite__mapDeps([36,1,23]) : void 0).then((m) => ({ default: m.AdminBlogScreen })));
-reactExports.lazy(() => __vitePreload(() => import("./screens/PublicBlogScreen.js"), true ? __vite__mapDeps([37,1]) : void 0).then((m) => ({ default: m.PublicBlogScreen })));
+const ContentManagerScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/ContentManagerScreen.js"), true ? __vite__mapDeps([30,1]) : void 0).then((m) => ({ default: m.ContentManagerScreen })));
+const AdminBlogScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/AdminBlogScreen.js"), true ? __vite__mapDeps([31,1,23]) : void 0).then((m) => ({ default: m.AdminBlogScreen })));
+const ParentFamilyScreen = reactExports.lazy(() => __vitePreload(() => import("./screens/ParentFamilyScreen.js"), true ? __vite__mapDeps([32,1,19,2]) : void 0).then((m) => ({ default: m.ParentFamilyScreen })));
 const LoadingView = () => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center justify-center min-h-[60vh] text-slate-400", children: [
-  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-10 h-10 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin mb-4" }),
-  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-bold uppercase tracking-widest text-slate-500", children: "Connecting to Production Core..." })
+  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-10 h-10 border-4 border-slate-200 border-t-violet-600 rounded-full animate-spin mb-4" }),
+  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-bold uppercase tracking-widest", children: "Mastering Preparation..." })
 ] });
 const App = () => {
   const [user, setUser] = reactExports.useState(() => {
@@ -153,71 +148,38 @@ const App = () => {
   const [progress, setProgress] = reactExports.useState({});
   const [testAttempts, setTestAttempts] = reactExports.useState([]);
   const [goals, setGoals] = reactExports.useState([]);
-  const [mistakes, setMistakes] = reactExports.useState([]);
   const [backlogs, setBacklogs] = reactExports.useState([]);
   const [timetable, setTimetable] = reactExports.useState({});
-  const [questionBank, setQuestionBank] = reactExports.useState(generateInitialQuestionBank());
-  const [tests, setTests] = reactExports.useState(MOCK_TESTS_DATA);
   const [flashcards, setFlashcards] = reactExports.useState([]);
   const [hacks, setHacks] = reactExports.useState([]);
   const [blogs, setBlogs] = reactExports.useState([]);
-  const mapProgress = (p) => ({
-    topicId: p.topic_id || p.topicId,
-    status: p.status,
-    lastRevised: p.last_revised || p.lastRevised,
-    revisionLevel: Number(p.revision_level || p.revisionLevel || 0),
-    nextRevisionDate: p.next_revision_date || p.nextRevisionDate,
-    solvedQuestions: p.solved_questions_json ? typeof p.solved_questions_json === "string" ? JSON.parse(p.solved_questions_json) : p.solved_questions_json : p.solvedQuestions || []
-  });
-  const loadDashboard = reactExports.useCallback(async (userId) => {
+  const loadData = reactExports.useCallback(async (userId) => {
     setGlobalSyncStatus("SYNCING");
     try {
       const data = await apiService.request(`/api/get_dashboard.php?user_id=${userId}`);
       if (data.progress) {
-        const progMap = {};
-        data.progress.forEach((p) => {
-          const mapped = mapProgress(p);
-          progMap[mapped.topicId] = mapped;
+        const pm = {};
+        data.progress.forEach((p) => pm[p.topic_id] = {
+          topicId: p.topic_id,
+          status: p.status,
+          lastRevised: p.last_revised,
+          revisionLevel: Number(p.revision_level),
+          nextRevisionDate: p.next_revision_date,
+          solvedQuestions: p.solved_questions_json ? JSON.parse(p.solved_questions_json) : []
         });
-        setProgress(progMap);
+        setProgress(pm);
       }
-      if (data.attempts) {
-        setTestAttempts(data.attempts.map((a) => ({
-          id: a.id,
-          date: a.date,
-          title: a.title,
-          score: Number(a.score),
-          totalMarks: Number(a.total_marks || a.totalMarks),
-          accuracy: Number(a.accuracy),
-          accuracy_percent: Number(a.accuracy),
-          testId: a.test_id || a.testId,
-          totalQuestions: Number(a.total_questions || a.totalQuestions),
-          correctCount: Number(a.correct_count || a.correctCount),
-          incorrectCount: Number(a.incorrect_count || a.incorrectCount),
-          unattemptedCount: Number(a.unattempted_count || a.unattemptedCount),
-          topicId: a.topic_id || a.topicId,
-          difficulty: a.difficulty,
-          detailedResults: a.detailed_results ? typeof a.detailed_results === "string" ? JSON.parse(a.detailed_results) : a.detailed_results : []
-        })));
-      }
-      if (data.goals) setGoals(data.goals.map((g) => ({ ...g, completed: g.completed == 1 || g.completed === true })));
-      if (data.backlogs) setBacklogs(data.backlogs.map((b) => ({ ...b, status: b.status || "PENDING" })));
-      if (data.timetable) setTimetable({
-        config: data.timetable.config_json ? typeof data.timetable.config_json === "string" ? JSON.parse(data.timetable.config_json) : data.timetable.config_json : data.timetable.config,
-        slots: data.timetable.slots_json ? typeof data.timetable.slots_json === "string" ? JSON.parse(data.timetable.slots_json) : data.timetable.slots_json : data.timetable.slots || []
-      });
+      if (data.attempts) setTestAttempts(data.attempts);
+      if (data.goals) setGoals(data.goals);
+      if (data.backlogs) setBacklogs(data.backlogs);
       setGlobalSyncStatus("SYNCED");
     } catch (e) {
       setGlobalSyncStatus("ERROR");
     }
   }, []);
   reactExports.useEffect(() => {
-    if (user) loadDashboard(user.id);
-  }, [user == null ? void 0 : user.id, loadDashboard]);
-  reactExports.useEffect(() => {
-    if (user) localStorage.setItem("user", JSON.stringify(user));
-    else localStorage.removeItem("user");
-  }, [user]);
+    if (user) loadData(user.id);
+  }, [user == null ? void 0 : user.id, loadData]);
   reactExports.useEffect(() => {
     localStorage.setItem("last_screen", currentScreen);
   }, [currentScreen]);
@@ -243,29 +205,62 @@ const App = () => {
     }
   };
   const renderContent = () => {
-    const isAdminRole = (user == null ? void 0 : user.role) === "ADMIN" || (user == null ? void 0 : user.role) === "ADMIN_EXECUTIVE";
+    const isAdmin = (user == null ? void 0 : user.role) === "ADMIN" || (user == null ? void 0 : user.role) === "ADMIN_EXECUTIVE";
     switch (currentScreen) {
       case "dashboard":
       case "overview":
-        return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDashboardScreen, { user, onNavigate: setScreen }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DashboardScreen, { user, progress, testAttempts, goals, toggleGoal: () => {
+        return isAdmin ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminDashboardScreen, { user, onNavigate: setScreen }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DashboardScreen, { user, progress, testAttempts, goals, toggleGoal: () => {
         }, addGoal: () => {
         }, setScreen });
-      case "syllabus":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(SyllabusScreen, { user, subjects: SYLLABUS_DATA, progress, onUpdateProgress: updateProgress, questionBank, addTestAttempt, testAttempts, syncStatus: globalSyncStatus });
-      case "tests":
-        return isAdminRole ? /* @__PURE__ */ jsxRuntimeExports.jsx(AdminTestManagerScreen, { questionBank, tests, syllabus: SYLLABUS_DATA, onAddQuestion: (q) => setQuestionBank([...questionBank, q]), onCreateTest: (t) => setTests([...tests, t]), onDeleteQuestion: (id) => setQuestionBank(questionBank.filter((q) => q.id !== id)), onDeleteTest: (id) => setTests(tests.filter((t) => t.id !== id)) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(TestScreen, { user, addTestAttempt, history: testAttempts, availableTests: tests });
-      case "timetable":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(TimetableScreen, { user, savedConfig: timetable.config, savedSlots: timetable.slots, onSave: (c, s) => setTimetable({ config: c, slots: s }), progress });
       case "analytics":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(AnalyticsScreen, { user, progress, testAttempts });
+      case "profile":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(ProfileScreen, { user, onAcceptRequest: () => {
+        }, onUpdateUser: (upd) => setUser({ ...user, ...upd }) });
+      case "syllabus":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(SyllabusScreen, { user, subjects: SYLLABUS_DATA, progress, onUpdateProgress: updateProgress, questionBank: generateInitialQuestionBank(), addTestAttempt, testAttempts, syncStatus: globalSyncStatus });
+      case "tests":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(TestScreen, { user, addTestAttempt, history: testAttempts, availableTests: MOCK_TESTS_DATA });
+      case "psychometric":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(PsychometricScreen, { user });
+      case "focus":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(FocusScreen, {});
+      case "timetable":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(TimetableScreen, { user, savedConfig: timetable.config, savedSlots: timetable.slots, progress, onSave: (c, s) => setTimetable({ config: c, slots: s }) });
+      case "revision":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(RevisionScreen, { progress, handleRevisionComplete: (id) => updateProgress(id, { lastRevised: (/* @__PURE__ */ new Date()).toISOString() }) });
+      case "mistakes":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(MistakesScreen, { mistakes: [], addMistake: () => {
+        } });
+      case "flashcards":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(FlashcardScreen, { flashcards });
       case "backlogs":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(BacklogScreen, { backlogs, onAddBacklog: () => {
         }, onToggleBacklog: () => {
         }, onDeleteBacklog: () => {
         } });
-      case "profile":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(ProfileScreen, { user, onAcceptRequest: () => {
-        }, onUpdateUser: (upd) => setUser({ ...user, ...upd }) });
+      case "hacks":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(HacksScreen, { hacks });
+      case "wellness":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(WellnessScreen, {});
+      case "ai-tutor":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(AITutorChat, { isFullScreen: true });
+      case "family":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(ParentFamilyScreen, { user, onSendRequest: async () => ({ success: true, message: "Request sent" }) });
+      case "users":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(AdminUserManagementScreen, {});
+      case "inbox":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(AdminInboxScreen, {});
+      case "syllabus_admin":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(AdminSyllabusScreen, { syllabus: SYLLABUS_DATA, onAddTopic: () => {
+        }, onDeleteTopic: () => {
+        } });
+      case "content":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(ContentManagerScreen, { flashcards, hacks, blogs, onAddFlashcard: (c) => setFlashcards([...flashcards, { ...c, id: Date.now() }]), onAddHack: (h) => setHacks([...hacks, { ...h, id: Date.now() }]), onAddBlog: () => {
+        }, onDelete: () => {
+        } });
+      case "blog_admin":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(AdminBlogScreen, { blogs, onAddBlog: (b) => setBlogs([...blogs, b]) });
       case "system":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(AdminSystemScreen, {});
       case "deployment":
@@ -281,14 +276,15 @@ const App = () => {
   if (!user) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.Suspense, { fallback: /* @__PURE__ */ jsxRuntimeExports.jsx(LoadingView, {}), children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthScreen, { onLogin: (u) => {
       setUser(u);
+      localStorage.setItem("user", JSON.stringify(u));
       setScreen(u.role.includes("ADMIN") ? "overview" : "dashboard");
     }, onNavigate: (p) => setScreen(p) }) });
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex bg-slate-50 min-h-screen font-inter", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Navigation, { currentScreen, setScreen, logout: () => {
       setUser(null);
-      setScreen("dashboard");
       localStorage.clear();
+      window.location.reload();
     }, user }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { className: "flex-1 md:ml-64 p-4 md:p-8 pb-24 md:pb-8 max-w-[1600px] mx-auto w-full relative", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute top-4 right-4 z-50", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SyncStatusBadge, { status: globalSyncStatus, show: true }) }),
@@ -296,8 +292,8 @@ const App = () => {
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(MobileNavigation, { currentScreen, setScreen, logout: () => {
       setUser(null);
-      setScreen("dashboard");
       localStorage.clear();
+      window.location.reload();
     }, user }),
     user.role === "STUDENT" && !["ai-tutor", "tests", "focus"].includes(currentScreen) && /* @__PURE__ */ jsxRuntimeExports.jsx(AITutorChat, {})
   ] });

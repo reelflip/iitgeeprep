@@ -947,7 +947,7 @@ class E2ETestRunner {
     const report = {
       header: {
         source: "IITGEEPrep Diagnostics Hub",
-        version: "v13.5",
+        version: "v17.0",
         timestamp: (/* @__PURE__ */ new Date()).toISOString(),
         environment: "Production_Sync_Mode"
       },
@@ -977,8 +977,8 @@ export {
   generateSQLSchema as b,
   CATEGORY_MAP as c,
   generatePsychometricReport as d,
-  generateInitialQuestionBank as e,
+  apiService as e,
   formatDate as f,
   getBackendFiles as g,
-  apiService as h
+  generateInitialQuestionBank as h
 };

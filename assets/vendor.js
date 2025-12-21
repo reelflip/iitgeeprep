@@ -12596,22 +12596,6 @@ const ArrowRight = createLucideIcon("ArrowRight", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Award = createLucideIcon("Award", [
-  [
-    "path",
-    {
-      d: "m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526",
-      key: "1yiouv"
-    }
-  ],
-  ["circle", { cx: "12", cy: "8", r: "6", key: "1vp47v" }]
-]);
-/**
- * @license lucide-react v0.468.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
 const Bell = createLucideIcon("Bell", [
   ["path", { d: "M10.268 21a2 2 0 0 0 3.464 0", key: "vwvbt9" }],
   [
@@ -12649,23 +12633,6 @@ const BookOpen = createLucideIcon("BookOpen", [
       key: "ruj8y"
     }
   ]
-]);
-/**
- * @license lucide-react v0.468.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const BookX = createLucideIcon("BookX", [
-  ["path", { d: "m14.5 7-5 5", key: "dy991v" }],
-  [
-    "path",
-    {
-      d: "M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20",
-      key: "k3hazp"
-    }
-  ],
-  ["path", { d: "m9.5 7 5 5", key: "s45iea" }]
 ]);
 /**
  * @license lucide-react v0.468.0 - ISC
@@ -12825,17 +12792,6 @@ const ChartColumn = createLucideIcon("ChartColumn", [
   ["path", { d: "M18 17V9", key: "2bz60n" }],
   ["path", { d: "M13 17V5", key: "1frdt8" }],
   ["path", { d: "M8 17v-3", key: "17ska0" }]
-]);
-/**
- * @license lucide-react v0.468.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const ChartNoAxesColumnIncreasing = createLucideIcon("ChartNoAxesColumnIncreasing", [
-  ["line", { x1: "12", x2: "12", y1: "20", y2: "10", key: "1vz5eb" }],
-  ["line", { x1: "18", x2: "18", y1: "20", y2: "4", key: "cun8e5" }],
-  ["line", { x1: "6", x2: "6", y1: "20", y2: "16", key: "hq0ia6" }]
 ]);
 /**
  * @license lucide-react v0.468.0 - ISC
@@ -13476,22 +13432,6 @@ const Mail = createLucideIcon("Mail", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const MapPin = createLucideIcon("MapPin", [
-  [
-    "path",
-    {
-      d: "M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0",
-      key: "1r0f0z"
-    }
-  ],
-  ["circle", { cx: "12", cy: "10", r: "3", key: "ilqhr7" }]
-]);
-/**
- * @license lucide-react v0.468.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
 const Map$5 = createLucideIcon("Map", [
   [
     "path",
@@ -13576,21 +13516,6 @@ const PenTool = createLucideIcon("PenTool", [
   ],
   ["path", { d: "m2.3 2.3 7.286 7.286", key: "1wuzzi" }],
   ["circle", { cx: "11", cy: "11", r: "2", key: "xmgehs" }]
-]);
-/**
- * @license lucide-react v0.468.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const Phone = createLucideIcon("Phone", [
-  [
-    "path",
-    {
-      d: "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z",
-      key: "foiqr5"
-    }
-  ]
 ]);
 /**
  * @license lucide-react v0.468.0 - ISC
@@ -14063,6 +13988,18 @@ const Underline = createLucideIcon("Underline", [
 const Undo = createLucideIcon("Undo", [
   ["path", { d: "M3 7v6h6", key: "1v2h90" }],
   ["path", { d: "M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13", key: "1r6uu6" }]
+]);
+/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const UserPlus = createLucideIcon("UserPlus", [
+  ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
+  ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }],
+  ["line", { x1: "19", x2: "19", y1: "8", y2: "14", key: "1bvyxn" }],
+  ["line", { x1: "22", x2: "16", y1: "11", y2: "11", key: "1shjgl" }]
 ]);
 /**
  * @license lucide-react v0.468.0 - ISC
@@ -39630,7 +39567,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 var jszip_minExports = jszip_min.exports;
 var JSZip = /* @__PURE__ */ getDefaultExportFromCjs(jszip_minExports);
 export {
-  TrendingUp as $,
+  Eye as $,
   Activity as A,
   Bot as B,
   CircleHelp as C,
@@ -39659,99 +39596,95 @@ export {
   Zap as Z,
   RefreshCw as _,
   Brain as a,
-  ClipboardList as a$,
-  Target as a0,
-  CalendarClock as a1,
-  ChartNoAxesColumnIncreasing as a2,
-  BookX as a3,
-  Globe as a4,
-  Eye as a5,
-  Save as a6,
-  Search as a7,
-  SquarePen as a8,
-  Trash2 as a9,
-  RadialBar as aA,
-  Legend as aB,
-  Tooltip as aC,
-  LineChart as aD,
-  CartesianGrid as aE,
-  XAxis as aF,
-  YAxis as aG,
-  Line as aH,
-  BarChart as aI,
-  Bar as aJ,
-  ListChecks as aK,
-  Info as aL,
-  MessageSquare as aM,
-  Menu as aN,
-  WifiOff as aO,
-  GraduationCap as aP,
-  Building as aQ,
-  Flame as aR,
-  Phone as aS,
-  MapPin as aT,
-  Clock as aU,
-  Trophy as aV,
-  Sparkles as aW,
-  Download as aX,
-  JSZip as aY,
-  Wrench as aZ,
-  Play as a_,
-  Server as aa,
-  ArrowRight as ab,
-  FileWarning as ac,
-  Mail as ad,
-  Plus as ae,
-  Youtube as af,
-  Book as ag,
-  FolderPlus as ah,
-  FilePlus as ai,
-  Video as aj,
-  Terminal as ak,
-  Lock as al,
-  ToggleRight as am,
-  ToggleLeft as an,
-  Key as ao,
-  ChartColumn as ap,
-  Database as aq,
-  FileCode as ar,
-  Tag as as,
-  Check as at,
-  ShieldCheck as au,
-  Shield as av,
-  CircleX as aw,
-  CircleCheckBig as ax,
-  ResponsiveContainer as ay,
-  RadialBarChart as az,
+  Pause as a$,
+  Save as a0,
+  Search as a1,
+  SquarePen as a2,
+  Trash2 as a3,
+  Server as a4,
+  ArrowRight as a5,
+  FileWarning as a6,
+  Mail as a7,
+  Plus as a8,
+  Youtube as a9,
+  LineChart as aA,
+  CartesianGrid as aB,
+  XAxis as aC,
+  YAxis as aD,
+  Line as aE,
+  BarChart as aF,
+  Bar as aG,
+  ListChecks as aH,
+  Info as aI,
+  MessageSquare as aJ,
+  Menu as aK,
+  WifiOff as aL,
+  GraduationCap as aM,
+  Building as aN,
+  Flame as aO,
+  CalendarClock as aP,
+  Clock as aQ,
+  Trophy as aR,
+  Sparkles as aS,
+  Download as aT,
+  JSZip as aU,
+  Wrench as aV,
+  Play as aW,
+  ClipboardList as aX,
+  ThumbsUp as aY,
+  Star as aZ,
+  ArrowLeft as a_,
+  Book as aa,
+  FolderPlus as ab,
+  FilePlus as ac,
+  Video as ad,
+  Terminal as ae,
+  Lock as af,
+  ToggleRight as ag,
+  ToggleLeft as ah,
+  Key as ai,
+  ChartColumn as aj,
+  Globe as ak,
+  Database as al,
+  FileCode as am,
+  Target as an,
+  Tag as ao,
+  Check as ap,
+  ShieldCheck as aq,
+  Shield as ar,
+  CircleX as as,
+  CircleCheckBig as at,
+  ResponsiveContainer as au,
+  RadialBarChart as av,
+  RadialBar as aw,
+  Legend as ax,
+  Tooltip as ay,
+  TrendingUp as az,
   ChevronDown as b,
-  Award as b0,
-  Bell as b1,
-  ThumbsUp as b2,
-  Star as b3,
-  ArrowLeft as b4,
-  Pause as b5,
-  Camera as b6,
-  HeartPulse as b7,
-  StickyNote as b8,
-  CirclePlay as b9,
-  RotateCcw as ba,
-  CalendarDays as bb,
-  Map$5 as bc,
-  SquareCheckBig as bd,
-  Flag as be,
-  Briefcase as bf,
-  Moon as bg,
-  Sun as bh,
-  Coffee as bi,
-  Wind as bj,
-  Music as bk,
-  CloudRain as bl,
-  Trees as bm,
-  Waves as bn,
-  Radio as bo,
-  Volume2 as bp,
-  clientExports as bq,
-  React$2 as br,
+  UserPlus as b0,
+  Camera as b1,
+  Bell as b2,
+  HeartPulse as b3,
+  StickyNote as b4,
+  CirclePlay as b5,
+  RotateCcw as b6,
+  CalendarDays as b7,
+  Map$5 as b8,
+  SquareCheckBig as b9,
+  Flag as ba,
+  Briefcase as bb,
+  Moon as bc,
+  Sun as bd,
+  Coffee as be,
+  Wind as bf,
+  Music as bg,
+  CloudRain as bh,
+  Trees as bi,
+  Waves as bj,
+  Radio as bk,
+  Volume2 as bl,
+  clientExports as bm,
+  React$2 as bn,
   BookOpen as c,
   ChevronLeft as d,
   ChevronRight as e,

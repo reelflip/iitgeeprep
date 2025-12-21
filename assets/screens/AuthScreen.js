@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, $ as TrendingUp, aL as Info, l as Layers, c as BookOpen, P as PenTool, aM as MessageSquare, X, aN as Menu, aO as WifiOff, Y as CircleCheck, aP as GraduationCap, o as Users, U as User, ad as Mail, aQ as Building, a0 as Target, i as Calendar, al as Lock, av as Shield, ao as Key, L as LoaderCircle, ab as ArrowRight } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, az as TrendingUp, aI as Info, l as Layers, c as BookOpen, P as PenTool, aJ as MessageSquare, X, aK as Menu, aL as WifiOff, Y as CircleCheck, aM as GraduationCap, o as Users, U as User, a7 as Mail, aN as Building, an as Target, i as Calendar, af as Lock, ar as Shield, ai as Key, L as LoaderCircle, a5 as ArrowRight } from "../vendor.js";
 import { T as TARGET_YEARS, a as TARGET_EXAMS, C as COACHING_INSTITUTES } from "../shared-core.js";
 const SECURITY_QUESTIONS = [
   "What is the name of your first pet?",
@@ -157,7 +157,7 @@ const AuthScreen = ({ onLogin, onNavigate }) => {
             "Prep"
           ] })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase", children: "v13.5 Ultimate Sync Core" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase", children: "v17.0 Ultimate Sync Core" })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 p-8 md:p-12 animate-in fade-in zoom-in-95 duration-500", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center mb-8", children: [
@@ -314,7 +314,7 @@ const AuthScreen = ({ onLogin, onNavigate }) => {
             ] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("button", { type: "submit", disabled: isLoading, className: "w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95", children: isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "w-5 h-5 animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-            view === "REGISTER" ? "Initialize v13.5 Account" : "Secure Entry",
+            view === "REGISTER" ? "Initialize v17.0 Account" : "Secure Entry",
             " ",
             /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 18 })
           ] }) })
@@ -346,7 +346,7 @@ const AuthScreen = ({ onLogin, onNavigate }) => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9px] font-bold text-slate-300 uppercase tracking-[0.3em]", children: [
         "© ",
         (/* @__PURE__ */ new Date()).getFullYear(),
-        " IITGEEPrep • ULTIMATE v13.5 MASTER SYNC"
+        " IITGEEPrep • ULTIMATE v17.0 MASTER SYNC"
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-6", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => onNavigate("privacy"), className: "text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-600", children: "Privacy Policy" }),

@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, T as Timer, b5 as Pause, a_ as Play, R as RotateCw, Z as Zap, _ as RefreshCw, F as FileText } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, T as Timer, a$ as Pause, aW as Play, R as RotateCw, Z as Zap, _ as RefreshCw, F as FileText } from "../vendor.js";
 const FocusScreen = () => {
   const [mode, setMode] = reactExports.useState("POMODORO");
   const [timeLeft, setTimeLeft] = reactExports.useState(25 * 60);

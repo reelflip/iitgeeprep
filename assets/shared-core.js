@@ -10,33 +10,25 @@ const apiService = {
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "X-Requested-With": "XMLHttpRequest",
           ...options.headers || {}
         }
       });
+      if (res.status === 404) {
+        throw new Error(`API_NOT_FOUND: The endpoint ${endpoint} was not found on the server.`);
+      }
       const text = await res.text();
       let json;
       try {
         json = JSON.parse(text);
       } catch (e) {
-        throw {
-          status: res.status,
-          statusText: res.statusText,
-          raw: text,
-          isHtml: text.includes("<!DOCTYPE html>") || text.includes("<?php"),
-          message: `Server returned non-JSON response (HTTP ${res.status})`
-        };
+        throw new Error(`NON_JSON_RESPONSE: Server returned a non-JSON response (HTTP ${res.status}). Ensure backend files are uploaded to the /api/ directory.`);
       }
       if (!res.ok) {
-        throw {
-          status: res.status,
-          message: json.message || `Server Error ${res.status}`,
-          details: json.details || null,
-          raw: json
-        };
+        throw new Error(json.message || `SERVER_ERROR: ${res.status} ${res.statusText}`);
       }
       return json;
     } catch (error) {
+      console.error(`Strict Sync Error [${endpoint}]:`, error.message || error);
       throw error;
     }
   }
@@ -585,7 +577,7 @@ const generatePsychometricReport = (responses) => {
 };
 const phpHeader = `<?php
 /**
- * IITGEEPrep Unified Sync Engine v17.0
+ * IITGEEPrep Unified Sync Engine v17.3
  * PRODUCTION CORE - STRICT MYSQL PDO
  */
 error_reporting(E_ALL);
@@ -645,7 +637,6 @@ const API_FILES_LIST = [
   "manage_tests.php",
   "manage_syllabus.php",
   "manage_questions.php",
-  "manage_questions.php",
   "manage_backlogs.php",
   "manage_goals.php",
   "manage_mistakes.php",
@@ -671,6 +662,14 @@ const API_FILES_LIST = [
 const getBackendFiles = (dbConfig) => {
   const files = [
     {
+      name: ".htaccess",
+      folder: "deployment/api",
+      content: `RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]`
+    },
+    {
       name: "config.php",
       folder: "deployment/api",
       content: `<?php
@@ -692,112 +691,148 @@ try {
 ?>`
     },
     {
-      name: "register.php",
-      folder: "deployment/api",
-      content: `${phpHeader}
-if(!$conn) sendError("DATABASE_OFFLINE", 500);
-$input = getJsonInput();
-if(!$input || !isset($input->email) || !isset($input->password)) sendError("MISSING_CREDENTIALS");
-
-try {
-    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-    $stmt->execute([$input->email]);
-    if($stmt->fetch()) sendError("EMAIL_ALREADY_EXISTS");
-
-    $id = bin2hex(random_bytes(4)); 
-    $hash = password_hash($input->password, PASSWORD_DEFAULT);
-    
-    $sql = "INSERT INTO users (id, name, email, password_hash, role, institute, target_exam, target_year, dob, gender) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        $id,
-        $input->name ?? 'Student',
-        $input->email,
-        $hash,
-        $input->role ?? 'STUDENT',
-        $input->institute ?? null,
-        $input->targetExam ?? null,
-        $input->targetYear ?? null,
-        $input->dob ?? null,
-        $input->gender ?? null
-    ]);
-
-    sendSuccess(["id" => $id]);
-} catch(Exception $e) { sendError($e->getMessage(), 500); }`
-    },
-    {
-      name: "login.php",
-      folder: "deployment/api",
-      content: `${phpHeader}
-if(!$conn) sendError("DATABASE_OFFLINE", 500);
-$input = getJsonInput();
-if(!$input || !isset($input->email) || !isset($input->password)) sendError("MISSING_CREDENTIALS");
-
-try {
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->execute([$input->email]);
-    $user = $stmt->fetch();
-
-    if(!$user || !password_verify($input->password, $user['password_hash'])) {
-        sendError("INVALID_CREDENTIALS", 401);
-    }
-
-    unset($user['password_hash']);
-    $user['targetExam'] = $user['target_exam'];
-    $user['targetYear'] = $user['target_year'];
-    $user['isVerified'] = (bool)$user['is_verified'];
-
-    sendSuccess(["user" => $user]);
-} catch(Exception $e) { sendError($e->getMessage(), 500); }`
-    },
-    {
       name: "get_dashboard.php",
       folder: "deployment/api",
       content: `${phpHeader}
-if(!$conn) sendError("DATABASE_OFFLINE", 500);
+if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
 $user_id = $_GET['user_id'] ?? null;
 if(!$user_id) sendError("MISSING_USER_ID");
 
 try {
+    // 1. Progress
     $stmt = $conn->prepare("SELECT * FROM user_progress WHERE user_id = ?");
     $stmt->execute([$user_id]);
-    $progress = $stmt->fetchAll();
+    $progress = [];
+    foreach($stmt->fetchAll() as $row) {
+        $progress[] = [
+            "topicId" => $row['topic_id'],
+            "status" => $row['status'],
+            "lastRevised" => $row['last_revised'],
+            "revisionLevel" => (int)$row['revision_level'],
+            "nextRevisionDate" => $row['next_revision_date'],
+            "solvedQuestions" => $row['solved_questions_json'] ? json_decode($row['solved_questions_json']) : []
+        ];
+    }
 
+    // 2. Attempts
     $stmt = $conn->prepare("SELECT * FROM test_attempts WHERE user_id = ? ORDER BY date DESC");
     $stmt->execute([$user_id]);
-    $attempts = $stmt->fetchAll();
+    $attempts = [];
+    foreach($stmt->fetchAll() as $row) {
+        $attempts[] = [
+            "id" => $row['id'],
+            "date" => $row['date'],
+            "title" => $row['title'],
+            "score" => (int)$row['score'],
+            "totalMarks" => (int)$row['total_marks'],
+            "accuracy" => (int)$row['accuracy'],
+            "accuracy_percent" => (int)$row['accuracy'],
+            "testId" => $row['test_id'],
+            "totalQuestions" => (int)$row['total_questions'],
+            "correctCount" => (int)$row['correct_count'],
+            "incorrectCount" => (int)$row['incorrect_count'],
+            "unattemptedCount" => (int)$row['unattempted_count'],
+            "topicId" => $row['topic_id'],
+            "difficulty" => $row['difficulty'],
+            "detailedResults" => $row['detailed_results'] ? json_decode($row['detailed_results']) : []
+        ];
+    }
 
-    $stmt = $conn->prepare("SELECT * FROM goals WHERE user_id = ?");
+    // 3. Goals
+    $stmt = $conn->prepare("SELECT id, text, completed FROM goals WHERE user_id = ?");
     $stmt->execute([$user_id]);
-    $goals = $stmt->fetchAll();
+    $goals = [];
+    foreach($stmt->fetchAll() as $row) {
+        $goals[] = ["id" => $row['id'], "text" => $row['text'], "completed" => (bool)$row['completed']];
+    }
 
-    $stmt = $conn->prepare("SELECT * FROM backlogs WHERE user_id = ?");
+    // 4. Backlogs
+    $stmt = $conn->prepare("SELECT id, topic, subject, priority, deadline, status FROM backlogs WHERE user_id = ?");
     $stmt->execute([$user_id]);
-    $backlogs = $stmt->fetchAll();
+    $backlogs = [];
+    foreach($stmt->fetchAll() as $row) {
+        $backlogs[] = [
+            "id" => $row['id'],
+            "topic" => $row['topic'],
+            "subject" => $row['subject'],
+            "priority" => $row['priority'],
+            "deadline" => $row['deadline'],
+            "status" => $row['status']
+        ];
+    }
 
+    // 5. Timetable
     $stmt = $conn->prepare("SELECT config_json, slots_json FROM timetables WHERE user_id = ?");
     $stmt->execute([$user_id]);
-    $timetable = $stmt->fetch();
+    $timetableRow = $stmt->fetch();
+
+    // 6. Psychometric
+    $stmt = $conn->prepare("SELECT report_json FROM psychometric_reports WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    $psychRow = $stmt->fetch();
 
     sendSuccess([
         "progress" => $progress,
         "attempts" => $attempts,
         "goals" => $goals,
         "backlogs" => $backlogs,
-        "timetable" => $timetable ? [
-            "config" => json_decode($timetable['config_json']),
-            "slots" => json_decode($timetable['slots_json'])
-        ] : null
+        "timetable" => $timetableRow ? [
+            "config" => json_decode($timetableRow['config_json']),
+            "slots" => json_decode($timetableRow['slots_json'])
+        ] : null,
+        "psychometric" => $psychRow ? json_decode($psychRow['report_json']) : null
     ]);
 } catch(Exception $e) { sendError($e->getMessage(), 500); }`
+    },
+    {
+      name: "save_attempt.php",
+      folder: "deployment/api",
+      content: `${phpHeader}
+if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
+$input = getJsonInput();
+if(!$input || !isset($input->userId)) sendError("MISSING_DATA");
+
+try {
+    $sql = "INSERT INTO \`test_attempts\` (
+        id, user_id, test_id, title, score, total_marks, accuracy, 
+        total_questions, correct_count, incorrect_count, unattempted_count, 
+        topic_id, difficulty, detailed_results, date
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE 
+        score = VALUES(score), 
+        accuracy = VALUES(accuracy),
+        correct_count = VALUES(correct_count),
+        incorrect_count = VALUES(incorrect_count),
+        unattempted_count = VALUES(unattempted_count),
+        detailed_results = VALUES(detailed_results)";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        $input->id,
+        $input->userId,
+        $input->testId,
+        $input->title,
+        $input->score,
+        $input->totalMarks,
+        $input->accuracy_percent ?? ($input->accuracy ?? 0),
+        $input->totalQuestions,
+        $input->correctCount,
+        $input->incorrectCount,
+        $input->unattemptedCount,
+        $input->topicId ?? null,
+        $input->difficulty ?? null,
+        isset($input->detailedResults) ? json_encode($input->detailedResults) : null,
+        $input->date ?? date('Y-m-d H:i:s')
+    ]);
+
+    sendSuccess(["status" => "SAVED"]);
+} catch(Exception $e) { sendError("PERSISTENCE_FAILURE", 500, $e->getMessage()); }`
     },
     {
       name: "sync_progress.php",
       folder: "deployment/api",
       content: `${phpHeader}
-if(!$conn) sendError("DATABASE_OFFLINE", 500);
+if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
 $input = getJsonInput();
 if(!$input || !isset($input->userId)) sendError("MISSING_DATA");
 
@@ -822,110 +857,8 @@ try {
         ':sqj' => isset($input->solvedQuestions) ? json_encode($input->solvedQuestions) : null
     ]);
 
-    sendSuccess();
+    sendSuccess(["status" => "SYNCED"]);
 } catch(Exception $e) { sendError($e->getMessage(), 500); }`
-    },
-    {
-      name: "save_attempt.php",
-      folder: "deployment/api",
-      content: `${phpHeader}
-if(!$conn) sendError("DATABASE_OFFLINE", 500);
-$input = getJsonInput();
-if(!$input || !isset($input->userId)) sendError("MISSING_DATA");
-
-try {
-    $sql = "INSERT INTO test_attempts (id, user_id, test_id, title, score, total_marks, accuracy, total_questions, correct_count, incorrect_count, unattempted_count, topic_id, difficulty, detailed_results, date) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        $input->id,
-        $input->userId,
-        $input->testId,
-        $input->title,
-        $input->score,
-        $input->totalMarks,
-        $input->accuracy_percent ?? $input->accuracy,
-        $input->totalQuestions,
-        $input->correctCount,
-        $input->incorrectCount,
-        $input->unattemptedCount,
-        $input->topicId ?? null,
-        $input->difficulty ?? null,
-        isset($input->detailedResults) ? json_encode($input->detailedResults) : null,
-        $input->date ?? date('Y-m-d H:i:s')
-    ]);
-
-    sendSuccess();
-} catch(Exception $e) { sendError($e->getMessage(), 500); }`
-    },
-    {
-      name: "save_timetable.php",
-      folder: "deployment/api",
-      content: `${phpHeader}
-if(!$conn) sendError("DATABASE_OFFLINE", 500);
-$input = getJsonInput();
-if(!$input || !isset($input->userId)) sendError("MISSING_DATA");
-
-try {
-    $sql = "INSERT INTO timetables (user_id, config_json, slots_json) 
-            VALUES (?, ?, ?) 
-            ON DUPLICATE KEY UPDATE 
-            config_json = VALUES(config_json), 
-            slots_json = VALUES(slots_json)";
-    
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        $input->userId,
-        json_encode($input->config),
-        json_encode($input->slots)
-    ]);
-
-    sendSuccess();
-} catch(Exception $e) { sendError($e->getMessage(), 500); }`
-    },
-    {
-      name: "manage_users.php",
-      folder: "deployment/api",
-      content: `${phpHeader}
-if(!$conn) sendError("DATABASE_OFFLINE", 500);
-
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $group = $_GET['group'] ?? 'USERS';
-    if ($group === 'ADMINS') {
-        $stmt = $conn->prepare("SELECT id, name, email, role, is_verified, created_at FROM users WHERE role LIKE 'ADMIN%'");
-    } else {
-        $stmt = $conn->prepare("SELECT id, name, email, role, is_verified, created_at FROM users WHERE role NOT LIKE 'ADMIN%'");
-    }
-    $stmt->execute();
-    $rows = $stmt->fetchAll();
-    
-    // Explicitly map snake_case to camelCase for the frontend User interface
-    foreach($rows as &$row) {
-        $row['isVerified'] = $row['is_verified'] == 1;
-        unset($row['is_verified']);
-    }
-    
-    echo json_encode($rows);
-    exit;
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $input = getJsonInput();
-    if (!$input || !isset($input->id)) sendError("MISSING_ID");
-    $stmt = $conn->prepare("UPDATE users SET is_verified = ? WHERE id = ?");
-    $stmt->execute([$input->isVerified ? 1 : 0, $input->id]);
-    sendSuccess();
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $id = $_GET['id'] ?? null;
-    if (!$id) sendError("MISSING_ID");
-    $stmt = $conn->prepare("DELETE FROM users WHERE id = ? AND role NOT LIKE 'ADMIN%'");
-    $stmt->execute([$id]);
-    sendSuccess();
-}
-`
     }
   ];
   API_FILES_LIST.forEach((name) => {
@@ -934,15 +867,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         name,
         folder: "deployment/api",
         content: `${phpHeader}
-// Business Logic for ${name}
+// Standardized Handler for ${name}
 if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
 
-$input = null;
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $input = getJsonInput();
-    if(!$input) sendError("INVALID_JSON_INPUT", 400);
-}
-
+$input = getJsonInput();
 sendSuccess(["info" => "Endpoint Active", "method" => $_SERVER['REQUEST_METHOD']]);`
       });
     }
@@ -950,9 +878,7 @@ sendSuccess(["info" => "Endpoint Active", "method" => $_SERVER['REQUEST_METHOD']
   return files;
 };
 const generateSQLSchema = () => {
-  return `-- IITGEEPrep Unified Schema v17.0
--- IMPORT TO PHPMYADMIN (HOSTINGER)
-
+  return `-- IITGEEPrep Master Schema v17.3
 CREATE TABLE IF NOT EXISTS users (
     id VARCHAR(255) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -1034,20 +960,7 @@ CREATE TABLE IF NOT EXISTS backlogs (
     status VARCHAR(20) DEFAULT 'PENDING',
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS contacts (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255),
-    email VARCHAR(255),
-    subject VARCHAR(255),
-    message TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS settings (
-    setting_key VARCHAR(255) PRIMARY KEY,
-    setting_value TEXT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`;
+`;
 };
 const CATEGORY_MAP = {
   INFRA: { label: "Platform & Infrastructure", count: 12, prefix: "A" },
@@ -1100,23 +1013,23 @@ class E2ETestRunner {
       write_safety: { id: "write_safety", label: "Write-Safety", status: "PENDING", msg: "Awaiting integrity" }
     };
     const res = await this.apiProbe("/api/test_db.php?action=full_diagnostic");
-    if (!res.ok && !res.json) {
+    if (!res.json || res.status === 404 || res.status === 500) {
       Object.keys(checks).forEach((k) => {
         checks[k].status = "FAIL";
-        checks[k].msg = res.raw || "API Endpoint Unreachable";
+        checks[k].msg = res.status === 404 ? "API file missing" : "Server internal error";
       });
       return checks;
     }
     const data = ((_a = res.json) == null ? void 0 : _a.checks) || {};
-    const apiSuccess = ((_b = res.json) == null ? void 0 : _b.status) === "success";
+    ((_b = res.json) == null ? void 0 : _b.status) === "success";
     Object.keys(checks).forEach((k) => {
       var _a2;
       if (data[k]) {
         checks[k].status = data[k].pass ? "PASS" : "FAIL";
         checks[k].msg = data[k].msg;
-      } else if (!apiSuccess) {
+      } else {
         checks[k].status = "FAIL";
-        checks[k].msg = ((_a2 = res.json) == null ? void 0 : _a2.message) || "Check failed to execute";
+        checks[k].msg = ((_a2 = res.json) == null ? void 0 : _a2.message) || "Incompatible API version";
       }
     });
     return checks;
@@ -1173,12 +1086,12 @@ class E2ETestRunner {
     return descMap[id] || `Requirement ${id} Logic Verification`;
   }
   async executeTestLogic(id) {
-    var _a, _b;
+    var _a, _b, _c;
     switch (id) {
       case "A.02": {
         const db = await this.apiProbe("/api/test_db.php");
-        if (((_a = db.json) == null ? void 0 : _a.status) === "CONNECTED") return { pass: true, msg: "DB Link Stable", latency: db.latency };
-        return { pass: false, msg: ((_b = db.json) == null ? void 0 : _b.message) || db.raw || "Connection Refused", latency: db.latency, raw: db.json };
+        if (((_a = db.json) == null ? void 0 : _a.status) === "success" || ((_b = db.json) == null ? void 0 : _b.status) === "CONNECTED") return { pass: true, msg: "DB Link Stable", latency: db.latency };
+        return { pass: false, msg: ((_c = db.json) == null ? void 0 : _c.message) || db.raw || "Connection Refused", latency: db.latency, raw: db.json };
       }
       default: {
         const gen = await this.apiProbe("/api/index.php");

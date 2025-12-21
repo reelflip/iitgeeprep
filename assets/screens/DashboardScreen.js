@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, o as Users, a5 as ArrowRight, aQ as Clock, an as Target, aR as Trophy, a as Brain, aS as Sparkles, k as CircleAlert, H as Heart, Z as Zap, n as Lightbulb } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, U as Users, a5 as ArrowRight, aQ as Clock, an as Target, aR as Trophy, a as Brain, aS as Sparkles, o as CircleAlert, H as Heart, Z as Zap, q as Lightbulb } from "../vendor.js";
 import { S as SYLLABUS_DATA } from "../shared-core.js";
 const DashboardScreen = ({ user, viewingStudentName, progress, testAttempts, goals, toggleGoal, addGoal, setScreen, linkedPsychReport }) => {
   const [newGoalText, setNewGoalText] = reactExports.useState("");

@@ -1,18 +1,26 @@
-import { r as reactExports, j as jsxRuntimeExports, o as Users, aq as ShieldCheck, a1 as Search, L as LoaderCircle, a7 as Mail, i as Calendar, ar as Shield, as as CircleX, at as CircleCheckBig, a3 as Trash2 } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, U as Users, aq as ShieldCheck, o as CircleAlert, _ as RefreshCw, a1 as Search, L as LoaderCircle, a7 as Mail, n as Calendar, ar as Shield, as as CircleX, at as CircleCheckBig, a3 as Trash2 } from "../vendor.js";
 import { a as apiService } from "../shared-core.js";
 const AdminUserManagementScreen = () => {
   const [users, setUsers] = reactExports.useState([]);
   const [loading, setLoading] = reactExports.useState(true);
+  const [error, setError] = reactExports.useState(null);
   const [searchTerm, setSearchTerm] = reactExports.useState("");
   const [activeGroup, setActiveGroup] = reactExports.useState("USERS");
   const [filterRole, setFilterRole] = reactExports.useState("ALL");
   const fetchUsers = reactExports.useCallback(async (group) => {
     setLoading(true);
+    setError(null);
     try {
       const data = await apiService.request(`/api/manage_users.php?group=${group}`);
-      setUsers(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Failed to fetch users", error);
+      if (data && !Array.isArray(data) && data.status === "error") {
+        setError(data.message || "Failed to load user registry.");
+        setUsers([]);
+      } else {
+        setUsers(Array.isArray(data) ? data : []);
+      }
+    } catch (err) {
+      console.error("Failed to fetch users", err);
+      setError(err.message || "Network Error: Could not connect to the management node.");
       setUsers([]);
     } finally {
       setLoading(false);
@@ -28,9 +36,8 @@ const AdminUserManagementScreen = () => {
         body: JSON.stringify({ id, isVerified: !currentStatus })
       });
       setUsers((prev) => prev.map((u) => u.id === id ? { ...u, isVerified: !currentStatus } : u));
-    } catch (error) {
-      console.error("Failed to update status", error);
-      alert("Update failed. Please try again.");
+    } catch (err) {
+      alert("Update failed. Check system logs.");
     }
   };
   const handleDelete = async (id) => {
@@ -38,8 +45,7 @@ const AdminUserManagementScreen = () => {
     try {
       await apiService.request(`/api/manage_users.php?id=${id}`, { method: "DELETE" });
       setUsers((prev) => prev.filter((u) => u.id !== id));
-    } catch (error) {
-      console.error("Failed to delete user", error);
+    } catch (err) {
       alert("Delete failed. Administrators cannot be deleted via this console.");
     }
   };
@@ -88,7 +94,32 @@ const AdminUserManagementScreen = () => {
         }
       )
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden", children: [
+    error && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-red-50 border border-red-200 p-6 rounded-2xl flex flex-col items-center text-center gap-4 animate-in slide-in-from-top-2 shadow-sm", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 bg-red-100 rounded-full text-red-600", children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { size: 32 }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-md", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-black text-red-900 uppercase tracking-tight", children: "Database Query Failed" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-red-700 text-sm font-medium mt-1", children: error }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-red-500 text-xs mt-3 leading-relaxed", children: [
+          "This usually happens if the ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("code", { children: "api/config.php" }),
+          " settings are incorrect or the MySQL user lacks permissions for the ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("code", { children: "users" }),
+          " table."
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          onClick: () => fetchUsers(activeGroup),
+          className: "mt-2 bg-red-600 text-white px-6 py-2 rounded-xl font-bold flex items-center gap-2 hover:bg-red-700 transition-all",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 16 }),
+            " Retry Sync"
+          ]
+        }
+      )
+    ] }),
+    !error && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-5 border-b border-slate-200 flex flex-col lg:flex-row gap-4 justify-between items-center bg-slate-50/50", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative w-full lg:w-96", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" }),
@@ -166,7 +197,7 @@ const AdminUserManagementScreen = () => {
               "button",
               {
                 onClick: () => handleDelete(user.id),
-                className: "p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all",
+                className: "p-2 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all",
                 title: "Delete Master Record",
                 children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 18 })
               }

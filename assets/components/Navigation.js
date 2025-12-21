@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, f as LogOut, r as reactExports, E as Ellipsis, g as LayoutDashboard, c as BookOpen, B as Bot, F as FileText, a as Brain, T as Timer, h as ChartNoAxesColumn, i as Calendar, R as RotateCw, k as CircleAlert, l as Layers, m as ListTodo, n as Lightbulb, H as Heart, U as User, o as Users, p as Settings, I as Inbox, P as PenTool, A as Activity, q as CloudUpload } from "../vendor.js";
+import { j as jsxRuntimeExports, f as LogOut, r as reactExports, E as Ellipsis, g as LayoutDashboard, U as Users, I as Inbox, c as BookOpen, F as FileText, h as Layers, P as PenTool, i as ChartNoAxesColumn, A as Activity, k as Settings, l as CloudUpload, m as User, B as Bot, a as Brain, T as Timer, n as Calendar, R as RotateCw, o as CircleAlert, p as ListTodo, q as Lightbulb, H as Heart } from "../vendor.js";
 const STUDENT_MENU = [
   { id: "dashboard", icon: LayoutDashboard, label: "Home" },
   { id: "syllabus", icon: BookOpen, label: "Syllabus" },
@@ -21,13 +21,14 @@ const ADMIN_MENU = [
   { id: "users", icon: Users, label: "User Management" },
   { id: "inbox", icon: Inbox, label: "Inbox" },
   { id: "syllabus_admin", icon: BookOpen, label: "Syllabus" },
-  { id: "tests", icon: FileText, label: "Tests" },
+  { id: "tests_admin", icon: FileText, label: "Tests" },
   { id: "content", icon: Layers, label: "Content" },
   { id: "blog_admin", icon: PenTool, label: "Blog" },
   { id: "analytics", icon: ChartNoAxesColumn, label: "Analytics" },
   { id: "diagnostics", icon: Activity, label: "Diagnostics" },
   { id: "system", icon: Settings, label: "System" },
-  { id: "deployment", icon: CloudUpload, label: "Deploy" }
+  { id: "deployment", icon: CloudUpload, label: "Deploy" },
+  { id: "profile", icon: User, label: "Profile" }
 ];
 const PARENT_MENU = [
   { id: "dashboard", icon: LayoutDashboard, label: "Overview" },
@@ -37,14 +38,9 @@ const PARENT_MENU = [
   { id: "profile", icon: Settings, label: "Settings" }
 ];
 const getMenu = (role) => {
-  switch (role) {
-    case "ADMIN":
-      return ADMIN_MENU;
-    case "PARENT":
-      return PARENT_MENU;
-    default:
-      return STUDENT_MENU;
-  }
+  if (role == null ? void 0 : role.startsWith("ADMIN")) return ADMIN_MENU;
+  if (role === "PARENT") return PARENT_MENU;
+  return STUDENT_MENU;
 };
 const NavItem = ({ id, icon: Icon, label, isActive, onClick, hasNotification }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
   "button",
@@ -70,7 +66,7 @@ const Navigation = ({ currentScreen, setScreen, logout, user }) => {
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mt-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1.5 py-0.5 bg-slate-800 rounded", children: (user == null ? void 0 : user.role) || "STUDENT" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-slate-600", children: "• v17.0" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-slate-600", children: "• v17.5" })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { className: "flex-1 space-y-1 pb-4", children: menuItems.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(

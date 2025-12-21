@@ -13179,22 +13179,6 @@ const Heading2 = createLucideIcon("Heading2", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const HeartPulse = createLucideIcon("HeartPulse", [
-  [
-    "path",
-    {
-      d: "M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z",
-      key: "c3ymky"
-    }
-  ],
-  ["path", { d: "M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27", key: "1uw2ng" }]
-]);
-/**
- * @license lucide-react v0.468.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
 const Heart = createLucideIcon("Heart", [
   [
     "path",
@@ -39588,7 +39572,7 @@ export {
   RotateCw as R,
   Send as S,
   Timer as T,
-  User as U,
+  Users as U,
   Image as V,
   TriangleAlert as W,
   X,
@@ -39664,42 +39648,41 @@ export {
   UserPlus as b0,
   Camera as b1,
   Bell as b2,
-  HeartPulse as b3,
-  StickyNote as b4,
-  CirclePlay as b5,
-  RotateCcw as b6,
-  CalendarDays as b7,
-  Map$5 as b8,
-  SquareCheckBig as b9,
-  Flag as ba,
-  Briefcase as bb,
-  Moon as bc,
-  Sun as bd,
-  Coffee as be,
-  Wind as bf,
-  Music as bg,
-  CloudRain as bh,
-  Trees as bi,
-  Waves as bj,
-  Radio as bk,
-  Volume2 as bl,
-  clientExports as bm,
-  React$2 as bn,
+  StickyNote as b3,
+  CirclePlay as b4,
+  RotateCcw as b5,
+  CalendarDays as b6,
+  Map$5 as b7,
+  SquareCheckBig as b8,
+  Flag as b9,
+  Briefcase as ba,
+  Moon as bb,
+  Sun as bc,
+  Coffee as bd,
+  Wind as be,
+  Music as bf,
+  CloudRain as bg,
+  Trees as bh,
+  Waves as bi,
+  Radio as bj,
+  Volume2 as bk,
+  clientExports as bl,
+  React$2 as bm,
   BookOpen as c,
   ChevronLeft as d,
   ChevronRight as e,
   LogOut as f,
   LayoutDashboard as g,
-  ChartNoAxesColumn as h,
-  Calendar as i,
+  Layers as h,
+  ChartNoAxesColumn as i,
   jsxRuntimeExports as j,
-  CircleAlert as k,
-  Layers as l,
-  ListTodo as m,
-  Lightbulb as n,
-  Users as o,
-  Settings as p,
-  CloudUpload as q,
+  Settings as k,
+  CloudUpload as l,
+  User as m,
+  Calendar as n,
+  CircleAlert as o,
+  ListTodo as p,
+  Lightbulb as q,
   reactExports as r,
   Undo as s,
   Redo as t,

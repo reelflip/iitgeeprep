@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, k as CircleAlert } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, o as CircleAlert } from "../vendor.js";
 const MistakesScreen = ({ mistakes, addMistake }) => {
   const [isOpen, setIsOpen] = reactExports.useState(false);
   const [form, setForm] = reactExports.useState({ question: "", subject: "Physics", note: "" });

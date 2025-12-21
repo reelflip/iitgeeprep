@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, R as RotateCw, C as CircleHelp, k as CircleAlert, aQ as Clock, Y as CircleCheck, i as Calendar } from "../vendor.js";
+import { j as jsxRuntimeExports, R as RotateCw, C as CircleHelp, o as CircleAlert, aQ as Clock, Y as CircleCheck, n as Calendar } from "../vendor.js";
 import { S as SYLLABUS_DATA, f as formatDate } from "../shared-core.js";
 const RevisionScreen = ({ progress, handleRevisionComplete }) => {
   const now = /* @__PURE__ */ new Date();

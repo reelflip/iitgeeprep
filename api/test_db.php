@@ -1,13 +1,13 @@
 <?php
 /**
- * IITGEEPrep Engine v14.5 - Production Logic Core
- * REAL DATABASE OPERATIONS ONLY - NO MOCKING
+ * IITGEEPrep Engine v16.0 - MySQL Production Core
+ * HOSTINGER OPTIMIZED - NO MOCKING
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
-// STRONG CORS HEADERS FOR PRODUCTION
+// PRODUCTION CORS HEADERS
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept");
@@ -22,7 +22,7 @@ include_once 'config.php';
 
 /**
  * Standardized JSON Input Reader
- * Essential for modern React Fetch requests on PHP servers.
+ * Essential for modern React Fetch requests.
  */
 function getJsonInput() {
     $raw = file_get_contents('php://input');
@@ -42,10 +42,20 @@ function sendSuccess($data = []) {
     exit;
 }
 
-// Business logic for test_db.php follows...
-if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
+if (!$conn) {
+    sendError("DATABASE_CONNECTION_FAILED", 500, $db_error);
+}
 
-$input = getJsonInput();
-if(!$input) sendError("INVALID_JSON_INPUT", 400);
-
-sendSuccess(["info" => "Production Endpoint Active"]);
+try {
+    $tables = [];
+    $stmt = $conn->query("SHOW TABLES");
+    while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+        $name = $row[0];
+        $countStmt = $conn->query("SELECT COUNT(*) FROM `$name`");
+        $count = $countStmt->fetchColumn();
+        $tables[] = ["name" => $name, "rows" => (int)$count];
+    }
+    sendSuccess(["status" => "CONNECTED", "engine" => "MySQL", "tables" => $tables]);
+} catch (Exception $e) {
+    sendError("QUERY_FAILED", 500, $e->getMessage());
+}

@@ -1,13 +1,13 @@
 <?php
 /**
- * IITGEEPrep Engine v14.5 - Production Logic Core
- * REAL DATABASE OPERATIONS ONLY - NO MOCKING
+ * IITGEEPrep Engine v16.0 - MySQL Production Core
+ * HOSTINGER OPTIMIZED - NO MOCKING
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
-// STRONG CORS HEADERS FOR PRODUCTION
+// PRODUCTION CORS HEADERS
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept");
@@ -22,7 +22,7 @@ include_once 'config.php';
 
 /**
  * Standardized JSON Input Reader
- * Essential for modern React Fetch requests on PHP servers.
+ * Essential for modern React Fetch requests.
  */
 function getJsonInput() {
     $raw = file_get_contents('php://input');
@@ -42,10 +42,16 @@ function sendSuccess($data = []) {
     exit;
 }
 
-// Business logic for manage_tests.php follows...
+// MySQL Business logic for manage_tests.php
 if(!$conn) sendError("DATABASE_OFFLINE", 500, $db_error);
 
-$input = getJsonInput();
-if(!$input) sendError("INVALID_JSON_INPUT", 400);
+/**
+ * Fixed: Only enforce JSON input on POST/PUT requests to avoid 400 on diagnostic probes
+ */
+$input = null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT') {
+    $input = getJsonInput();
+    if(!$input) sendError("INVALID_JSON_INPUT", 400);
+}
 
-sendSuccess(["info" => "Production Endpoint Active"]);
+sendSuccess(["info" => "Production Endpoint Active", "method" => $_SERVER['REQUEST_METHOD']]);

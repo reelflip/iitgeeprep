@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v13.4 - Production Logic Core
- * Fix: Data integrity for Admin Dashboards (Prevents JS .map() crashes)
+ * IITGEEPrep Engine v13.5 - Production Logic Core
+ * REAL DATABASE OPERATIONS ONLY - NO MOCKING
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -36,9 +36,6 @@ function sendSuccess($data = []) {
     exit;
 }
 
-/**
- * Health Check Bypass
- */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $raw = file_get_contents('php://input');
     if ($raw === '{}' || $raw === '[]') {
@@ -47,9 +44,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-try { 
-  $method = $_SERVER['REQUEST_METHOD'];
-  $data = getJsonInput();
-  // Default array fallback to prevent JS crashes on admin screens
-  echo json_encode([]); 
+$data = getJsonInput();
+if (!$data) sendError("Payload missing");
+try {
+    $stmt = $conn->prepare("INSERT INTO test_attempts (id, user_id, test_id, title, score, total_marks, accuracy, total_questions, correct_count, incorrect_count, unattempted_count, topic_id, difficulty, detailed_results) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([
+        getV($data, 'id'), getV($data, 'userId'), getV($data, 'testId'), getV($data, 'title'),
+        getV($data, 'score'), getV($data, 'totalMarks'), getV($data, 'accuracy'),
+        getV($data, 'totalQuestions'), getV($data, 'correctCount'), getV($data, 'incorrectCount'),
+        getV($data, 'unattemptedCount'), getV($data, 'topicId'), getV($data, 'difficulty'),
+        json_encode(getV($data, 'detailedResults', []))
+    ]);
+    sendSuccess(["attempt_id" => getV($data, 'id')]);
 } catch (Exception $e) { sendError($e->getMessage(), 500); }

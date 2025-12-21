@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v13.4 - Production Logic Core
- * Fix: Data integrity for Admin Dashboards (Prevents JS .map() crashes)
+ * IITGEEPrep Engine v13.5 - Production Logic Core
+ * REAL DATABASE OPERATIONS ONLY - NO MOCKING
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -36,9 +36,6 @@ function sendSuccess($data = []) {
     exit;
 }
 
-/**
- * Health Check Bypass
- */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $raw = file_get_contents('php://input');
     if ($raw === '{}' || $raw === '[]') {
@@ -47,9 +44,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-try { 
-  $method = $_SERVER['REQUEST_METHOD'];
-  $data = getJsonInput();
-  // Default array fallback to prevent JS crashes on admin screens
-  echo json_encode([]); 
+$data = getJsonInput();
+if (!$data) sendError("Payload missing");
+$uid = getV($data, 'userId');
+$tid = getV($data, 'topicId');
+try {
+    $stmt = $conn->prepare("INSERT INTO user_progress (user_id, topic_id, status, last_revised, revision_level, next_revision_date, solved_questions_json) 
+        VALUES (?, ?, ?, ?, ?, ?, ?) 
+        ON DUPLICATE KEY UPDATE status=VALUES(status), last_revised=VALUES(last_revised), revision_level=VALUES(revision_level), next_revision_date=VALUES(next_revision_date), solved_questions_json=VALUES(solved_questions_json)");
+    $stmt->execute([
+        $uid, $tid, getV($data, 'status'), getV($data, 'lastRevised'), 
+        getV($data, 'revisionLevel', 0), getV($data, 'nextRevisionDate'),
+        json_encode(getV($data, 'solvedQuestions', []))
+    ]);
+    sendSuccess(["affected_rows" => $stmt->rowCount()]);
 } catch (Exception $e) { sendError($e->getMessage(), 500); }

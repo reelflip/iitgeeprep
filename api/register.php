@@ -1,7 +1,7 @@
 <?php
 /**
- * IITGEEPrep Engine v13.4 - Production Logic Core
- * Fix: Data integrity for Admin Dashboards (Prevents JS .map() crashes)
+ * IITGEEPrep Engine v13.5 - Production Logic Core
+ * REAL DATABASE OPERATIONS ONLY - NO MOCKING
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -36,9 +36,6 @@ function sendSuccess($data = []) {
     exit;
 }
 
-/**
- * Health Check Bypass
- */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $raw = file_get_contents('php://input');
     if ($raw === '{}' || $raw === '[]') {
@@ -47,9 +44,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-try { 
-  $method = $_SERVER['REQUEST_METHOD'];
-  $data = getJsonInput();
-  // Default array fallback to prevent JS crashes on admin screens
-  echo json_encode([]); 
+$data = getJsonInput();
+if (!$data) sendError("Registration data missing");
+$email = getV($data, 'email');
+try {
+    $check = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $check->execute([$email]);
+    if ($check->fetch()) sendError("Duplicate account detected", 409);
+    
+    $newId = "U" . mt_rand(100000, 999999);
+    $passHash = password_hash(getV($data, 'password'), PASSWORD_BCRYPT);
+    $stmt = $conn->prepare("INSERT INTO users (id, name, email, password_hash, role) VALUES (?, ?, ?, ?, ?)");
+    $stmt->execute([$newId, getV($data, 'name'), $email, $passHash, getV($data, 'role', 'STUDENT')]);
+    sendSuccess(["id" => $newId]);
 } catch (Exception $e) { sendError($e->getMessage(), 500); }

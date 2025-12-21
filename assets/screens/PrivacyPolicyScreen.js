@@ -1,4 +1,4 @@
-import { j as jsxRuntimeExports, aB as ShieldCheck, ax as Database, ad as Eye, as as Lock, F as FileText } from "../vendor.js";
+import { j as jsxRuntimeExports, au as ShieldCheck, aq as Database, a5 as Eye, al as Lock, F as FileText } from "../vendor.js";
 const PrivacyPolicyScreen = () => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "animate-in fade-in slide-in-from-bottom-4 pb-10", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-slate-900 text-white py-16 px-4 text-center", children: [

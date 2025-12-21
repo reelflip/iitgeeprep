@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, bg as Camera, a8 as Target, ae as Save, U as User, bc as Bell, al as Mail, aC as Shield, a6 as CircleCheck } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, b8 as Camera, a0 as Target, a6 as Save, U as User, b3 as Bell, ad as Mail, av as Shield, Y as CircleCheck } from "../vendor.js";
 import { a as TARGET_EXAMS } from "../shared-core.js";
 const ProfileScreen = ({ user, onAcceptRequest, onUpdateUser, linkedStudentName }) => {
   var _a;

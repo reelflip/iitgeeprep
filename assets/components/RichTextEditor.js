@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, z as Undo, D as Redo, G as Bold, J as Italic, K as Underline, N as Heading1, O as Heading2, Q as Type, V as AlignLeft, W as AlignCenter, _ as AlignRight, $ as List, a0 as ListOrdered, a1 as Quote, a2 as Code, a3 as Link, a4 as Image } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, s as Undo, t as Redo, u as Bold, v as Italic, w as Underline, x as Heading1, y as Heading2, z as Type, D as AlignLeft, G as AlignCenter, J as AlignRight, K as List, M as ListOrdered, Q as Quote, N as Code, O as Link, V as Image } from "../vendor.js";
 const RichTextEditor = ({ content, onChange, placeholder, className = "" }) => {
   const editorRef = reactExports.useRef(null);
   const execCmd = (command, value = void 0) => {

@@ -1,4 +1,4 @@
-import { r as reactExports, j as jsxRuntimeExports, c as BookOpen, af as Search, a6 as CircleCheck, e as ChevronRight, t as ArrowLeft, a_ as Clock, ae as Save, b0 as Sparkles, L as LoaderCircle, S as Send, bi as StickyNote } from "../vendor.js";
+import { r as reactExports, j as jsxRuntimeExports, c as BookOpen, a7 as Search, Y as CircleCheck, e as ChevronRight, b6 as ArrowLeft, aU as Clock, a6 as Save, aW as Sparkles, L as LoaderCircle, S as Send, ba as StickyNote } from "../vendor.js";
 import { B as BookReader } from "../components/BookReader.js";
 import { S as SyncStatusBadge } from "../components/SyncStatusBadge.js";
 const statusColors = {

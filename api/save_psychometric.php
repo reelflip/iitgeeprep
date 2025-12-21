@@ -1,33 +1,34 @@
 <?php
 /**
- * IITGEEPrep Engine v13.5 - Production Logic Core
- * REAL DATABASE OPERATIONS ONLY - NO MOCKING
+ * IITGEEPrep Unified Sync Engine v17.0
+ * PRODUCTION CORE - STRICT MYSQL PDO
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
-include_once 'cors.php';
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept");
+header("Content-Type: application/json; charset=UTF-8");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
 include_once 'config.php';
 
 function getJsonInput() {
     $raw = file_get_contents('php://input');
-    if (!$raw || $raw === '{}' || $raw === '[]') return null;
+    if (!$raw) return null;
     $data = json_decode($raw);
     return (json_last_error() === JSON_ERROR_NONE) ? $data : null;
 }
 
-function getV($data, $p, $default = null) {
-    if (!$data) return $default;
-    if (isset($data->$p)) return $data->$p;
-    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $p));
-    if (isset($data->$snake)) return $data->$snake;
-    return $default;
-}
-
-function sendError($msg, $code = 400) {
+function sendError($msg, $code = 400, $details = null) {
     http_response_code($code);
-    echo json_encode(["status" => "error", "message" => $msg]);
+    echo json_encode(["status" => "error", "message" => $msg, "details" => $details]);
     exit;
 }
 
@@ -36,12 +37,11 @@ function sendSuccess($data = []) {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $raw = file_get_contents('php://input');
-    if ($raw === '{}' || $raw === '[]') {
-        echo json_encode(["status" => "active", "message" => "Endpoint responsive"]);
-        exit;
-    }
-}
-
-echo json_encode(["status" => "success", "info" => "Production logic active for $name"]);
+if(!$conn) sendError("DB_OFFLINE", 500);
+$input = getJsonInput();
+if(!$input || !isset($input->user_id)) sendError("INVALID_PAYLOAD");
+try {
+    $stmt = $conn->prepare("INSERT INTO psychometric_reports (user_id, report_json) VALUES (?, ?) ON DUPLICATE KEY UPDATE report_json = VALUES(report_json)");
+    $stmt->execute([$input->user_id, json_encode($input->report)]);
+    sendSuccess();
+} catch(Exception $e) { sendError($e->getMessage(), 500); }

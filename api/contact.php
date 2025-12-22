@@ -1,34 +1,23 @@
 <?php
-/**
- * IITGEEPrep Unified Sync Engine v20.0
- * PRODUCTION CORE - STRICT MYSQL PDO
- */
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept");
-header("Content-Type: application/json; charset=UTF-8");
+require_once "config.php";
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit; }
+$input = getInput();
 
-include_once 'config.php';
+$name    = trim($input['name'] ?? '');
+$email   = trim($input['email'] ?? '');
+$message = trim($input['message'] ?? '');
 
-function getJsonInput() {
-    return json_decode(file_get_contents('php://input'));
+if ($name === '' || $email === '' || $message === '') {
+    jsonResponse(["success" => false, "message" => "All fields required"], 400);
 }
 
-function sendError($msg, $code = 400) {
-    http_response_code($code);
-    echo json_encode(["status" => "error", "message" => $msg]);
-    exit;
-}
+$stmt = $conn->prepare(
+    "INSERT INTO contact_messages (name, email, message) VALUES (?, ?, ?)"
+);
+$stmt->bind_param("sss", $name, $email, $message);
 
-function sendSuccess($data = []) {
-    echo json_encode(array_merge(["status" => "success"], $data));
-    exit;
+if ($stmt->execute()) {
+    jsonResponse(["success" => true]);
+} else {
+    jsonResponse(["success" => false], 500);
 }
-
-// logic for contact.php
-// Placeholder for v20.0 endpoint
-sendSuccess(["endpoint" => "contact.php", "status" => "PENDING_IMPLEMENTATION"]);

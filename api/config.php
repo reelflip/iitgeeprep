@@ -9,10 +9,9 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 $DB_HOST = "localhost";
-$DB_USER = "YOUR_DB_USER";
-$DB_PASS = "YOUR_DB_PASSWORD";
-$DB_NAME = "YOUR_DB_NAME";
-
+$DB_USER = "u131922718_iitgeedb2_user";
+$DB_PASS = "2YWeJK|S0x:";
+$DB_NAME = "u131922718_iitgeedb2";
 $conn = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
 
 if ($conn->connect_error) {
